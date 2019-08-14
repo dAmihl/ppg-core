@@ -16,7 +16,13 @@ Puzzle * PuzzleGenerator::generatePuzzle(T_PuzzleObjectList objects, T_PuzzleEve
 {
 
 	// initialize randomizer
-	PuzzleRandomizer::init();
+	if (this->seedSet) {
+		PuzzleRandomizer::init(this->seed);
+	}
+	else {
+		PuzzleRandomizer::init();
+	}
+	
 	Puzzle* P = new Puzzle();
 
 	if (this->NUM_NODES == 0) {
@@ -191,6 +197,17 @@ void PuzzleGenerator::setNumberNodes(int n)
 int PuzzleGenerator::getNumberNodes()
 {
 	return this->NUM_NODES;
+}
+
+void PuzzleGenerator::setSeed(unsigned int seed)
+{
+	this->seed = seed;
+	this->seedSet = true;
+}
+
+unsigned int PuzzleGenerator::getSeed()
+{
+	return this->seed;
 }
 
 

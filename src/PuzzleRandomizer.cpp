@@ -12,12 +12,14 @@ PuzzleRandomizer::~PuzzleRandomizer()
 {
 }
 
-
-
 void PuzzleRandomizer::init()
 {
-	// TODO Better initialization, seed?, better randomiser
-	srand( (unsigned int) time(NULL));
+	srand((unsigned int)time(NULL));
+}
+
+void PuzzleRandomizer::init(unsigned int seed)
+{
+	srand( seed );
 }
 
 PuzzleObject* PuzzleRandomizer::getRandomObjectFromList(PuzzleList<PuzzleObject*>::Type list)

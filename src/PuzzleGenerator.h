@@ -24,6 +24,9 @@ public:
 	void setNumberNodes(int n);
 	int getNumberNodes();
 
+	void setSeed(unsigned int seed);
+	unsigned int getSeed();
+
 private:
 
 	void _initializeActivePropertyOnNodes(Puzzle* P);
@@ -31,5 +34,7 @@ private:
 	void _cleanupNodes(Puzzle* P);
 	void _removeNodeFromList(PuzzleNode*N, T_PuzzleNodeList &nodes);
 	int NUM_NODES = 0;
+	unsigned int seed = 0;
+	bool seedSet = false;
 };
 
