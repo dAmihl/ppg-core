@@ -169,8 +169,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 	GIVEN("A more extensive puzzle universe with X nodes and rules") {
 
-		PuzzleRelation* R = new PuzzleRelation();
-
 		// Deterministic generation
 		unsigned int seed = 42;
 
@@ -220,22 +218,80 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		T_PuzzleNodePair n1n2Pair = PuzzleRelation::makePuzzlePair(N1, N2);
 		T_PuzzleNodePair n2n3Pair = PuzzleRelation::makePuzzlePair(N2, N3);
 
-		R->addPair(n1n2Pair);
-		R->addPair(n2n3Pair);
-
 		PuzzleRule* R1 = new PuzzleRule(O1, S1_2, O2, S2_1, PuzzleRule::E_PuzzleRuleType::BEFORE);
-		PuzzleRule* R2 = new PuzzleRule(O2, S2_1, O3, nullptr, PuzzleRule::E_PuzzleRuleType::STRICT_BEFORE);
+		PuzzleRule* R2 = new PuzzleRule(O2, S2_2, O3, nullptr, PuzzleRule::E_PuzzleRuleType::STRICT_BEFORE);
 
 		rules.push_back(*R1);
 		rules.push_back(*R2);
 
-		PG->setSeed(seed);
+		//PG->setSeed(seed);
+		PG->setNumberNodes(10);
 		Puzzle* P = PG->generatePuzzle(objects, events, rules);
 
 		WHEN("A puzzle is generated") {
-
+			UNSCOPED_INFO("Generated Puzzle:");
+			UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
 			THEN("It is definitely generated..") {
 				REQUIRE(P != nullptr);
+			}
+
+		}
+
+		WHEN("A puzzle is generated with the Rule (O2,S2_2) < (O3, *)") {
+		
+			THEN("Every node (O2, S2_2) has to occur before every other node referencing O3") {
+
+				T_PuzzleNodeList nodes = P->getNodes();
+
+				PuzzleRelation R = P->getRelation();
+
+				bool result = true;
+				int count = 0;
+
+				for (T_PuzzleNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it) {
+
+					// The node (O2, S2_1)
+					if ((*it)->getRelatedObject() == O2 && (*it)->getGoalState().getStateName() == (*S2_2).getStateName()) {
+						auto checkNotO3 = [](PuzzleNode N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
+						// All smaller nodes than (O2, S2_1) have to be != O3
+						result = result && R.checkAllSmaller((*it), checkNotO3);
+						count++;
+					}
+					if (!result) break;
+				}
+				UNSCOPED_INFO("Checked nodes:");
+				UNSCOPED_INFO(count);
+				REQUIRE(result);
+			}
+		
+		}
+
+		WHEN("A puzzle is generated with the Rule (O1,S1_2) < (O2, S2_1)") {
+
+			THEN("Every node (O1, S1_2) has to occur before every other node referencing O2 and Stage S2_1") {
+
+				T_PuzzleNodeList nodes = P->getNodes();
+
+				PuzzleRelation R = P->getRelation();
+
+				bool result = true;
+				int count = 0;
+
+				for (T_PuzzleNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it) {
+
+					// The node (O1, S1_2)
+					if ((*it)->getRelatedObject() == O1 && (*it)->getGoalState().getStateName() == (*S1_2).getStateName()) {
+						auto checkNotO2AndS2_1 = [](PuzzleNode N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O2") && !(N.getGoalState().getStateName() == "State_2_1"); };
+						// All smaller nodes than (O1, S1_2) have to be != O2 AND != S2_1
+						result = result && R.checkAllSmaller((*it), checkNotO2AndS2_1);
+						count++;
+					}
+					if (!result) break;
+				}
+
+				UNSCOPED_INFO("Checked Nodes:");
+				UNSCOPED_INFO(count);
+				REQUIRE(result);
 			}
 
 		}
