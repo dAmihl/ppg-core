@@ -227,6 +227,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList 
 
 
 /*
+*	S = Node to be added from Generator
 *	PuzzleRule::Type BEFORE
 *	Check "STRICT_BEFORE" by setting isStrict to true!
 *	True = Compatible!
@@ -241,7 +242,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 	PuzzleObject* rhsO = rule.getRightHandSideObject();
 	PuzzleState* rhsS = rule.getRightHandSideState();
 
-	// LHS = S und RHS = N
+	// LHS = S and RHS = N
 	if (__isRuleObjectEqual(lhsO, S->getRelatedObject()) && __isRuleStateEqual(lhsS, &(S->getGoalState())) &&
 		__isRuleObjectEqual(rhsO, N->getRelatedObject()) && __isRuleStateEqual(rhsS, &(N->getGoalState()))) {
 
@@ -261,6 +262,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 		}
 	}
 
+	// LHS = S
 	if (PuzzleGeneratorHelper::__isRuleObjectEqual(lhsO, S->getRelatedObject()) && PuzzleGeneratorHelper::__isRuleStateEqual(lhsS, &(S->getGoalState()))) {
 		/*
 			Get every existing nodes which fullfill Right Hand Side of Rule
@@ -277,7 +279,9 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 		}
 	}
 
-	/* If the node S is going to get attached, and S is Right hand side in Rule
+	/*
+	* RHS = S
+	* If the node S is going to get attached, and S is Right hand side in Rule
 	*	Then check if there is no LHS following
 	*/
 	if (PuzzleGeneratorHelper::__isRuleObjectEqual(rhsO, S->getRelatedObject()) && PuzzleGeneratorHelper::__isRuleStateEqual(rhsS, &(S->getGoalState()))) {

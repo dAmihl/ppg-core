@@ -165,6 +165,14 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				REQUIRE_FALSE(hasMetaEqualOccurence);
 			}
 		}
+
+		WHEN("A custom rule is used to restrict the generation: (N4, *) < (N2, *)") {
+
+			PuzzleRule* rule1 = new PuzzleRule(N4->getRelatedObject(), )
+
+		}
+
+
 	}
 
 	GIVEN("A more extensive puzzle universe with X nodes and rules") {
