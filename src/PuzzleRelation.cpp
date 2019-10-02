@@ -54,22 +54,26 @@ std::string PuzzleRelation::getRecursiveTextualRepresentationOfNode(T_PuzzleNode
 	T_PuzzleNodeList pre = getPrecedingNodes(N);
 	T_PuzzleNodeList fol = getFollowingNodes(N);
 	std::string tmp = "";
+	if (std::find(alreadyOut.begin(), alreadyOut.end(), N) == alreadyOut.end()) {
+		for (int hyph = 0; hyph > level; hyph--) {
+			tmp += "-";
+		}
+		tmp += "[(L" + std::to_string(level) + ")" + N->getRelatedObject()->getObjectName() + "::" + N->getGoalState().getStateName() + "]\n";
+		alreadyOut.push_back(N);
+	}
+	(*out) += tmp;
+
 	for (T_PuzzleNodeList::iterator pIt = pre.begin(); pIt != pre.end(); ++pIt) {
 		if (std::find(alreadyOut.begin(), alreadyOut.end(), *pIt) == alreadyOut.end()) {
 			getRecursiveTextualRepresentationOfNode(alreadyOut,out, *pIt, level-1);
 		}
 	}
 	
-	if (std::find(alreadyOut.begin(), alreadyOut.end(), N) == alreadyOut.end()) {
-		tmp += "[(L" + std::to_string(level) + ")" + N->getRelatedObject()->getObjectName() + "::" + N->getGoalState().getStateName() + "]";
-		alreadyOut.push_back(N);
-	}
-	(*out) +=  tmp;
-	for (T_PuzzleNodeList::iterator fIt = fol.begin(); fIt != fol.end(); ++fIt) {
+	/*for (T_PuzzleNodeList::iterator fIt = fol.begin(); fIt != fol.end(); ++fIt) {
 		if (std::find(alreadyOut.begin(), alreadyOut.end(), *fIt) == alreadyOut.end()) {
 			getRecursiveTextualRepresentationOfNode(alreadyOut,out, *fIt, level+1);
 		}
-	}
+	}*/
 	
 	return (*out);
 }
@@ -79,14 +83,14 @@ std::string PuzzleRelation::getExtendedTextualRepresentation(T_PuzzleNodeList no
 	std::string out = "";
 	T_PuzzleNodeList alreadyOutputNodes;
 
-	T_PuzzleNodeList smallest = getMinima(nodes);
+	T_PuzzleNodeList leafs = getMaxima(nodes);
 
-	for (T_PuzzleNodeList::iterator it = smallest.begin(); it != smallest.end(); ++it) {
+	for (T_PuzzleNodeList::iterator it = leafs.begin(); it != leafs.end(); ++it) {
 		
 		if (std::find(alreadyOutputNodes.begin(), alreadyOutputNodes.end(), *it) == alreadyOutputNodes.end()) {
 			getRecursiveTextualRepresentationOfNode(alreadyOutputNodes, &out, *it, 0);
 		}
-		out += "\n---\n";
+		out += "\n\n";
 	}
 	out += "\n";
 	return out;
@@ -206,6 +210,17 @@ T_PuzzleNodeList PuzzleRelation::getMinima(T_PuzzleNodeList nodes)
 	return mins;
 }
 
+T_PuzzleNodeList PuzzleRelation::getMaxima(T_PuzzleNodeList nodes)
+{
+	T_PuzzleNodeList maxs;
+
+	for (T_PuzzleNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it) {
+		bool isMax = !hasFollowingNode(*it);
+		if (isMax) maxs.push_back(*it);
+	}
+	return maxs;
+}
+
 
 
 T_PuzzleNodeList PuzzleRelation::getSmallestNodesFromList(T_PuzzleNodeList nodes)
@@ -239,10 +254,22 @@ T_PuzzleNodeList PuzzleRelation::getLargestNodesFromList(T_PuzzleNodeList nodes)
 	return maxs;
 }
 
-bool PuzzleRelation::findPrecedingNode(PuzzleNode * start, PuzzleNode * nodeToFind)
+bool PuzzleRelation::findPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind)
+{
+	return findPrecedingNode(start, nodeToFind, false);
+}
+
+bool PuzzleRelation::findFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind)
+{
+	return findFollowingNode(start, nodeToFind, false);
+}
+
+bool PuzzleRelation::findPrecedingNode(PuzzleNode * start, PuzzleNode * nodeToFind, bool includeStart)
 {
 	bool result = false;
-	//if (start == nodeToFind) return true;
+	if (includeStart) {
+		if (start == nodeToFind) return true;
+	}
 
 	T_PuzzleNodeList pre = getPrecedingNodes(start);
 
@@ -253,7 +280,7 @@ bool PuzzleRelation::findPrecedingNode(PuzzleNode * start, PuzzleNode * nodeToFi
 			return true;
 		}
 		else {
-			result = result || findPrecedingNode(*it, nodeToFind);
+			result = findPrecedingNode(*it, nodeToFind, includeStart);
 			if (result) return true;
 		}
 	}
@@ -261,10 +288,12 @@ bool PuzzleRelation::findPrecedingNode(PuzzleNode * start, PuzzleNode * nodeToFi
 	return result;
 }
 
-bool PuzzleRelation::findFollowingNode(PuzzleNode * start, PuzzleNode * nodeToFind)
+bool PuzzleRelation::findFollowingNode(PuzzleNode * start, PuzzleNode * nodeToFind, bool includeStart)
 {
 	bool result = false;
-	//if (start == nodeToFind) return true;
+	if (includeStart) {
+		if (start == nodeToFind) return true;
+	}
 
 	T_PuzzleNodeList fol = getFollowingNodes(start);
 	
@@ -276,7 +305,7 @@ bool PuzzleRelation::findFollowingNode(PuzzleNode * start, PuzzleNode * nodeToFi
 			return true;
 		}
 		else {
-			result = result || findFollowingNode(*it, nodeToFind);
+			result = findFollowingNode(*it, nodeToFind, includeStart);
 			if (result) return true;
 		}
 	}

@@ -36,12 +36,15 @@ public:
 	bool hasFollowingNode(PuzzleNode* N);
 
 	T_PuzzleNodeList getMinima(T_PuzzleNodeList nodes);
+	T_PuzzleNodeList getMaxima(T_PuzzleNodeList nodes);
 
 	T_PuzzleNodeList getSmallestNodesFromList(T_PuzzleNodeList nodes);
 	T_PuzzleNodeList getLargestNodesFromList(T_PuzzleNodeList nodes);
 
 	bool findPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
 	bool findFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
+	bool findPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind, bool includeStart);
+	bool findFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind, bool includeStart);
 
 	T_PuzzleNodeList findNodesByPattern(T_PuzzleNodeList nodes, PuzzleObject* O, PuzzleState* S, bool(*EqualObject)(PuzzleObject*, PuzzleObject*), bool(*EqualState)(PuzzleState*, PuzzleState*));
 

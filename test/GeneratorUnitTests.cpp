@@ -166,9 +166,63 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			}
 		}
 
-		WHEN("A custom rule is used to restrict the generation: (N4, *) < (N2, *)") {
+		WHEN("A custom rule is used to restrict the generation: (O4, *) < (O2, *)") {
 
-			PuzzleRule* rule1 = new PuzzleRule(N4->getRelatedObject(), )
+			PuzzleRule* rule1 = new PuzzleRule(N4->getRelatedObject(), nullptr, N2->getRelatedObject(), nullptr, PuzzleRule::E_PuzzleRuleType::BEFORE);
+
+			THEN("isRuleObjectEqual and isRuleStateEqual should return true with (O4,*) =R= (O4, S4)") {
+				bool isRuleObjectEqual = PuzzleGeneratorHelper::__isRuleObjectEqual(rule1->getLeftHandSideObject(), N4->getRelatedObject());
+				bool isRuleStateEqual = PuzzleGeneratorHelper::__isRuleStateEqual(rule1->getLeftHandSideState(), S4);
+				REQUIRE(isRuleObjectEqual);
+				REQUIRE(isRuleStateEqual);
+			}
+
+			THEN("isRuleObjectEqual and isRuleStateEqual should return true with (O2,*) =R= (O2, S2)"){
+				bool isRuleObjectEqual = PuzzleGeneratorHelper::__isRuleObjectEqual(rule1->getRightHandSideObject(), N2->getRelatedObject());
+				bool isRuleStateEqual = PuzzleGeneratorHelper::__isRuleStateEqual(rule1->getRightHandSideState(), S2);
+				REQUIRE(isRuleObjectEqual);
+				REQUIRE(isRuleStateEqual);
+			}
+
+			THEN("isRuleObjectEqual should return false, isRuleStateEqual true (because of wildcard) with (O2,*) =R= (O3, S2)"){
+				bool isRuleObjectEqual = PuzzleGeneratorHelper::__isRuleObjectEqual(rule1->getRightHandSideObject(), N3->getRelatedObject());
+				bool isRuleStateEqual = PuzzleGeneratorHelper::__isRuleStateEqual(rule1->getRightHandSideState(), S3);
+				REQUIRE_FALSE(isRuleObjectEqual);
+				REQUIRE(isRuleStateEqual);
+			}
+
+		}
+
+		WHEN("A list of nodes N1..N5 is given") {
+			T_PuzzleNodeList nodes;
+			nodes.push_back(N1);
+			nodes.push_back(N2);
+			nodes.push_back(N3);
+			nodes.push_back(N4);
+			PuzzleNode* N5 = new PuzzleNode(O1, *S2);
+			nodes.push_back(N5);
+			PuzzleObject* O5 = new PuzzleObject("O5");
+
+			THEN("findNodesByPattern for Object O1 and S1 should only return N1") {
+				T_PuzzleNodeList foundNodes = R->findNodesByPattern(nodes, O1, S1, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+				int size = foundNodes.size();
+				REQUIRE(size == 1);
+				REQUIRE(foundNodes.at(0) == N1);
+			}
+
+			THEN("findNodesByPattern for Object O1 and * should return N1 and N5") {
+				T_PuzzleNodeList foundNodes = R->findNodesByPattern(nodes, O1, nullptr, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+				int size = foundNodes.size();
+				REQUIRE(size == 2);
+				bool result = (foundNodes.at(0) == N1) || (foundNodes.at(0) == N5);
+				REQUIRE( result );
+			}
+
+			THEN("findNodesByPattern for Object O5 and * should return nothing") {
+				T_PuzzleNodeList foundNodes = R->findNodesByPattern(nodes, O5, nullptr, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+				int size = foundNodes.size();
+				REQUIRE(size == 0);
+			}
 
 		}
 
@@ -178,7 +232,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 	GIVEN("A more extensive puzzle universe with X nodes and rules") {
 
 		// Deterministic generation
-		unsigned int seed = 42;
+		unsigned int seed = 664242;
 
 		PuzzleGenerator* PG = new PuzzleGenerator();
 
@@ -226,13 +280,13 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		T_PuzzleNodePair n1n2Pair = PuzzleRelation::makePuzzlePair(N1, N2);
 		T_PuzzleNodePair n2n3Pair = PuzzleRelation::makePuzzlePair(N2, N3);
 
-		PuzzleRule* R1 = new PuzzleRule(O1, S1_2, O2, S2_1, PuzzleRule::E_PuzzleRuleType::BEFORE);
-		PuzzleRule* R2 = new PuzzleRule(O2, S2_2, O3, nullptr, PuzzleRule::E_PuzzleRuleType::STRICT_BEFORE);
+		PuzzleRule* R1 = new PuzzleRule(O1, S1_2, O2, nullptr, PuzzleRule::E_PuzzleRuleType::BEFORE);
+		PuzzleRule* R2 = new PuzzleRule(O2, S2_2, O3, nullptr, PuzzleRule::E_PuzzleRuleType::BEFORE);
 
 		rules.push_back(*R1);
 		rules.push_back(*R2);
 
-		//PG->setSeed(seed);
+		PG->setSeed(seed);
 		PG->setNumberNodes(10);
 		Puzzle* P = PG->generatePuzzle(objects, events, rules);
 
@@ -258,10 +312,10 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				for (T_PuzzleNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 
-					// The node (O2, S2_1)
+					// The node (O2, S2_2)
 					if ((*it)->getRelatedObject() == O2 && (*it)->getGoalState().getStateName() == (*S2_2).getStateName()) {
 						auto checkNotO3 = [](PuzzleNode N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
-						// All smaller nodes than (O2, S2_1) have to be != O3
+						// All smaller nodes than (O2, S2_2) have to be != O3
 						result = result && R.checkAllSmaller((*it), checkNotO3);
 						count++;
 					}
@@ -269,6 +323,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				}
 				UNSCOPED_INFO("Checked nodes:");
 				UNSCOPED_INFO(count);
+				UNSCOPED_INFO("Generated Puzzle:");
+				UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
 				REQUIRE(result);
 			}
 		
