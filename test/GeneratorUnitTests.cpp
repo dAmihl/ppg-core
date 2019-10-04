@@ -234,7 +234,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		// Deterministic generation
 		unsigned int seed = 664242;
 		// Number of nodes to generate
-		unsigned int numberNodes = 20;
+		unsigned int numberNodes = 100;
 
 		PuzzleGenerator* PG = new PuzzleGenerator();
 
@@ -249,6 +249,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		StateTransition* T1 = new StateTransition();
 		PuzzleEvent* E1 = new PuzzleEvent("Event_E1", O1);
 		T1->addTransition(E1->getEventName(), *S1_1, *S1_2);
+		T1->addTransition(E1->getEventName(), *S1_2, *S1_1);
 		O1->setStateTransition(*T1);
 		events.push_back(E1);
 		PuzzleNode* N1 = new PuzzleNode(O1, *S1_1);
@@ -260,6 +261,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		StateTransition* T2 = new StateTransition();
 		PuzzleEvent* E2 = new PuzzleEvent("Event_E2", O2);
 		T2->addTransition(E2->getEventName(), *S2_1, *S2_2);
+		T2->addTransition(E2->getEventName(), *S2_2, *S2_1);
 		O2->setStateTransition(*T2);
 		events.push_back(E2);
 		PuzzleNode* N2 = new PuzzleNode(O2, *S2_1);
@@ -268,7 +270,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		objects.push_back(O3);
 		PuzzleState* S3_1 = new PuzzleState("State_S3_1");
 		PuzzleState* S3_2 = new PuzzleState("State_S3_2");
-		PuzzleState* S3_3 = new PuzzleState("State_S3_2");
+		PuzzleState* S3_3 = new PuzzleState("State_S3_3");
 		StateTransition* T3 = new StateTransition();
 		PuzzleEvent* E3_1 = new PuzzleEvent("Event_E3_1", O3);
 		PuzzleEvent* E3_2 = new PuzzleEvent("Event_E3_2", O3);
@@ -282,7 +284,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		T_PuzzleNodePair n1n2Pair = PuzzleRelation::makePuzzlePair(N1, N2);
 		T_PuzzleNodePair n2n3Pair = PuzzleRelation::makePuzzlePair(N2, N3);
 
-		PuzzleRule* R1 = new PuzzleRule(O1, S1_2, O2, nullptr, PuzzleRule::E_PuzzleRuleType::BEFORE);
+		PuzzleRule* R1 = new PuzzleRule(O1, S1_2, O2, S2_1, PuzzleRule::E_PuzzleRuleType::BEFORE);
 		PuzzleRule* R2 = new PuzzleRule(O2, S2_2, O3, nullptr, PuzzleRule::E_PuzzleRuleType::BEFORE);
 		PuzzleRule* R3 = new PuzzleRule(O1, nullptr, O3, nullptr, PuzzleRule::E_PuzzleRuleType::STRICT_BEFORE);
 		PuzzleRule* R4 = new PuzzleRule(O1, nullptr, O3, nullptr, PuzzleRule::E_PuzzleRuleType::AFTER);
@@ -355,7 +357,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 					// The node (O1, S1_2)
 					if ((*it)->getRelatedObject() == O1 && (*it)->getGoalState().getStateName() == (*S1_2).getStateName()) {
-						auto checkNotO2AndS2_1 = [](PuzzleNode N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O2") && !(N.getGoalState().getStateName() == "State_2_1"); };
+						auto checkNotO2AndS2_1 = [](PuzzleNode N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O2" && N.getGoalState().getStateName() == "State_2_1"); };
 						// All smaller nodes than (O1, S1_2) have to be != O2 AND != S2_1
 						result = result && R.checkAllSmaller((*it), checkNotO2AndS2_1);
 						count++;

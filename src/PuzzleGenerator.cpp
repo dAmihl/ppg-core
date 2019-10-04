@@ -49,6 +49,8 @@ Puzzle * PuzzleGenerator::generatePuzzle(T_PuzzleObjectList objects, T_PuzzleEve
 	/* Generate Relation and add to Puzzle P */
 	//PuzzleRelation *R = __simple_generateRelation(P->getNodes());
 	PuzzleRelation *R = generateRelation(P->getNodes(), rules);
+	//PuzzleRelation* R = generateRelationExperimental(P, P->getNodes(), rules);
+
 	P->setRelation(*R);
 
 	_cleanupNodes(P);
@@ -57,6 +59,8 @@ Puzzle * PuzzleGenerator::generatePuzzle(T_PuzzleObjectList objects, T_PuzzleEve
 
 	return P;
 }
+
+
 
 
 void PuzzleGenerator::_removeNodeFromList(PuzzleNode*N, T_PuzzleNodeList &nodes) {
@@ -164,12 +168,43 @@ PuzzleRelation* PuzzleGenerator::generateRelation(T_PuzzleNodeList nodes,  T_Puz
 
 		// returns nullptr if list is empty
 		PuzzleNode* N2 = PuzzleRandomizer::getRandomNodeFromList(compList);
-		//if (it == nodes.begin()) N1->setPuzzleNodeState(PUZZLENODE_STATE::ACTIVE);
 
 		if (N2 != nullptr) {
 			rel->addPair(N1, N2);
 		}
 	}
+
+	return rel;
+}
+
+PuzzleRelation* PuzzleGenerator::generateRelationExperimental(Puzzle *P, T_PuzzleNodeList nodes, T_PuzzleRuleList rules)
+{
+	PuzzleRelation* rel = new PuzzleRelation();
+
+	T_PuzzleNodeList nodesInGraph;
+
+	PuzzleNode* NStart = PuzzleRandomizer::getRandomNodeFromList(nodes);
+	nodesInGraph.push_back(NStart);
+
+	for (std::vector<PuzzleNode*>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
+		PuzzleNode* N1 = *it;
+
+
+		/*
+		* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
+		*/
+		T_PuzzleNodeList compList = PuzzleGeneratorHelper::_filterCompatibleNodes(N1, rel, nodesInGraph, rules);
+
+		// returns nullptr if list is empty
+		PuzzleNode* N2 = PuzzleRandomizer::getRandomNodeFromList(compList);
+
+		if (N2 != nullptr) {
+			rel->addPair(N1, N2);
+			nodesInGraph.push_back(N1);
+		}
+	}
+
+	P->setNodes(nodesInGraph);
 
 	return rel;
 }

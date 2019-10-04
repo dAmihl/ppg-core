@@ -290,6 +290,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList 
 		}
 	}
 	else {
+		//return true;
 		PuzzleRule::E_PuzzleRuleType tmpType = isStrict ? PuzzleRule::STRICT_BEFORE : PuzzleRule::BEFORE;
 		PuzzleRule* tmpRule = new PuzzleRule(rule.getRightHandSideObject(), rule.getRightHandSideState(), rule.getLeftHandSideObject(), rule.getLeftHandSideState(), tmpType);
 		return _checkCompatibilityRuleType__BEFORE(nodes, N, S, R, *tmpRule, isStrict);
@@ -372,6 +373,19 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 			for (T_PuzzleNodeList::iterator k = existingRHS.begin(); k != existingRHS.end(); ++k) {
 				if (R->findPrecedingNode(N, *k, false)) {
 					PuzzleLogger::log("S is LHS or has LHS as a preceding node - N has RHS as preceding node; FALSE");
+					return false;
+				}
+			}
+		}
+	}
+
+	// Check if N is LHS or has LHS as a following node
+	for (T_PuzzleNodeList::iterator n = existingLHS.begin(); n != existingLHS.end(); ++n) {
+		if (R->findFollowingNode(N, *n, true)) {
+			// Then S is not allowed to be RHS or have RHS as a preceding node
+			for (T_PuzzleNodeList::iterator k = existingRHS.begin(); k != existingRHS.end(); ++k) {
+				if (R->findPrecedingNode(S, *k, true)) {
+					PuzzleLogger::log("N is LHS or has LHS as a preceding node - S is RHS or has RHS as preceding node; FALSE");
 					return false;
 				}
 			}

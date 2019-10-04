@@ -19,6 +19,7 @@ public:
 	PuzzleRelation* __simple_generateRelation(T_PuzzleNodeList nodes);
 
 	PuzzleRelation* generateRelation(T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
+	PuzzleRelation* generateRelationExperimental(Puzzle* P, T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
 
 	T_PuzzleNodeList generateNodes(T_PuzzleObjectList objects);
 
