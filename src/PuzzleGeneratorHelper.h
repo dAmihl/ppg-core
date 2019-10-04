@@ -4,6 +4,7 @@
 #include "PuzzleRandomizer.h"
 #include "PUZZGEN_TYPES.h"
 #include "Puzzle.h"
+#include "PuzzleLogger.h"
 
 class PuzzleGeneratorHelper
 {

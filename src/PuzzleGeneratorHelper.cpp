@@ -179,7 +179,14 @@ bool PuzzleGeneratorHelper::_checkCompatibilityBasicRules(PuzzleNode* S, PuzzleN
 */
 bool PuzzleGeneratorHelper::_checkCompatibilityCustomRules(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, T_PuzzleRuleList rules)
 {
+
+	
+
 	for (T_PuzzleRuleList::iterator r = rules.begin(); r != rules.end(); ++r) {
+
+		PuzzleLogger::log("Checking Rule " + r->getTextualRepresentation());
+		PuzzleLogger::log("S: " + S->getSimpleTextualRepresentation());
+		PuzzleLogger::log("N: " + N->getSimpleTextualRepresentation());
 
 		bool (*FN) (T_PuzzleNodeList, PuzzleNode*, PuzzleNode*, PuzzleRelation*, PuzzleRule, bool) = NULL;
 		bool strict = false;
@@ -198,7 +205,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityCustomRules(T_PuzzleNodeList node
 			strict = false;
 			break;
 		case PuzzleRule::E_PuzzleRuleType::STRICT_BEFORE:
-			FN = &PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER;
+			FN = &PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE;
 			strict = true;
 			break;
 		}
@@ -219,10 +226,74 @@ bool PuzzleGeneratorHelper::_checkCompatibilityCustomRules(T_PuzzleNodeList node
 *	Check "STRICT_AFTER" by setting isStrict to true!
 *	True = Compatible!
 *	False = INCOMPATIBLE!
+*
+*	This ruletype works a little different.
+*	IF node S is LHS of rule, S is only allowed to connect to another node, if S already has RHS as a precing node.
+*	If the rule is strict, S needs a RHS as a directly preceding node.
+*
+*	If S is not allowed to connect with another node N without the RHS of the rule, then S will never be a part of the graph and will be removed as a cleanup.
+*	S then only has a chance to be connected to the graph, if a Node N == RHS of the rule is connected to this node.
+*
+*	IF N is the RHS of the rule, then S has to be the LHS (strict) or have LHS as a preceding node (not strict)
+*
+*	IF S is not LHS of the rule and N is not the RHS, then the inverse rule must apply, i.e. (N < S) or (N <! S)
 */
 bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict)
 {
-	return true;
+	/* */
+	PuzzleObject* lhsO = rule.getLeftHandSideObject();
+	PuzzleState* lhsS = rule.getLeftHandSideState();
+
+	PuzzleObject* rhsO = rule.getRightHandSideObject();
+	PuzzleState* rhsS = rule.getRightHandSideState();
+
+	// Find all existing Right-Hand-side nodes of rule
+	T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+	T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+
+	if (__isRuleObjectEqual(lhsO, S->getRelatedObject()) && __isRuleStateEqual(lhsS, &(S->getGoalState()))) {
+		
+		if (isStrict) {
+			for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
+				if (!R->findDirectlyPrecedingNode(N, *n)) {
+					PuzzleLogger::log("LHS = S and RHS = N; There is no directly preceding RHS found; FALSE");
+					return false;
+				}
+			}
+		}
+		else {
+			for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
+				if (!R->findPrecedingNode(N, *n, false)) {
+					PuzzleLogger::log("LHS = S and RHS = N; There is no preceding RHS found; FALSE");
+					return false;
+				}
+			}
+		}
+	}
+	// S is for sure not the LHS
+	// if N is the LHS, then S has to either be RHS (strict) or has RHS as a preceding node
+	else if (__isRuleObjectEqual(lhsO, N->getRelatedObject()) && __isRuleStateEqual(lhsS, &(N->getGoalState()))) {
+		
+		// Strict: S has to be RHS
+		if (isStrict) {
+			return __isRuleObjectEqual(rhsO, S->getRelatedObject()) && __isRuleStateEqual(rhsS, &(S->getGoalState()));
+		}
+		// Otherwise, S has to atleast have RHS as a preceding node
+		else {
+			for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
+				if (!R->findPrecedingNode(N, *n, false)) {
+					PuzzleLogger::log("RHS = S and LHS = N; There is no preceding RHS found in S; FALSE");
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	else {
+		PuzzleRule::E_PuzzleRuleType tmpType = isStrict ? PuzzleRule::STRICT_BEFORE : PuzzleRule::BEFORE;
+		PuzzleRule* tmpRule = new PuzzleRule(rule.getRightHandSideObject(), rule.getRightHandSideState(), rule.getLeftHandSideObject(), rule.getLeftHandSideState(), tmpType);
+		return _checkCompatibilityRuleType__BEFORE(nodes, N, S, R, *tmpRule, isStrict);
+	}
 }
 
 
@@ -236,6 +307,9 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList 
 */
 bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict)
 {
+
+	
+
 	/* */
 	PuzzleObject* lhsO = rule.getLeftHandSideObject();
 	PuzzleState* lhsS = rule.getLeftHandSideState();
@@ -247,20 +321,44 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 	// S < N automatically false
 	if (PuzzleGeneratorHelper::__isRuleObjectEqual(lhsO, N->getRelatedObject()) && PuzzleGeneratorHelper::__isRuleStateEqual(lhsS, &(N->getGoalState())) &&
 		PuzzleGeneratorHelper::__isRuleObjectEqual(rhsO, S->getRelatedObject()) && PuzzleGeneratorHelper::__isRuleStateEqual(rhsS, &(S->getGoalState()))) {
-		
+		PuzzleLogger::log("LHS = N and RHS = S; FALSE");
 		return false;
 	}
 
-	// TODO: could be moved out of the if-elseif construct? it is only computed once though.
-	T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+	// Find all existing Right-Hand-side nodes of rule
 	T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+	T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
 
+	// LHS = S and RHS = N
+	// S < N for all N
+	// In case of a strict rule, ONLY S<N is allowed.
+	if (__isRuleObjectEqual(lhsO, S->getRelatedObject()) && __isRuleStateEqual(lhsS, &(S->getGoalState()))){
+		
+		if (__isRuleObjectEqual(rhsO, N->getRelatedObject()) && __isRuleStateEqual(rhsS, &(N->getGoalState()))) {
+			// check if this is the smallest occurance of N? so S is not after any other occurance of N
+			for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
+				if (R->findPrecedingNode(N, *n, false)) {
+					PuzzleLogger::log("LHS = S and RHS = N; There is a smaller RHS found; FALSE");
+					return false;
+				}
+			}
+			PuzzleLogger::log("LHS = S and RHS = N; TRUE");
+			return true;
+		}
+		else if (isStrict) {
+			PuzzleLogger::log("LHS = S and RHS != N; STRICT=true; FALSE");
+			return false;
+		}
+			
+	}
+	
 	// Check if S is RHS or has RHS as a preceding node
 	for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
 		if (R->findPrecedingNode(S, *n, true)) {
 			// Then N is not allowed to be LHS or to have LHS as a following node
 			for (T_PuzzleNodeList::iterator k = existingLHS.begin(); k != existingLHS.end(); ++k) {
 				if (R->findFollowingNode(N, *k, true)) {
+					PuzzleLogger::log("S is RHS or has RHS as a preceding node - N is LHS or has LHS as following node; FALSE");
 					return false;
 				}
 			}
@@ -273,106 +371,21 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 			// Then N is not allowed to have RHS as a preceding node
 			for (T_PuzzleNodeList::iterator k = existingRHS.begin(); k != existingRHS.end(); ++k) {
 				if (R->findPrecedingNode(N, *k, false)) {
+					PuzzleLogger::log("S is LHS or has LHS as a preceding node - N has RHS as preceding node; FALSE");
 					return false;
 				}
 			}
 		}
 	}
-
+	
+	PuzzleLogger::log("Node is compatible! TRUE");
 	return true;
 
-	// LHS = S and RHS = N
-	// S < N for all N
-	/*else if (__isRuleObjectEqual(lhsO, S->getRelatedObject()) && __isRuleStateEqual(lhsS, &(S->getGoalState())) &&
-		__isRuleObjectEqual(rhsO, N->getRelatedObject()) && __isRuleStateEqual(rhsS, &(N->getGoalState()))) {
-
-		T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
-
-		// check if this is the smallest occurance of N? so S is not after any other occurance of N
-		for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
-			if (R->findPrecedingNode(N, *n)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	else if (isStrict) {
-		return false;
-	}*/
-	/*
-	// LHS = S
-	else if (false && PuzzleGeneratorHelper::__isRuleObjectEqual(lhsO, S->getRelatedObject()) && PuzzleGeneratorHelper::__isRuleStateEqual(lhsS, &(S->getGoalState()))) {
-		
-		//	Get every existing nodes which fullfill Right Hand Side of Rule
-		
-		T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, __isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
-		bool result = true;
-		
-		//	For each existing node, check if S will be BEFORE those nodes by trying to find the node in the sequential order
-		
-		for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
-			if (R->findPrecedingNode(N, *n)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-	*/
-	/*
-	* RHS = S
-	* If the node S is going to get attached, and S is Right hand side in Rule
-	*	Then check if there is no LHS following
-	*/
-	/*
-	else if (false && PuzzleGeneratorHelper::__isRuleObjectEqual(rhsO, S->getRelatedObject()) && PuzzleGeneratorHelper::__isRuleStateEqual(rhsS, &(S->getGoalState()))) {
-		
-		//Get every existing nodes which fullfill Left Hand Side of Rule
-		
-		T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
-		bool result = true;
-		
-		//For each existing node, check if N will be AFTER those nodes by trying to find the node in the sequential order
-		
-		for (T_PuzzleNodeList::iterator n = existingLHS.begin(); n != existingLHS.end(); ++n) {
-			if (R->findFollowingNode(N, *n)) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-	*/
-	/*
-	* S is neither LHS nor RHS of rule.
-	* Still, if S has preceding nodes, or N has following nodes, we still have to make sure that this rule is not violated
-	*/
-	/*else {
-		// TODO: could be moved out of the if-elseif construct? it is only computed once though.
-		T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
-		T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, __isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
-
-		// Check if S is RHS or has RHS as a preceding node
-		for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
-			if (R->findPrecedingNode(S, *n, true)) {
-				// Then N is not allowed to be LHS or to have LHS as a following node
-				for (T_PuzzleNodeList::iterator k = existingLHS.begin(); k != existingLHS.end(); ++k) {
-					if (R->findFollowingNode(N, *k, true)) {
-						return false;
-					}
-				}
-			}
-		}
-
-	}
-	*/
-
-	return true;
 }
 
 
 bool PuzzleGeneratorHelper::__isRuleObjectEqual(PuzzleObject* o1, PuzzleObject* o2) {
-	if (o1 == nullptr || o2 == nullptr) return false;
+	if (o1 == nullptr || o2 == nullptr) return true;
 	return (o1->sameTemplateAs(*o2));
 }
 

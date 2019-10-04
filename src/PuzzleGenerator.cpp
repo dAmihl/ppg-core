@@ -15,6 +15,12 @@ PuzzleGenerator::~PuzzleGenerator()
 Puzzle * PuzzleGenerator::generatePuzzle(T_PuzzleObjectList objects, T_PuzzleEventList events, T_PuzzleRuleList rules)
 {
 
+	PuzzleLogger::log("Start generating a new Puzzle.");
+	PuzzleLogger::log("Using rules:");
+	for (auto it = rules.begin(); it != rules.end(); ++it) {
+		PuzzleLogger::log(it->getTextualRepresentation());
+	}
+	
 	// initialize randomizer
 	if (this->seedSet) {
 		PuzzleRandomizer::init(this->seed);

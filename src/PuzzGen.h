@@ -13,6 +13,7 @@
 #include "PuzzleEvent.h"
 #include "PuzzleEventManager.h"
 #include "PUZZGEN_TYPES.h"
+#include "PuzzleLogger.h"
 
 namespace PuzzGen
 {

@@ -28,6 +28,11 @@ public:
 	bool checkAllSmaller(PuzzleNode* N, bool(*Check)(PuzzleNode));
 
 	bool checkAllFollowing(PuzzleNode* N, bool(*Check)(PuzzleNode));
+	bool checkAllPreceding(PuzzleNode* N, bool(*Check)(PuzzleNode));
+	bool checkAtLeastOneFollowing(PuzzleNode* N, bool(*Check)(PuzzleNode));
+	bool checkAtLeastOnePreceding(PuzzleNode* N, bool(*Check)(PuzzleNode));
+
+
 
 	T_PuzzlePairList getNextPairs(T_PuzzleNodePair P);
 	T_PuzzlePairList getParallelPairs(T_PuzzleNodePair P);
@@ -45,6 +50,10 @@ public:
 	bool findFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
 	bool findPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind, bool includeStart);
 	bool findFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind, bool includeStart);
+
+	bool findDirectlyPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
+	bool findDirectlyFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
+
 
 	T_PuzzleNodeList findNodesByPattern(T_PuzzleNodeList nodes, PuzzleObject* O, PuzzleState* S, bool(*EqualObject)(PuzzleObject*, PuzzleObject*), bool(*EqualState)(PuzzleState*, PuzzleState*));
 

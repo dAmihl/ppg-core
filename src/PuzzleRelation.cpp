@@ -152,6 +152,39 @@ bool PuzzleRelation::checkAllFollowing(PuzzleNode * N, bool(*Check)(PuzzleNode))
 	return result;
 }
 
+bool PuzzleRelation::checkAllPreceding(PuzzleNode* N, bool(*Check)(PuzzleNode))
+{
+	bool result = true;
+	for (T_PuzzlePairList::iterator it = this->pairs.begin(); it != this->pairs.end(); ++it) {
+		if (it->second == N) {
+			result = result && Check(*it->first);
+		}
+	}
+	return result;
+}
+
+bool PuzzleRelation::checkAtLeastOneFollowing(PuzzleNode* N, bool(*Check)(PuzzleNode))
+{
+	bool result = false;
+	for (T_PuzzlePairList::iterator it = this->pairs.begin(); it != this->pairs.end(); ++it) {
+		if (it->first == N) {
+			result = result || Check(*it->second);
+		}
+	}
+	return result;
+}
+
+bool PuzzleRelation::checkAtLeastOnePreceding(PuzzleNode* N, bool(*Check)(PuzzleNode))
+{
+	bool result = false;
+	for (T_PuzzlePairList::iterator it = this->pairs.begin(); it != this->pairs.end(); ++it) {
+		if (it->second == N) {
+			result = result || Check(*it->first);
+		}
+	}
+	return result;
+}
+
 T_PuzzlePairList PuzzleRelation::getNextPairs(T_PuzzleNodePair P)
 {
 	T_PuzzlePairList nextPairs;
@@ -311,6 +344,37 @@ bool PuzzleRelation::findFollowingNode(PuzzleNode * start, PuzzleNode * nodeToFi
 	}
 
 	return result;
+}
+
+bool PuzzleRelation::findDirectlyPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind)
+{
+	T_PuzzleNodeList pre = getPrecedingNodes(start);
+
+	if (pre.empty()) return false;
+
+	for (T_PuzzleNodeList::iterator it = pre.begin(); it != pre.end(); ++it) {
+		if (*it == nodeToFind) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool PuzzleRelation::findDirectlyFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind)
+{
+	T_PuzzleNodeList fol = getFollowingNodes(start);
+
+	if (fol.empty()) return false;
+
+
+	for (T_PuzzleNodeList::iterator it = fol.begin(); it != fol.end(); ++it) {
+		if (*it == nodeToFind) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 T_PuzzleNodeList PuzzleRelation::findNodesByPattern(T_PuzzleNodeList nodes, PuzzleObject* O, PuzzleState* S, bool(*EqualObject)(PuzzleObject*, PuzzleObject*), bool(*EqualState)(PuzzleState *, PuzzleState *))

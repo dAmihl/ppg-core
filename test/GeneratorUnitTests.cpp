@@ -233,6 +233,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		// Deterministic generation
 		unsigned int seed = 664242;
+		// Number of nodes to generate
+		unsigned int numberNodes = 20;
 
 		PuzzleGenerator* PG = new PuzzleGenerator();
 
@@ -282,15 +284,16 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		PuzzleRule* R1 = new PuzzleRule(O1, S1_2, O2, nullptr, PuzzleRule::E_PuzzleRuleType::BEFORE);
 		PuzzleRule* R2 = new PuzzleRule(O2, S2_2, O3, nullptr, PuzzleRule::E_PuzzleRuleType::BEFORE);
+		PuzzleRule* R3 = new PuzzleRule(O1, nullptr, O3, nullptr, PuzzleRule::E_PuzzleRuleType::STRICT_BEFORE);
+		PuzzleRule* R4 = new PuzzleRule(O1, nullptr, O3, nullptr, PuzzleRule::E_PuzzleRuleType::AFTER);
+		PuzzleRule* R5 = new PuzzleRule(O2, S2_2, O3, nullptr, PuzzleRule::E_PuzzleRuleType::STRICT_AFTER);
 
-		rules.push_back(*R1);
-		rules.push_back(*R2);
-
-		PG->setSeed(seed);
-		PG->setNumberNodes(10);
-		Puzzle* P = PG->generatePuzzle(objects, events, rules);
+		//PG->setSeed(seed);
+		PG->setNumberNodes(numberNodes);
+		
 
 		WHEN("A puzzle is generated") {
+			Puzzle* P = PG->generatePuzzle(objects, events, rules);
 			UNSCOPED_INFO("Generated Puzzle:");
 			UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
 			THEN("It is definitely generated..") {
@@ -300,7 +303,9 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		}
 
 		WHEN("A puzzle is generated with the Rule (O2,S2_2) < (O3, *)") {
-		
+			rules.clear();
+			rules.push_back(*R2);
+			Puzzle* P = PG->generatePuzzle(objects, events, rules);
 			THEN("Every node (O2, S2_2) has to occur before every other node referencing O3") {
 
 				T_PuzzleNodeList nodes = P->getNodes();
@@ -321,6 +326,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 					}
 					if (!result) break;
 				}
+				UNSCOPED_INFO("Rule:");
+				UNSCOPED_INFO(R2->getTextualRepresentation());
 				UNSCOPED_INFO("Checked nodes:");
 				UNSCOPED_INFO(count);
 				UNSCOPED_INFO("Generated Puzzle:");
@@ -331,6 +338,9 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		}
 
 		WHEN("A puzzle is generated with the Rule (O1,S1_2) < (O2, S2_1)") {
+			rules.clear();
+			rules.push_back(*R1);
+			Puzzle* P = PG->generatePuzzle(objects, events, rules);
 
 			THEN("Every node (O1, S1_2) has to occur before every other node referencing O2 and Stage S2_1") {
 
@@ -352,13 +362,125 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 					}
 					if (!result) break;
 				}
-
+				UNSCOPED_INFO("Rule:");
+				UNSCOPED_INFO(R1->getTextualRepresentation());
 				UNSCOPED_INFO("Checked Nodes:");
 				UNSCOPED_INFO(count);
+				UNSCOPED_INFO("Generated Puzzle:");
+				UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
 				REQUIRE(result);
 			}
 
 		}
+
+		WHEN("A puzzle is generated with the Rule (O1,*) <! (O3,*)") {
+			rules.clear();
+			rules.push_back(*R3);
+			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+
+			THEN("Every node (O1,*) has to occur STRICTLY (directly and only) before a node referencing O3") {
+
+				T_PuzzleNodeList nodes = P->getNodes();
+
+				PuzzleRelation R = P->getRelation();
+
+				bool result = true;
+				int count = 0;
+
+				for (T_PuzzleNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it) {
+
+					// The node (O1, *)
+					if ((*it)->getRelatedObject() == O1) {
+						auto checkIsO3= [](PuzzleNode N) -> auto {return (N.getRelatedObject()->getObjectName() == "Object_O3"); };
+						// All directly following nodes of (O1, *) have to  be = O3 
+						result = result && R.checkAllFollowing((*it), checkIsO3);
+						count++;
+					}
+					if (!result) break;
+				}
+				UNSCOPED_INFO("Rule:");
+				UNSCOPED_INFO(R3->getTextualRepresentation());
+				UNSCOPED_INFO("Checked Nodes:");
+				UNSCOPED_INFO(count);
+				UNSCOPED_INFO("Generated Puzzle:");
+				UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
+				REQUIRE(result);
+
+			}
+		}
+
+		WHEN("A puzzle is generated with the Rule (O1,*) > (O3,*)") {
+			rules.clear();
+			rules.push_back(*R4);
+			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+
+			THEN("Every node (O1,*) has to be after every other node referencing O3") {
+
+				T_PuzzleNodeList nodes = P->getNodes();
+
+				PuzzleRelation R = P->getRelation();
+
+				bool result = true;
+				int count = 0;
+
+				for (T_PuzzleNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it) {
+
+					// The node (O1, *)
+					if ((*it)->getRelatedObject() == O1) {
+						auto checkNotO3 = [](PuzzleNode N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
+						// There must not be a node referencing O3 LARGER than O1
+						result = result && R.checkAllLarger((*it), checkNotO3);
+						count++;
+					}
+					if (!result) break;
+				}
+				UNSCOPED_INFO("Rule:");
+				UNSCOPED_INFO(R4->getTextualRepresentation());
+				UNSCOPED_INFO("Checked Nodes:");
+				UNSCOPED_INFO(count);
+				UNSCOPED_INFO("Generated Puzzle:");
+				UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
+				REQUIRE(result);
+
+			}
+		}
+
+
+		WHEN("A puzzle is generated with the Rule (O2,S2_2) >! (O3, *)") {
+			rules.clear();
+			rules.push_back(*R5);
+			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			THEN("Every node (O2, S2_2) has to occur STRICTLY (directly and only) after another node referencing O3") {
+
+				T_PuzzleNodeList nodes = P->getNodes();
+
+				PuzzleRelation R = P->getRelation();
+
+				bool result = true;
+				int count = 0;
+
+				for (T_PuzzleNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it) {
+
+					// The node (O2, S2_2)
+					if ((*it)->getRelatedObject() == O2 && (*it)->getGoalState().getStateName() == (*S2_2).getStateName()) {
+						auto checkIsO3 = [](PuzzleNode N) -> auto {return (N.getRelatedObject()->getObjectName() == "Object_O3"); };
+						// At least one preceding node has to be referencing O3
+						result = result && R.checkAtLeastOnePreceding((*it), checkIsO3);
+						count++;
+					}
+					if (!result) break;
+				}
+				UNSCOPED_INFO("Rule:");
+				UNSCOPED_INFO(R5->getTextualRepresentation());
+				UNSCOPED_INFO("Checked nodes:");
+				UNSCOPED_INFO(count);
+				UNSCOPED_INFO("Generated Puzzle:");
+				UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
+				REQUIRE(result);
+			}
+
+		}
+
 
 	}
 
