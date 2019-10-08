@@ -234,7 +234,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		// Deterministic generation
 		unsigned int seed = 664242;
 		// Number of nodes to generate
-		unsigned int numberNodes = 100;
+		unsigned int numberNodes = 20;
 
 		PuzzleGenerator* PG = new PuzzleGenerator();
 

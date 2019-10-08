@@ -48,8 +48,8 @@ Puzzle * PuzzleGenerator::generatePuzzle(T_PuzzleObjectList objects, T_PuzzleEve
 
 	/* Generate Relation and add to Puzzle P */
 	//PuzzleRelation *R = __simple_generateRelation(P->getNodes());
-	PuzzleRelation *R = generateRelation(P->getNodes(), rules);
-	//PuzzleRelation* R = generateRelationExperimental(P, P->getNodes(), rules);
+	//PuzzleRelation *R = generateRelation(P->getNodes(), rules);
+	PuzzleRelation* R = generateRelationExperimental(P, P->getNodes(), rules);
 
 	P->setRelation(*R);
 
@@ -189,11 +189,15 @@ PuzzleRelation* PuzzleGenerator::generateRelationExperimental(Puzzle *P, T_Puzzl
 	for (std::vector<PuzzleNode*>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 		PuzzleNode* N1 = *it;
 
+		// Copies nodesInGraph
+		// Add N1 temporary for filterCompatibleNodes
+		T_PuzzleNodeList tmpNodes = nodesInGraph;
+		tmpNodes.push_back(N1);
 
 		/*
 		* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
 		*/
-		T_PuzzleNodeList compList = PuzzleGeneratorHelper::_filterCompatibleNodes(N1, rel, nodesInGraph, rules);
+		T_PuzzleNodeList compList = PuzzleGeneratorHelper::_filterCompatibleNodes(N1, rel, tmpNodes, rules);
 
 		// returns nullptr if list is empty
 		PuzzleNode* N2 = PuzzleRandomizer::getRandomNodeFromList(compList);

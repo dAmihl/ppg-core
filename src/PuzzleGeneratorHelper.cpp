@@ -308,9 +308,6 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList 
 */
 bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict)
 {
-
-	
-
 	/* */
 	PuzzleObject* lhsO = rule.getLeftHandSideObject();
 	PuzzleState* lhsS = rule.getLeftHandSideState();
@@ -352,6 +349,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 		}
 			
 	}
+
 	
 	// Check if S is RHS or has RHS as a preceding node
 	for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
@@ -385,7 +383,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 			// Then S is not allowed to be RHS or have RHS as a preceding node
 			for (T_PuzzleNodeList::iterator k = existingRHS.begin(); k != existingRHS.end(); ++k) {
 				if (R->findPrecedingNode(S, *k, true)) {
-					PuzzleLogger::log("N is LHS or has LHS as a preceding node - S is RHS or has RHS as preceding node; FALSE");
+					PuzzleLogger::log("N is LHS or has LHS as a following node - S is RHS or has RHS as preceding node; FALSE");
 					return false;
 				}
 			}
@@ -397,6 +395,14 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 
 }
 
+
+bool PuzzleGeneratorHelper::__isRuleNodeEqual(PuzzleNode* N, PuzzleObject* ruleObject, PuzzleState* ruleState)
+{
+	PuzzleObject* nodeObject = N->getRelatedObject();
+	PuzzleState* nodeState = &(N->getGoalState());
+
+	return __isRuleObjectEqual(nodeObject, ruleObject) && __isRuleStateEqual(nodeState, ruleState);
+}
 
 bool PuzzleGeneratorHelper::__isRuleObjectEqual(PuzzleObject* o1, PuzzleObject* o2) {
 	if (o1 == nullptr || o2 == nullptr) return true;

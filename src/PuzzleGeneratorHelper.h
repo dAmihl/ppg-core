@@ -27,6 +27,7 @@ public:
 
 	static bool checkMetaEqualOccuranceByNode(PuzzleNode* N, PuzzleRelation* R);
 
+	static bool __isRuleNodeEqual(PuzzleNode * N, PuzzleObject* ruleObject, PuzzleState* ruleState);
 	static bool __isRuleObjectEqual(PuzzleObject* o1, PuzzleObject* o2);
 	static bool __isRuleStateEqual(PuzzleState* s1, PuzzleState* s2);
 
