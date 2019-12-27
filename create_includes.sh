@@ -1,4 +1,7 @@
-mkdir includes/ppg-core
-rm -rf includes/ppg-core/*
-cp src/*.h includes/ppg-core
-cp build/src/Release/ppg-core.lib includes/ppg-core/
+rm -rf include/
+rm -rf lib/
+mkdir include/
+mkdir lib/
+cp src/*.h include/
+cp build/build_results/bin/Release/ppg-core.lib lib/
+cp build/build_results/bin/Release/ppg-core.dll lib/
