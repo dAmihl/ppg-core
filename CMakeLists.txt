@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.4)
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 SET (CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
-SET (BUILD_SHARED_LIBS true)
+option(BUILD_SHARED_LIBS "Build shared library" OFF)
 SET (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 project (ppg-core)
 
