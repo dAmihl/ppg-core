@@ -1,4 +1,4 @@
-ADD_LIBRARY( ppg-core
+ADD_LIBRARY( ppg-core STATIC
             PuzzGen.cpp
 			Puzzle.cpp 
 			PuzzleEvent.cpp 
