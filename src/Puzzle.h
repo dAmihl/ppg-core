@@ -29,7 +29,7 @@ public:
 	std::string getExtendedTextualRepresentation();
 	std::string getTextualEnvironmentDescription();
 
-	PuzzleGraphNode* getGraphRepresentation();
+	T_PuzzleGraphNodeList getGraphRepresentation();
 
 private: 
 	T_PuzzleNodeList nodes;

@@ -232,11 +232,10 @@ std::string Puzzle::getTextualEnvironmentDescription()
 	return out;
 }
 
-PuzzleGraphNode* Puzzle::getGraphRepresentation()
+T_PuzzleGraphNodeList Puzzle::getGraphRepresentation()
 {
 	T_PuzzleGraphNodeList allRoots = this->relation.getGraphRepresentation(this->nodes);
-	// TEMP TODO: Only return first root node for now
-	return allRoots.at(0);
+	return allRoots;
 }
 
 bool Puzzle::canNodeHandleEvent(PuzzleNode *N, PuzzleEvent E)
