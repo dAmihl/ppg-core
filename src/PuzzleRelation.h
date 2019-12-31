@@ -1,9 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "PuzzleNode.h"
-
 #include "PUZZGEN_TYPES.h"
+#include "PuzzleGraphNode.h"
+#include "PuzzleNode.h"
 
 class PuzzleRelation
 {
@@ -20,6 +20,9 @@ public:
 	std::string getSimpleTextualRepresentation();
 	std::string getRecursiveTextualRepresentationOfNode(T_PuzzleNodeList &alreadyOut, std::string* out, PuzzleNode* N, int level);
 	std::string getExtendedTextualRepresentation(T_PuzzleNodeList nodes);
+
+	T_PuzzleGraphNodeList getGraphRepresentation(T_PuzzleNodeList nodes);
+	PuzzleGraphNode getRecursiveGraphRepresentation(PuzzleNode* N);
 
 	void checkDoForAllPreceding(PuzzleNode *N, bool(*Check)(PuzzleNode), void(*Do)(PuzzleNode*));
 	void checkDoForAllFollowing(PuzzleNode *N, bool(*Check)(PuzzleNode), void(*Do)(PuzzleNode*));

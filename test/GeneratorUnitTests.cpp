@@ -484,6 +484,26 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		}
 
 
+		WHEN("A puzzle is generated without Rules") {
+			rules.clear();
+			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			THEN("getGraphRepresentation() returns the recursive representation of the puzzle starting from the leaf (ending) node") {
+
+				T_PuzzleNodeList nodes = P->getNodes();
+
+				PuzzleRelation R = P->getRelation();
+
+				bool result = false;
+				
+				PuzzleGraphNode *leaf = P->getGraphRepresentation();
+
+				result = leaf != nullptr;
+				REQUIRE(result);
+			}
+
+		}
+
+
 	}
 
 }

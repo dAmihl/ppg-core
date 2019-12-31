@@ -6,7 +6,7 @@
 #include "Puzzle.h"
 #include "PuzzleRule.h"
 #include "PuzzleGenerator.h"
-#include "PuzzleGraph.h"
+#include "PuzzleGraphNode.h"
 #include "PuzzleNode.h"
 #include "PuzzleRelation.h"
 #include "PuzzleRandomizer.h"

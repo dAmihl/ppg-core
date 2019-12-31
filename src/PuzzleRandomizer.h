@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include "PUZZGEN_TYPES.h"
+#include "PuzzleState.h"
 
 class PuzzleRandomizer
 {

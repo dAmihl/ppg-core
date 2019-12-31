@@ -5,6 +5,7 @@
 #include "PUZZGEN_TYPES.h"
 #include "Puzzle.h"
 #include "PuzzleLogger.h"
+#include "PuzzleRule.h"
 
 class PuzzleGeneratorHelper
 {

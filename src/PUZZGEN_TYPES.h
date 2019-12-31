@@ -1,11 +1,14 @@
 #pragma once
 
 #include <vector>
-#include "PuzzleNode.h"
-#include "PuzzleObject.h"
 #include "PuzzleRule.h"
-#include "PuzzleObject.h"
-#include "PuzzleState.h"
+
+
+class PuzzleNode;
+class PuzzleObject;
+class PuzzleState;
+class PuzzleGraphNode;
+class PuzzleEvent;
 
 typedef std::pair<PuzzleNode*, PuzzleNode*> T_PuzzleNodePair;
 
@@ -14,6 +17,7 @@ typedef std::vector<PuzzleNode*> T_PuzzleNodeList;
 typedef std::vector<PuzzleObject*> T_PuzzleObjectList;
 typedef std::vector<PuzzleEvent*> T_PuzzleEventList;
 typedef std::vector<PuzzleRule> T_PuzzleRuleList;
+typedef std::vector<PuzzleGraphNode*> T_PuzzleGraphNodeList;
 
 typedef std::pair<PuzzleObject*, PuzzleState*> T_PuzzleObjectStatePair;
 
