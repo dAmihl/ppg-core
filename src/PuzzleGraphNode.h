@@ -11,18 +11,18 @@ public:
 	PuzzleGraphNode();
 	~PuzzleGraphNode();
 
-	PuzzleObject getObject();
-	PuzzleState getState();
+	PuzzleObject* getObject();
+	PuzzleState* getState();
 	T_PuzzleGraphNodeList getChildren();
 
-	void setObject(PuzzleObject object);
-	void setState(PuzzleState state);
+	void setObject(PuzzleObject* object);
+	void setState(PuzzleState* state);
 	void setChildren(T_PuzzleGraphNodeList children);
 	void addChild(PuzzleGraphNode* child);
 
 private:
-	PuzzleObject object;
-	PuzzleState state;
+	PuzzleObject* object;
+	PuzzleState* state;
 	T_PuzzleGraphNodeList children;
 
 };

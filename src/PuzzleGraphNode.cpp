@@ -10,12 +10,12 @@ PuzzleGraphNode::~PuzzleGraphNode()
 {
 }
 
-PuzzleObject PuzzleGraphNode::getObject()
+PuzzleObject* PuzzleGraphNode::getObject()
 {
 	return this->object;
 }
 
-PuzzleState PuzzleGraphNode::getState()
+PuzzleState* PuzzleGraphNode::getState()
 {
 	return this->state;
 }
@@ -25,12 +25,12 @@ T_PuzzleGraphNodeList PuzzleGraphNode::getChildren()
 	return this->children;
 }
 
-void PuzzleGraphNode::setObject(PuzzleObject object)
+void PuzzleGraphNode::setObject(PuzzleObject* object)
 {
 	this->object = object;
 }
 
-void PuzzleGraphNode::setState(PuzzleState state)
+void PuzzleGraphNode::setState(PuzzleState* state)
 {
 	this->state = state;
 }

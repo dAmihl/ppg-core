@@ -102,26 +102,26 @@ T_PuzzleGraphNodeList PuzzleRelation::getGraphRepresentation(T_PuzzleNodeList no
 	T_PuzzleGraphNodeList rootNodes;
 
 	for (T_PuzzleNodeList::iterator it = leafs.begin(); it != leafs.end(); ++it) {
-		PuzzleGraphNode root = getRecursiveGraphRepresentation(*it);
-		rootNodes.push_back(&root);
+		PuzzleGraphNode* root = getRecursiveGraphRepresentation(*it);
+		rootNodes.push_back(root);
 	}
 
 	return rootNodes;
 }
 
-PuzzleGraphNode PuzzleRelation::getRecursiveGraphRepresentation(PuzzleNode* N)
+PuzzleGraphNode* PuzzleRelation::getRecursiveGraphRepresentation(PuzzleNode* N)
 {
-	PuzzleGraphNode root = PuzzleGraphNode();
-	root.setObject(*(N->getRelatedObject()));
-	root.setState(N->getRelatedObject()->getCurrentState());
+	PuzzleGraphNode* root = new PuzzleGraphNode();
+	root->setObject(N->getRelatedObject());
+	root->setState(&(N->getRelatedObject()->getCurrentState()));
 
 	T_PuzzleNodeList pre = getPrecedingNodes(N);
 	T_PuzzleGraphNodeList children;
 	for (T_PuzzleNodeList::iterator c = pre.begin(); c != pre.end(); ++c) {
-		PuzzleGraphNode child = getRecursiveGraphRepresentation(*c);
-		children.push_back(&child);
+		PuzzleGraphNode* child = getRecursiveGraphRepresentation(*c);
+		children.push_back(child);
 	}
-	root.setChildren(children);
+	root->setChildren(children);
 	return root;
 }
 

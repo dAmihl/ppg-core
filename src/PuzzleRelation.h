@@ -22,7 +22,7 @@ public:
 	std::string getExtendedTextualRepresentation(T_PuzzleNodeList nodes);
 
 	T_PuzzleGraphNodeList getGraphRepresentation(T_PuzzleNodeList nodes);
-	PuzzleGraphNode getRecursiveGraphRepresentation(PuzzleNode* N);
+	PuzzleGraphNode* getRecursiveGraphRepresentation(PuzzleNode* N);
 
 	void checkDoForAllPreceding(PuzzleNode *N, bool(*Check)(PuzzleNode), void(*Do)(PuzzleNode*));
 	void checkDoForAllFollowing(PuzzleNode *N, bool(*Check)(PuzzleNode), void(*Do)(PuzzleNode*));

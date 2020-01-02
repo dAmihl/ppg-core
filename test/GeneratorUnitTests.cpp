@@ -495,7 +495,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				bool result = false;
 				
-				PuzzleGraphNode *leaf = P->getGraphRepresentation().at(0);
+				T_PuzzleGraphNodeList roots = P->getGraphRepresentation();
+				PuzzleGraphNode *leaf = roots.at(0);
 
 
 				result = leaf != nullptr;
