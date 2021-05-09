@@ -16,7 +16,7 @@ __This is the core repository. For extending projects please refer to these link
 
 ## Examples:
 
-The best example I can give is within my "paper". If you know German please take a look at my [paper](/blob/master/docs/Prozedurale_Generation_von_Raetseln_EggerM.pdf)
+The best example I can give is within my "paper". If you know German please take a look at my [paper](/docs/Prozedurale_Generation_von_Raetseln_EggerM.pdf)
 
 I have also created a small game in Godot Engine using this system which can be found here: [simplePPG](https://github.com/dAmihl/simplePPG)
 
