@@ -7,6 +7,8 @@ My abandoned bachelor's project experimenting with procedurally generating puzzl
 ## Disclaimer:
 
 You won't find _good_ C++ code here. At the time I wrote this, I kind of only knew Java and C, so this is the result of my naive C++ implementation.
+In the rare case of you thinking to use this anywhere near production: please don't.
+This is pure experimental.
 
 __This is the core repository. For extending projects please refer to these links:__
 
