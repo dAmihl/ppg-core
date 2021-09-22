@@ -1,12 +1,9 @@
-
-
 # PPG - Procedural Puzzle Generator
 
 My abandoned bachelor's project experimenting with procedurally generating puzzles for video games.
 
 ## Disclaimer:
 
-You won't find _good_ C++ code here. At the time I wrote this, I kind of only knew Java and C, so this is the result of my naive C++ implementation.
 In the rare case of you thinking to use this anywhere near production: please don't.
 This is pure experimental.
 
@@ -23,8 +20,6 @@ I have also created a small game in Godot Engine using this system which can be 
 
 ## Build:
 
-Use cmakebuild.sh to run CMAKE and create build/ directory
-
-Use cmake.exe --build build/ --target INSTALL to install library and include paths
-
-or cmake.exe --build build/ --target INSTALL --config Release
+* Install Premake5
+* Run e.g. `premake5 vs2019`
+* Open project file
