@@ -10,7 +10,7 @@ project "PPG"
 	
 	files {"src/**.h", "src/**.cpp"}
 	
-	includedirs {"includes"}
+	includedirs {"vendor/includes"}
 	
 	filter "configurations:Debug"
 		defines {"DEBUG"}
