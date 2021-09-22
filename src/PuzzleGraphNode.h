@@ -1,26 +1,27 @@
 #pragma once
 
-#include "PUZZGEN_TYPES.h"
-#include "PuzzleState.h"
-#include "PuzzleObject.h"
-#include "PuzzleEvent.h"
+#include "PuzzGenCore.h"
 
-class PuzzleGraphNode
+namespace PPG
 {
-public:
-	PuzzleObject* getObject();
-	PuzzleState* getState();
-	T_PuzzleGraphNodeList getChildren();
+	class PuzzleGraphNode
+	{
+	public:
+		PuzzleObject* getObject();
+		PuzzleState* getState();
+		Vec<PuzzleGraphNode*> getChildren();
 
-	void setObject(PuzzleObject* object);
-	void setState(PuzzleState* state);
-	void setChildren(T_PuzzleGraphNodeList children);
-	void addChild(PuzzleGraphNode* child);
+		void setObject(PuzzleObject* object);
+		void setState(PuzzleState* state);
+		void setChildren(Vec<PuzzleGraphNode*> children);
+		void addChild(PuzzleGraphNode* child);
 
-private:
-	PuzzleObject* object;
-	PuzzleState* state;
-	T_PuzzleGraphNodeList children;
+	private:
+		PuzzleObject* object;
+		PuzzleState* state;
+		Vec<PuzzleGraphNode*> children;
 
-};
+	};
+}
+
 

@@ -6,40 +6,44 @@
 #include "StateTransition.h"
 #include "IPuzzleObjectMetaData.h"
 
-class PuzzleObject
+namespace PPG
 {
-public:
-	PuzzleObject();
-	PuzzleObject(std::string name);
-	~PuzzleObject();
-	std::string getObjectName() const;
-	PuzzleState getCurrentState();
-	void setStateTransition(StateTransition F);
-	StateTransition getStateTransition();
-	void setCurrentState(PuzzleState Sc);
-	std::string getTextualRepresentation();
-	std::vector<PuzzleState> getReachableStates();
+	class PuzzleObject
+	{
+	public:
+		PuzzleObject();
+		PuzzleObject(std::string name);
+		~PuzzleObject();
+		std::string getObjectName() const;
+		PuzzleState getCurrentState();
+		void setStateTransition(StateTransition F);
+		StateTransition getStateTransition();
+		void setCurrentState(PuzzleState Sc);
+		std::string getTextualRepresentation();
+		std::vector<PuzzleState> getReachableStates();
 
-	IPuzzleObjectMetaData getMetaData();
-	void setMetaData(IPuzzleObjectMetaData MD);
+		IPuzzleObjectMetaData getMetaData();
+		void setMetaData(IPuzzleObjectMetaData MD);
 
-	std::string getTemplateName() const;
-	void setTemplateName(std::string tName);
+		std::string getTemplateName() const;
+		void setTemplateName(std::string tName);
 
-	bool isTemplateObject() const;
-	void setIsTemplateObject(bool bTemplate);
+		bool isTemplateObject() const;
+		void setIsTemplateObject(bool bTemplate);
 
-	bool operator==(const PuzzleObject& o2);
+		bool operator==(const PuzzleObject& o2);
 
-	bool sameTemplateAs(const PuzzleObject& o2);
+		bool sameTemplateAs(const PuzzleObject& o2);
 
-private: 
-	std::string objectName;
-	PuzzleState currentState;
-	StateTransition stateTransition;
-	std::string getReachableStatesTextualRepresentation();
-	IPuzzleObjectMetaData metaData;
-	bool bIsTemplate = false;
-	std::string templateName;
-};
+	private:
+		std::string objectName;
+		PuzzleState currentState;
+		StateTransition stateTransition;
+		std::string getReachableStatesTextualRepresentation();
+		IPuzzleObjectMetaData metaData;
+		bool bIsTemplate = false;
+		std::string templateName;
+	};
+}
+
 

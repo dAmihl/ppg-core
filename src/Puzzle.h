@@ -1,51 +1,57 @@
 #pragma once
 
-#include "PuzzleNode.h"
+#include "Node.h"
 #include "PuzzleEvent.h"
 #include "PuzzleRelation.h"
 #include "PuzzleUpdateListener.h"
 
-class Puzzle
+namespace PPG
 {
-public:
-	void addNode(PuzzleNode* n, bool isRelevant);
-	void addEvent(PuzzleEvent* e);
-	void setRelation(PuzzleRelation O);
-	void setNodes(T_PuzzleNodeList nodes);
+	using NodeVec = Vec<Node*>;
+	using EventVec = Vec<PuzzleEvent*>;
 
-	void handleEvent(PuzzleEvent e);
+	class Puzzle
+	{
+	public:
+		void addNode(Node* n, bool isRelevant);
+		void addEvent(PuzzleEvent* e);
+		void setRelation(PuzzleRelation O);
+		void setNodes(NodeVec nodes);
 
-	void setUpdateListener(PuzzleUpdateListener* PUL);
+		void handleEvent(PuzzleEvent e);
 
-	T_PuzzleNodeList getNodes();
-	T_PuzzleNodeList getRelevantNodes();
-	T_PuzzleEventList getEvents();
-	PuzzleRelation getRelation();
+		void setUpdateListener(PuzzleUpdateListener* PUL);
 
-	std::string getSimpleTextualRepresentation();
-	std::string getExtendedTextualRepresentation();
-	std::string getTextualEnvironmentDescription();
+		NodeVec getNodes();
+		NodeVec getRelevantNodes();
+		EventVec getEvents();
+		PuzzleRelation getRelation();
 
-	T_PuzzleGraphNodeList getGraphRepresentation();
+		std::string getSimpleTextualRepresentation();
+		std::string getExtendedTextualRepresentation();
+		std::string getTextualEnvironmentDescription();
 
-private: 
-	T_PuzzleNodeList nodes;
-	T_PuzzleNodeList relevantNodes;
-	T_PuzzleEventList events;
-	PuzzleRelation relation;
+		Vec<PuzzleGraphNode*> getGraphRepresentation();
 
-	PuzzleUpdateListener* updateListener = NULL;
+	private:
+		NodeVec nodes;
+		NodeVec relevantNodes;
+		EventVec events;
+		PuzzleRelation relation;
 
-	/*
-	void doSetNodeActive(PuzzleNode* M);
-	void doCheckNodeComplete(PuzzleNode* M);
-	void doSetNodeIncomplete(PuzzleNode* M);
-	*/
-	bool canNodeHandleEvent(PuzzleNode* N, PuzzleEvent E);
-	bool isNodeCompatible(PuzzleNode *N, PuzzleEvent E);
-	void updateNodeProperties(PuzzleNode* N);
-	void checkPuzzleCompletion();
-	void onPuzzleCompleted();
+		PuzzleUpdateListener* updateListener = NULL;
 
-};
+		/*
+		void doSetNodeActive(PuzzleNode* M);
+		void doCheckNodeComplete(PuzzleNode* M);
+		void doSetNodeIncomplete(PuzzleNode* M);
+		*/
+		bool canNodeHandleEvent(Node* N, PuzzleEvent E);
+		bool isNodeCompatible(Node* N, PuzzleEvent E);
+		void updateNodeProperties(Node* N);
+		void checkPuzzleCompletion();
+		void onPuzzleCompleted();
 
+	};
+
+}

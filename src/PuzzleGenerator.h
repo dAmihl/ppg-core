@@ -1,40 +1,50 @@
 #pragma once
 #include <vector>
-#include "PuzzleNode.h"
+#include "Node.h"
 #include "PuzzleRelation.h"
 #include "PuzzleRandomizer.h"
-#include "PUZZGEN_TYPES.h"
+#include "PuzzGenCore.h"
 #include "Puzzle.h"
 #include "PuzzleGeneratorHelper.h"
 #include "PuzzleLogger.h"
 
-class PuzzleGenerator
+namespace PPG 
 {
-public:
 
-	Puzzle* generatePuzzle(T_PuzzleObjectList objects, T_PuzzleEventList events, T_PuzzleRuleList rules);
+	using NodeVec = Vec<Node*>;
+	using ObjVec = Vec<PuzzleObject*>;
+	using EventVec = Vec<PuzzleEvent*>;
+	using RuleVec = Vec<PuzzleRule>;
 
-	PuzzleRelation* simpleGenerateRelation(T_PuzzleNodeList nodes);
+	class PuzzleGenerator
+	{
+	public:
 
-	PuzzleRelation* generateRelation(T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
-	PuzzleRelation* generateRelationExperimental(Puzzle* P, T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
+		Puzzle* generatePuzzle(ObjVec objects, EventVec events, RuleVec rules);
 
-	T_PuzzleNodeList generateNodes(T_PuzzleObjectList objects);
+		PuzzleRelation* simpleGenerateRelation(NodeVec nodes);
 
-	void setNumberNodes(int n);
-	int getNumberNodes();
+		PuzzleRelation* generateRelation(NodeVec nodes, RuleVec rules);
+		PuzzleRelation* generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec rules);
 
-	void setSeed(unsigned int seed);
-	unsigned int getSeed();
+		NodeVec generateNodes(ObjVec objects);
 
-private:
+		void setNumberNodes(int n);
+		int getNumberNodes();
 
-	void initializeActivePropertyOnNodes(Puzzle* P);
+		void setSeed(unsigned int seed);
+		unsigned int getSeed();
 
-	void cleanupNodes(Puzzle* P);
-	void removeNodeFromList(PuzzleNode*N, T_PuzzleNodeList &nodes);
-	int NUM_NODES = 0;
-	unsigned int seed = 0;
-	bool seedSet = false;
-};
+	private:
+
+		void initializeActivePropertyOnNodes(Puzzle* P);
+
+		void cleanupNodes(Puzzle* P);
+		void removeNodeFromList(Node* N, NodeVec& nodes);
+		int NUM_NODES = 0;
+		unsigned int seed = 0;
+		bool seedSet = false;
+	};
+
+}
 

@@ -1,6 +1,8 @@
 #include "catch2/catch.hpp"
 #include "PuzzGen.h"
 
+using namespace PPG;
+
 TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 	GIVEN("a simple Puzzle Relation with 4 nodes and a simple Relation N1->N2->N3") {
@@ -25,8 +27,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		PuzzleState* S4 = new PuzzleState("State_S4");
 		PuzzleNode* N4 = new PuzzleNode(O4, *S4);
 
-		T_PuzzleNodePair n1n2Pair = PuzzleRelation::makePuzzlePair(N1, N2);
-		T_PuzzleNodePair n2n3Pair = PuzzleRelation::makePuzzlePair(N2, N3);
+		NodePair n1n2Pair = PuzzleRelation::makePuzzlePair(N1, N2);
+		NodePair n2n3Pair = PuzzleRelation::makePuzzlePair(N2, N3);
 
 		R->addPair(n1n2Pair);
 		R->addPair(n2n3Pair);
@@ -495,7 +497,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				bool result = false;
 				
-				T_PuzzleGraphNodeList roots = P->getGraphRepresentation();
+				Vec<PuzzleGraphNode*> roots = P->getGraphRepresentation();
 				PuzzleGraphNode *leaf = roots.at(0);
 
 

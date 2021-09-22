@@ -1,77 +1,84 @@
 #pragma once
 
 #include <vector>
-#include "PUZZGEN_TYPES.h"
+#include "PuzzGenCore.h"
 #include "PuzzleGraphNode.h"
-#include "PuzzleNode.h"
+#include "Node.h"
 
-class PuzzleRelation
+namespace PPG
 {
-public:
-	T_PuzzlePairList getPairs();
-	void addPair(PuzzleNode* lhs, PuzzleNode* rhs);
-	void addPair(T_PuzzleNodePair pair);
+	using NodePair = Pair<Node*, Node*>;
+	using NodePairVec = Vec<NodePair>;
+	using NodeVec = Vec<Node*>;
 
-	void removePair(T_PuzzleNodePair pair);
+	class PuzzleRelation
+	{
+	public:
+		NodePairVec getPairs();
+		void addPair(Node* lhs, Node* rhs);
+		void addPair(NodePair pair);
 
-	std::string getSimpleTextualRepresentation();
-	std::string getRecursiveTextualRepresentationOfNode(T_PuzzleNodeList &alreadyOut, std::string* out, PuzzleNode* N, int level);
-	std::string getExtendedTextualRepresentation(T_PuzzleNodeList nodes);
+		void removePair(NodePair pair);
 
-	T_PuzzleGraphNodeList getGraphRepresentation(T_PuzzleNodeList nodes);
-	PuzzleGraphNode* getRecursiveGraphRepresentation(PuzzleNode* N);
+		std::string getSimpleTextualRepresentation();
+		std::string getRecursiveTextualRepresentationOfNode(NodeVec& alreadyOut, std::string* out, Node* N, int level);
+		std::string getExtendedTextualRepresentation(NodeVec nodes);
 
-	void checkDoForAllPreceding(PuzzleNode *N, bool(*Check)(PuzzleNode), void(*Do)(PuzzleNode*));
-	void checkDoForAllFollowing(PuzzleNode *N, bool(*Check)(PuzzleNode), void(*Do)(PuzzleNode*));
+		Vec<PuzzleGraphNode*> getGraphRepresentation(NodeVec nodes);
+		PuzzleGraphNode* getRecursiveGraphRepresentation(Node* N);
 
-	bool checkAllLarger(PuzzleNode* N, bool(*Check)(PuzzleNode));
-	bool checkAllSmaller(PuzzleNode* N, bool(*Check)(PuzzleNode));
+		void checkDoForAllPreceding(Node* N, bool(*Check)(Node), void(*Do)(Node*));
+		void checkDoForAllFollowing(Node* N, bool(*Check)(Node), void(*Do)(Node*));
 
-	bool checkAllFollowing(PuzzleNode* N, bool(*Check)(PuzzleNode));
-	bool checkAllPreceding(PuzzleNode* N, bool(*Check)(PuzzleNode));
-	bool checkAtLeastOneFollowing(PuzzleNode* N, bool(*Check)(PuzzleNode));
-	bool checkAtLeastOnePreceding(PuzzleNode* N, bool(*Check)(PuzzleNode));
+		bool checkAllLarger(Node* N, bool(*Check)(Node));
+		bool checkAllSmaller(Node* N, bool(*Check)(Node));
 
-
-
-	T_PuzzlePairList getNextPairs(T_PuzzleNodePair P);
-	T_PuzzlePairList getParallelPairs(T_PuzzleNodePair P);
-
-	bool hasPrecedingNode(PuzzleNode* N);
-	bool hasFollowingNode(PuzzleNode* N);
-
-	T_PuzzleNodeList getMinima(T_PuzzleNodeList nodes);
-	T_PuzzleNodeList getMaxima(T_PuzzleNodeList nodes);
-
-	T_PuzzleNodeList getSmallestNodesFromList(T_PuzzleNodeList nodes);
-	T_PuzzleNodeList getLargestNodesFromList(T_PuzzleNodeList nodes);
-
-	bool findPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
-	bool findFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
-	bool findPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind, bool includeStart);
-	bool findFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind, bool includeStart);
-
-	bool findDirectlyPrecedingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
-	bool findDirectlyFollowingNode(PuzzleNode* start, PuzzleNode* nodeToFind);
+		bool checkAllFollowing(Node* N, bool(*Check)(Node));
+		bool checkAllPreceding(Node* N, bool(*Check)(Node));
+		bool checkAtLeastOneFollowing(Node* N, bool(*Check)(Node));
+		bool checkAtLeastOnePreceding(Node* N, bool(*Check)(Node));
 
 
-	T_PuzzleNodeList findNodesByPattern(T_PuzzleNodeList nodes, PuzzleObject* O, PuzzleState* S, bool(*EqualObject)(PuzzleObject*, PuzzleObject*), bool(*EqualState)(PuzzleState*, PuzzleState*));
 
-	T_PuzzleNodeList findNearestPrecedingEqualNodesByObject(PuzzleNode* N);
-	T_PuzzleNodeList findNearestPrecedingEqualNodesByObject(PuzzleNode* N, PuzzleNode* start);
-	T_PuzzleNodeList findNearestFollowingEqualNodesByObject(PuzzleNode* N);
-	T_PuzzleNodeList findNearestFollowingEqualNodesByObject(PuzzleNode* N, PuzzleNode* start);
+		NodePairVec getNextPairs(NodePair P);
+		NodePairVec getParallelPairs(NodePair P);
 
-	T_PuzzleNodeList filterCompatibleNodesByRules(T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
-	
+		bool hasPrecedingNode(Node* N);
+		bool hasFollowingNode(Node* N);
 
-	T_PuzzleNodeList getPrecedingNodes(PuzzleNode* N);
-	T_PuzzleNodeList getFollowingNodes(PuzzleNode* N);
+		NodeVec getMinima(NodeVec nodes);
+		NodeVec getMaxima(NodeVec nodes);
 
-	static T_PuzzleNodePair makePuzzlePair(PuzzleNode* N1, PuzzleNode* N2);
+		NodeVec getSmallestNodesFromList(NodeVec nodes);
+		NodeVec getLargestNodesFromList(NodeVec nodes);
 
-private:
-	T_PuzzlePairList pairs;
+		bool findPrecedingNode(Node* start, Node* nodeToFind);
+		bool findFollowingNode(Node* start, Node* nodeToFind);
+		bool findPrecedingNode(Node* start, Node* nodeToFind, bool includeStart);
+		bool findFollowingNode(Node* start, Node* nodeToFind, bool includeStart);
 
-};
+		bool findDirectlyPrecedingNode(Node* start, Node* nodeToFind);
+		bool findDirectlyFollowingNode(Node* start, Node* nodeToFind);
+
+
+		NodeVec findNodesByPattern(NodeVec nodes, PuzzleObject* O, PuzzleState* S, bool(*EqualObject)(PuzzleObject*, PuzzleObject*), bool(*EqualState)(PuzzleState*, PuzzleState*));
+
+		NodeVec findNearestPrecedingEqualNodesByObject(Node* N);
+		NodeVec findNearestPrecedingEqualNodesByObject(Node* N, Node* start);
+		NodeVec findNearestFollowingEqualNodesByObject(Node* N);
+		NodeVec findNearestFollowingEqualNodesByObject(Node* N, Node* start);
+
+		NodeVec filterCompatibleNodesByRules(NodeVec nodes, Vec<PuzzleRule> rules);
+
+
+		NodeVec getPrecedingNodes(Node* N);
+		NodeVec getFollowingNodes(Node* N);
+
+		static NodePair makePuzzlePair(Node* N1, Node* N2);
+
+	private:
+		NodePairVec pairs;
+
+	};
+}
 

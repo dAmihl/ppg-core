@@ -2,16 +2,19 @@
 
 #include <string>
 
-class PuzzleState
+namespace PPG
 {
-public:
-	PuzzleState() : m_stateName{ "DefaultState" } {};
-	PuzzleState(std::string name) : m_stateName{ name } {};
-	std::string getStateName() {
-		return m_stateName;
-	}
+	class PuzzleState
+	{
+	public:
+		PuzzleState() : m_stateName{ "DefaultState" } {};
+		PuzzleState(std::string name) : m_stateName{ name } {};
+		std::string getStateName() {
+			return m_stateName;
+		}
 
-private:
-	std::string m_stateName;
-};
+	private:
+		std::string m_stateName;
+	};
 
+}

@@ -2,11 +2,13 @@
 
 #include <string>
 
-class PuzzleEventManager
+namespace PPG
 {
-public:
+	class PuzzleEventManager
+	{
+	public:
 
-	virtual void onObjectEvent(std::string objName, std::string eventName) = 0;
+		virtual void onObjectEvent(std::string objName, std::string eventName) = 0;
 
-};
-
+	};
+}

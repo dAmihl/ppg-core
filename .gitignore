@@ -9,3 +9,9 @@ lib/
 **/cmake_install.cmake
 **/CMakeSettings.json
 **/CTestTestfile.cmake
+
+# premake
+Makefile
+*.make
+bin/
+obj/

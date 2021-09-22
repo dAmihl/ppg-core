@@ -3,19 +3,22 @@
 #include <unordered_map>
 #include "PuzzleState.h"
 
+using EVENT_MAP = std::unordered_map<std::string, std::vector<std::pair<PPG::PuzzleState, PPG::PuzzleState>>>;
 
-class StateTransition
+namespace PPG
 {
-	using EVENT_MAP = std::unordered_map<std::string, std::vector<std::pair<PuzzleState, PuzzleState>>>;
+	class StateTransition
+	{
+	public:
+		EVENT_MAP* getTransitionMap();
+		void addTransition(std::string eventName, PuzzleState origState, PuzzleState newState);
+		std::string getTextualOutput();
+		std::vector<PuzzleState> getReachableStates();
+		std::vector<std::pair<PuzzleState, PuzzleState>> findTransitions(const std::string name);
 
-public:
-	EVENT_MAP* getTransitionMap();
-	void addTransition(std::string eventName, PuzzleState origState, PuzzleState newState);
-	std::string getTextualOutput();
-	std::vector<PuzzleState> getReachableStates();
-	std::vector<std::pair<PuzzleState, PuzzleState>> findTransitions(const std::string name);
+	private:
+		EVENT_MAP transitionMap;
+	};
 
-private:
-	EVENT_MAP transitionMap;
-};
 
+}
