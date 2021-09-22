@@ -4,7 +4,7 @@ workspace "PPG"
 	configurations { "Debug", "Release"}
 	
 project "PPG"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
 	targetdir "bin/%{cfg.buildcfg}"
 	
@@ -28,3 +28,11 @@ project ("PPG-tests")
     files {"test/**.cpp"}
     includedirs {"includes", "src"}
     links {"PPG"}
+	
+	filter "configurations:Debug"
+		defines {"DEBUG"}
+		symbols "On"
+		
+	filter "configurations:Release"
+		defines {"NDEBUG"}
+		symbols "On"
