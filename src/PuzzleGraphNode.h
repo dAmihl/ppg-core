@@ -8,9 +8,6 @@
 class PuzzleGraphNode
 {
 public:
-	PuzzleGraphNode();
-	~PuzzleGraphNode();
-
 	PuzzleObject* getObject();
 	PuzzleState* getState();
 	T_PuzzleGraphNodeList getChildren();

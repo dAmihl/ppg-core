@@ -6,41 +6,39 @@
 class PuzzleRule
 {
 public:
-	enum E_PuzzleRuleType {
+	enum class EPuzzleRuleType {
 		BEFORE,
 		STRICT_BEFORE,
 		AFTER,
 		STRICT_AFTER
 	};
 
-	PuzzleRule(PuzzleObject* leftO, PuzzleState* leftS, PuzzleObject* rightO, PuzzleState* rightS, E_PuzzleRuleType t);
-	~PuzzleRule();
+	PuzzleRule(PuzzleObject* leftO, PuzzleState* leftS, PuzzleObject* rightO, PuzzleState* rightS, EPuzzleRuleType t)
+		: m_lhsObj{ leftO }, m_lhsState{ leftS }, m_rhsObj{ rightO }, m_rhsState{ rightS }, m_type{ t } 
+	{};
 
 	
+	void setRuleType(EPuzzleRuleType t) { m_type = t };
 
-	/*Setters*/
-	void setRuleType(E_PuzzleRuleType t);
+	EPuzzleRuleType getRuleType() { return m_type; };
 
-	/*Getters*/
-	E_PuzzleRuleType getRuleType();
-
-	PuzzleObject* getLeftHandSideObject();
-	PuzzleState* getLeftHandSideState();
+	PuzzleObject* getLeftHandSideObject() { return m_lhsObj; };
+	PuzzleState* getLeftHandSideState() { return m_lhsState; };
 	
-	PuzzleObject* getRightHandSideObject();
-	PuzzleState* getRightHandSideState();
+	PuzzleObject* getRightHandSideObject() { return m_rhsObj; };
+	PuzzleState* getRightHandSideState() { return m_rhsState; };
 
 	std::string getTextualRepresentation();
 	
 
 private:
-	E_PuzzleRuleType type;
+	EPuzzleRuleType m_type;
 
-	PuzzleObject* _lhsObj;
-	PuzzleState* _lhsState;
+	PuzzleObject* m_lhsObj;
+	PuzzleState* m_lhsState;
 
-	PuzzleObject* _rhsObj;
-	PuzzleState* _rhsState;
+	PuzzleObject* m_rhsObj;
+	PuzzleState* m_rhsState;
 
 	std::string getRuleTypeString();
 

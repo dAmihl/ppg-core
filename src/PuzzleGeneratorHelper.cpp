@@ -5,7 +5,7 @@
 *	True: Circular Dependency detected
 *	False: No Circular Dependency with new pair P in Relation R detected
 */
-bool PuzzleGeneratorHelper::_checkCreatesCircularDependency(T_PuzzleNodePair P, PuzzleRelation* R)
+bool PuzzleGeneratorHelper::checkCreatesCircularDependency(T_PuzzleNodePair P, PuzzleRelation* R)
 {
 
 	T_PuzzlePairList pairs = R->getPairs();
@@ -18,7 +18,7 @@ bool PuzzleGeneratorHelper::_checkCreatesCircularDependency(T_PuzzleNodePair P, 
 	*/
 	for (T_PuzzlePairList::iterator it = pairs.begin(); it != pairs.end(); ++it) {
 		if (it->first == P.second) {
-			if (_findNodeSequential(P.first, *it, R)) {
+			if (findNodeSequential(P.first, *it, R)) {
 				return true;
 			}
 		}
@@ -32,7 +32,7 @@ bool PuzzleGeneratorHelper::_checkCreatesCircularDependency(T_PuzzleNodePair P, 
 *	False: No Exclusive Dependency with new pair P in Relation R detected
 *	Extension: Parallel nodes must have different related game-objects
 */
-bool PuzzleGeneratorHelper::_checkCreatesExclusiveDependency(T_PuzzleNodePair P, PuzzleRelation* R)
+bool PuzzleGeneratorHelper::checkCreatesExclusiveDependency(T_PuzzleNodePair P, PuzzleRelation* R)
 {
 	T_PuzzlePairList parallelPairs = R->getParallelPairs(P);
 
@@ -52,7 +52,7 @@ bool PuzzleGeneratorHelper::_checkCreatesExclusiveDependency(T_PuzzleNodePair P,
 /*
 *	Trys to find occurence of N going from /start/ sequential till the end
 */
-bool PuzzleGeneratorHelper::_findNodeSequential(PuzzleNode* N, T_PuzzleNodePair start, PuzzleRelation* R)
+bool PuzzleGeneratorHelper::findNodeSequential(PuzzleNode* N, T_PuzzleNodePair start, PuzzleRelation* R)
 {
 	// Check starting node if direct successor
 	if (start.second == N) return true;
@@ -68,7 +68,7 @@ bool PuzzleGeneratorHelper::_findNodeSequential(PuzzleNode* N, T_PuzzleNodePair 
 			return true;
 		}
 		else {
-			if (_findNodeSequential(N, *it, R)) {
+			if (findNodeSequential(N, *it, R)) {
 				return true;
 			}
 		}
@@ -77,7 +77,7 @@ bool PuzzleGeneratorHelper::_findNodeSequential(PuzzleNode* N, T_PuzzleNodePair 
 	return false;
 }
 
-bool PuzzleGeneratorHelper::_checkEquality(PuzzleNode* N1, PuzzleNode* N2)
+bool PuzzleGeneratorHelper::checkEquality(PuzzleNode* N1, PuzzleNode* N2)
 {
 	return N1->getRelatedObject() == N2->getRelatedObject() &&
 		N1->getGoalState().getStateName() == N2->getGoalState().getStateName();
@@ -115,7 +115,7 @@ bool PuzzleGeneratorHelper::checkMetaEqualOccuranceByNode(PuzzleNode* N, PuzzleR
 	return result;
 }
 
-bool PuzzleGeneratorHelper::_checkMetaEqualOccurance(T_PuzzleNodePair P, PuzzleRelation* R)
+bool PuzzleGeneratorHelper::checkMetaEqualOccurance(T_PuzzleNodePair P, PuzzleRelation* R)
 {
 	bool result = false;
 
@@ -134,13 +134,13 @@ bool PuzzleGeneratorHelper::_checkMetaEqualOccurance(T_PuzzleNodePair P, PuzzleR
 *
 *
 */
-T_PuzzleNodeList PuzzleGeneratorHelper::_filterCompatibleNodes(PuzzleNode* N, PuzzleRelation* R, T_PuzzleNodeList nodes, T_PuzzleRuleList rules)
+T_PuzzleNodeList PuzzleGeneratorHelper::filterCompatibleNodes(PuzzleNode* N, PuzzleRelation* R, T_PuzzleNodeList nodes, T_PuzzleRuleList rules)
 {
 	T_PuzzleNodeList compatibles;
 
 	for (T_PuzzleNodeList::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-		if (_checkCompatibilityBasicRules(N, *it, R)) {
-			if (_checkCompatibilityCustomRules(nodes, N, *it, R, rules)) {
+		if (checkCompatibilityBasicRules(N, *it, R)) {
+			if (checkCompatibilityCustomRules(nodes, N, *it, R, rules)) {
 				compatibles.push_back(*it);
 			}
 		}
@@ -154,13 +154,13 @@ T_PuzzleNodeList PuzzleGeneratorHelper::_filterCompatibleNodes(PuzzleNode* N, Pu
 *	Checks compatibility of two nodes S and N by Basic Rules (PuzzleRule)s
 */
 
-bool PuzzleGeneratorHelper::_checkCompatibilityBasicRules(PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R)
+bool PuzzleGeneratorHelper::checkCompatibilityBasicRules(PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R)
 {
 	T_PuzzleNodePair pair = PuzzleRelation::makePuzzlePair(S, N);
-	if (!_checkEquality(S, N)) { // check node equality
+	if (!checkEquality(S, N)) { // check node equality
 		R->addPair(pair);
-		if (PuzzleGeneratorHelper::_checkCreatesCircularDependency(pair, R) || PuzzleGeneratorHelper::_checkCreatesExclusiveDependency(pair, R) ||
-			PuzzleGeneratorHelper::_checkMetaEqualOccurance(pair, R)) {
+		if (PuzzleGeneratorHelper::checkCreatesCircularDependency(pair, R) || PuzzleGeneratorHelper::checkCreatesExclusiveDependency(pair, R) ||
+			PuzzleGeneratorHelper::checkMetaEqualOccurance(pair, R)) {
 			R->removePair(pair);// TODO
 			return false;
 		}
@@ -177,7 +177,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityBasicRules(PuzzleNode* S, PuzzleN
 /*
 *	Checks compatibility of two nodes S and N by User-made Custom Rules (PuzzleRule)s
 */
-bool PuzzleGeneratorHelper::_checkCompatibilityCustomRules(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, T_PuzzleRuleList rules)
+bool PuzzleGeneratorHelper::checkCompatibilityCustomRules(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, T_PuzzleRuleList rules)
 {
 
 	
@@ -192,20 +192,20 @@ bool PuzzleGeneratorHelper::_checkCompatibilityCustomRules(T_PuzzleNodeList node
 		bool strict = false;
 
 		switch (r->getRuleType()) {
-		case PuzzleRule::E_PuzzleRuleType::AFTER:
-			FN = &PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER;
+		case PuzzleRule::EPuzzleRuleType::AFTER:
+			FN = &PuzzleGeneratorHelper::checkCompatibilityRuleTypeAfter;
 			strict = false;
 			break;
-		case PuzzleRule::E_PuzzleRuleType::STRICT_AFTER:
-			FN = &PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER;
+		case PuzzleRule::EPuzzleRuleType::STRICT_AFTER:
+			FN = &PuzzleGeneratorHelper::checkCompatibilityRuleTypeAfter;
 			strict = true;
 			break;
-		case PuzzleRule::E_PuzzleRuleType::BEFORE:
-			FN = &PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE;
+		case PuzzleRule::EPuzzleRuleType::BEFORE:
+			FN = &PuzzleGeneratorHelper::checkCompatibilityRuleTypeBefore;
 			strict = false;
 			break;
-		case PuzzleRule::E_PuzzleRuleType::STRICT_BEFORE:
-			FN = &PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE;
+		case PuzzleRule::EPuzzleRuleType::STRICT_BEFORE:
+			FN = &PuzzleGeneratorHelper::checkCompatibilityRuleTypeBefore;
 			strict = true;
 			break;
 		}
@@ -238,7 +238,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityCustomRules(T_PuzzleNodeList node
 *
 *	IF S is not LHS of the rule and N is not the RHS, then the inverse rule must apply, i.e. (N < S) or (N <! S)
 */
-bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict)
+bool PuzzleGeneratorHelper::checkCompatibilityRuleTypeAfter(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict)
 {
 	/* */
 	PuzzleObject* lhsO = rule.getLeftHandSideObject();
@@ -248,10 +248,10 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList 
 	PuzzleState* rhsS = rule.getRightHandSideState();
 
 	// Find all existing Right-Hand-side nodes of rule
-	T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
-	T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+	T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, PuzzleGeneratorHelper::isRuleObjectEqual, PuzzleGeneratorHelper::isRuleStateEqual);
+	T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::isRuleObjectEqual, PuzzleGeneratorHelper::isRuleStateEqual);
 
-	if (__isRuleObjectEqual(lhsO, S->getRelatedObject()) && __isRuleStateEqual(lhsS, &(S->getGoalState()))) {
+	if (isRuleObjectEqual(lhsO, S->getRelatedObject()) && isRuleStateEqual(lhsS, &(S->getGoalState()))) {
 		
 		if (isStrict) {
 			for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
@@ -272,11 +272,11 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList 
 	}
 	// S is for sure not the LHS
 	// if N is the LHS, then S has to either be RHS (strict) or has RHS as a preceding node
-	else if (__isRuleObjectEqual(lhsO, N->getRelatedObject()) && __isRuleStateEqual(lhsS, &(N->getGoalState()))) {
+	else if (isRuleObjectEqual(lhsO, N->getRelatedObject()) && isRuleStateEqual(lhsS, &(N->getGoalState()))) {
 		
 		// Strict: S has to be RHS
 		if (isStrict) {
-			return __isRuleObjectEqual(rhsO, S->getRelatedObject()) && __isRuleStateEqual(rhsS, &(S->getGoalState()));
+			return isRuleObjectEqual(rhsO, S->getRelatedObject()) && isRuleStateEqual(rhsS, &(S->getGoalState()));
 		}
 		// Otherwise, S has to atleast have RHS as a preceding node
 		else {
@@ -291,9 +291,9 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList 
 	}
 	else {
 		//return true;
-		PuzzleRule::E_PuzzleRuleType tmpType = isStrict ? PuzzleRule::STRICT_BEFORE : PuzzleRule::BEFORE;
+		PuzzleRule::EPuzzleRuleType tmpType = isStrict ? PuzzleRule::STRICT_BEFORE : PuzzleRule::BEFORE;
 		PuzzleRule* tmpRule = new PuzzleRule(rule.getRightHandSideObject(), rule.getRightHandSideState(), rule.getLeftHandSideObject(), rule.getLeftHandSideState(), tmpType);
-		return _checkCompatibilityRuleType__BEFORE(nodes, N, S, R, *tmpRule, isStrict);
+		return checkCompatibilityRuleTypeBefore(nodes, N, S, R, *tmpRule, isStrict);
 	}
 }
 
@@ -306,7 +306,7 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__AFTER(T_PuzzleNodeList 
 *	True = Compatible!
 *	False = INCOMPATIBLE!
 */
-bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict)
+bool PuzzleGeneratorHelper::checkCompatibilityRuleTypeBefore(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict)
 {
 	/* */
 	PuzzleObject* lhsO = rule.getLeftHandSideObject();
@@ -317,22 +317,22 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 
 	// LHS = N and RHS = S
 	// S < N automatically false
-	if (PuzzleGeneratorHelper::__isRuleObjectEqual(lhsO, N->getRelatedObject()) && PuzzleGeneratorHelper::__isRuleStateEqual(lhsS, &(N->getGoalState())) &&
-		PuzzleGeneratorHelper::__isRuleObjectEqual(rhsO, S->getRelatedObject()) && PuzzleGeneratorHelper::__isRuleStateEqual(rhsS, &(S->getGoalState()))) {
+	if (PuzzleGeneratorHelper::isRuleObjectEqual(lhsO, N->getRelatedObject()) && PuzzleGeneratorHelper::isRuleStateEqual(lhsS, &(N->getGoalState())) &&
+		PuzzleGeneratorHelper::isRuleObjectEqual(rhsO, S->getRelatedObject()) && PuzzleGeneratorHelper::isRuleStateEqual(rhsS, &(S->getGoalState()))) {
 		PuzzleLogger::log("LHS = N and RHS = S; FALSE");
 		return false;
 	}
 
 	// Find all existing Right-Hand-side nodes of rule
-	T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
-	T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::__isRuleObjectEqual, PuzzleGeneratorHelper::__isRuleStateEqual);
+	T_PuzzleNodeList existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, PuzzleGeneratorHelper::isRuleObjectEqual, PuzzleGeneratorHelper::isRuleStateEqual);
+	T_PuzzleNodeList existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, PuzzleGeneratorHelper::isRuleObjectEqual, PuzzleGeneratorHelper::isRuleStateEqual);
 
 	// LHS = S and RHS = N
 	// S < N for all N
 	// In case of a strict rule, ONLY S<N is allowed.
-	if (__isRuleObjectEqual(lhsO, S->getRelatedObject()) && __isRuleStateEqual(lhsS, &(S->getGoalState()))){
+	if (isRuleObjectEqual(lhsO, S->getRelatedObject()) && isRuleStateEqual(lhsS, &(S->getGoalState()))){
 		
-		if (__isRuleObjectEqual(rhsO, N->getRelatedObject()) && __isRuleStateEqual(rhsS, &(N->getGoalState()))) {
+		if (isRuleObjectEqual(rhsO, N->getRelatedObject()) && isRuleStateEqual(rhsS, &(N->getGoalState()))) {
 			// check if this is the smallest occurance of N? so S is not after any other occurance of N
 			for (T_PuzzleNodeList::iterator n = existingRHS.begin(); n != existingRHS.end(); ++n) {
 				if (R->findPrecedingNode(N, *n, false)) {
@@ -396,20 +396,20 @@ bool PuzzleGeneratorHelper::_checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList
 }
 
 
-bool PuzzleGeneratorHelper::__isRuleNodeEqual(PuzzleNode* N, PuzzleObject* ruleObject, PuzzleState* ruleState)
+bool PuzzleGeneratorHelper::isRuleNodeEqual(PuzzleNode* N, PuzzleObject* ruleObject, PuzzleState* ruleState)
 {
 	PuzzleObject* nodeObject = N->getRelatedObject();
 	PuzzleState* nodeState = &(N->getGoalState());
 
-	return __isRuleObjectEqual(nodeObject, ruleObject) && __isRuleStateEqual(nodeState, ruleState);
+	return isRuleObjectEqual(nodeObject, ruleObject) && isRuleStateEqual(nodeState, ruleState);
 }
 
-bool PuzzleGeneratorHelper::__isRuleObjectEqual(PuzzleObject* o1, PuzzleObject* o2) {
+bool PuzzleGeneratorHelper::isRuleObjectEqual(PuzzleObject* o1, PuzzleObject* o2) {
 	if (o1 == nullptr || o2 == nullptr) return true;
 	return (o1->sameTemplateAs(*o2));
 }
 
-bool PuzzleGeneratorHelper::__isRuleStateEqual(PuzzleState* s1, PuzzleState* s2) {
+bool PuzzleGeneratorHelper::isRuleStateEqual(PuzzleState* s1, PuzzleState* s2) {
 	if (s1 == nullptr || s2 == nullptr) return true;
 	return (s1->getStateName() == s2->getStateName());
 }

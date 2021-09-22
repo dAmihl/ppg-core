@@ -5,12 +5,13 @@
 class PuzzleState
 {
 public:
-	PuzzleState();
-	PuzzleState(std::string name);
-	~PuzzleState();
-	std::string getStateName();
+	PuzzleState() : m_stateName{ "DefaultState" } {};
+	PuzzleState(std::string name) : m_stateName{ name } {};
+	std::string getStateName() {
+		return m_stateName;
+	}
 
 private:
-	std::string stateName;
+	std::string m_stateName;
 };
 

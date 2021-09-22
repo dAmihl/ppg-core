@@ -3,12 +3,10 @@
 #include <unordered_map>
 #include "PuzzleState.h"
 
-#ifndef EVENT_MAP
-	#define EVENT_MAP std::unordered_map<std::string, std::vector<std::pair<PuzzleState, PuzzleState>>>
-#endif
 
 class StateTransition
 {
+	using EVENT_MAP = std::unordered_map<std::string, std::vector<std::pair<PuzzleState, PuzzleState>>>;
 public:
 	StateTransition();
 	~StateTransition();

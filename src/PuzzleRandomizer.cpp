@@ -2,15 +2,6 @@
 #include <time.h>
 #include <random>
 
-PuzzleRandomizer::PuzzleRandomizer()
-{
-	this->init();
-}
-
-
-PuzzleRandomizer::~PuzzleRandomizer()
-{
-}
 
 void PuzzleRandomizer::init()
 {
@@ -20,6 +11,15 @@ void PuzzleRandomizer::init()
 void PuzzleRandomizer::init(unsigned int seed)
 {
 	srand( seed );
+}
+
+template<typename T>
+T PuzzleRandomizer::getRandomFromList(std::vector<T> list)
+{
+	if (list.empty()) return nullptr;
+	int index = rand() % list.size();
+
+	return list.at(index);
 }
 
 PuzzleObject* PuzzleRandomizer::getRandomObjectFromList(PuzzleList<PuzzleObject*>::Type list)

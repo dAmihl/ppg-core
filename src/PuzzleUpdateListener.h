@@ -7,8 +7,6 @@ class PuzzleNode;
 class PuzzleUpdateListener
 {
 public:
-	PuzzleUpdateListener();
-	virtual ~PuzzleUpdateListener();
 
 	virtual void onPuzzleComplete() = 0;
 	virtual void onObjectStateChange(PuzzleObject* Obj) = 0;

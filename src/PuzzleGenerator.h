@@ -11,12 +11,10 @@
 class PuzzleGenerator
 {
 public:
-	PuzzleGenerator();
-	~PuzzleGenerator();
-	
+
 	Puzzle* generatePuzzle(T_PuzzleObjectList objects, T_PuzzleEventList events, T_PuzzleRuleList rules);
 
-	PuzzleRelation* __simple_generateRelation(T_PuzzleNodeList nodes);
+	PuzzleRelation* simpleGenerateRelation(T_PuzzleNodeList nodes);
 
 	PuzzleRelation* generateRelation(T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
 	PuzzleRelation* generateRelationExperimental(Puzzle* P, T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
@@ -31,10 +29,10 @@ public:
 
 private:
 
-	void _initializeActivePropertyOnNodes(Puzzle* P);
+	void initializeActivePropertyOnNodes(Puzzle* P);
 
-	void _cleanupNodes(Puzzle* P);
-	void _removeNodeFromList(PuzzleNode*N, T_PuzzleNodeList &nodes);
+	void cleanupNodes(Puzzle* P);
+	void removeNodeFromList(PuzzleNode*N, T_PuzzleNodeList &nodes);
 	int NUM_NODES = 0;
 	unsigned int seed = 0;
 	bool seedSet = false;

@@ -6,12 +6,14 @@
 class PuzzleEvent
 {
 public:
-	PuzzleEvent(std::string name_v, PuzzleObject* G);
-	~PuzzleEvent();
-	PuzzleObject* getRelatedObject();
-	std::string getEventName();
-	bool getIsReversible();
-	void setIsReversible(bool newIsReversible);
+	PuzzleEvent(std::string name_v, PuzzleObject* G) 
+		: eventName{ name_v }, relatedObject{ G }
+		{}
+
+	PuzzleObject* getRelatedObject() const { return relatedObject; };
+	std::string getEventName() const { return eventName; };
+	bool getIsReversible() const { return isReversible; };
+	void setIsReversible(bool newIsReversible) { isReversible = newIsReversible; };
 
 private:
 	PuzzleObject* relatedObject;

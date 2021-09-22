@@ -5,7 +5,7 @@
 #include "PuzzleEvent.h"
 #include "PuzzleUpdateListener.h"
 
-enum PUZZLENODE_STATE {
+enum class PUZZLENODE_STATE {
 	INCOMPLETE,
 	ACTIVE,
 	COMPLETED

@@ -8,10 +8,5 @@
 * This class can be set to PuzzleObjects and read for easier interpretation of those objects 
 */
 
-class IPuzzleObjectMetaData
-{
-public:
-	IPuzzleObjectMetaData();
-	~IPuzzleObjectMetaData();
-};
+class IPuzzleObjectMetaData {};
 

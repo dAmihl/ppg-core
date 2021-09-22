@@ -8,9 +8,6 @@
 class PuzzleRelation
 {
 public:
-	PuzzleRelation();
-	~PuzzleRelation();
-
 	T_PuzzlePairList getPairs();
 	void addPair(PuzzleNode* lhs, PuzzleNode* rhs);
 	void addPair(T_PuzzleNodePair pair);

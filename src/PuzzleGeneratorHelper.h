@@ -11,25 +11,25 @@ class PuzzleGeneratorHelper
 {
 
 public: 
-	static bool _checkCreatesCircularDependency(T_PuzzleNodePair P, PuzzleRelation* R);
-	static bool _checkCreatesExclusiveDependency(T_PuzzleNodePair P, PuzzleRelation* R);
-	static bool _findNodeSequential(PuzzleNode* N, T_PuzzleNodePair start, PuzzleRelation* R);
-	static bool _checkEquality(PuzzleNode* N1, PuzzleNode* N2);
-	static bool _checkMetaEqualOccurance(T_PuzzleNodePair P, PuzzleRelation* R);
+	static bool checkCreatesCircularDependency(T_PuzzleNodePair P, PuzzleRelation* R);
+	static bool checkCreatesExclusiveDependency(T_PuzzleNodePair P, PuzzleRelation* R);
+	static bool findNodeSequential(PuzzleNode* N, T_PuzzleNodePair start, PuzzleRelation* R);
+	static bool checkEquality(PuzzleNode* N1, PuzzleNode* N2);
+	static bool checkMetaEqualOccurance(T_PuzzleNodePair P, PuzzleRelation* R);
 
 
-	static bool _checkCompatibilityBasicRules(PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R);
-	static bool _checkCompatibilityCustomRules(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, T_PuzzleRuleList rules);
+	static bool checkCompatibilityBasicRules(PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R);
+	static bool checkCompatibilityCustomRules(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, T_PuzzleRuleList rules);
 
-	static bool _checkCompatibilityRuleType__AFTER(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict);
-	static bool _checkCompatibilityRuleType__BEFORE(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict);
+	static bool checkCompatibilityRuleTypeAfter(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict);
+	static bool checkCompatibilityRuleTypeBefore(T_PuzzleNodeList nodes, PuzzleNode* S, PuzzleNode* N, PuzzleRelation* R, PuzzleRule rule, bool isStrict);
 
-	static T_PuzzleNodeList _filterCompatibleNodes(PuzzleNode* N, PuzzleRelation* R, T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
+	static T_PuzzleNodeList filterCompatibleNodes(PuzzleNode* N, PuzzleRelation* R, T_PuzzleNodeList nodes, T_PuzzleRuleList rules);
 
 	static bool checkMetaEqualOccuranceByNode(PuzzleNode* N, PuzzleRelation* R);
 
-	static bool __isRuleNodeEqual(PuzzleNode * N, PuzzleObject* ruleObject, PuzzleState* ruleState);
-	static bool __isRuleObjectEqual(PuzzleObject* o1, PuzzleObject* o2);
-	static bool __isRuleStateEqual(PuzzleState* s1, PuzzleState* s2);
+	static bool isRuleNodeEqual(PuzzleNode * N, PuzzleObject* ruleObject, PuzzleState* ruleState);
+	static bool isRuleObjectEqual(PuzzleObject* o1, PuzzleObject* o2);
+	static bool isRuleStateEqual(PuzzleState* s1, PuzzleState* s2);
 
 };

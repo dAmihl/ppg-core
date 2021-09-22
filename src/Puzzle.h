@@ -8,9 +8,6 @@
 class Puzzle
 {
 public:
-	Puzzle();
-	~Puzzle();
-
 	void addNode(PuzzleNode* n, bool isRelevant);
 	void addEvent(PuzzleEvent* e);
 	void setRelation(PuzzleRelation O);

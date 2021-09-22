@@ -1,15 +1,6 @@
 #include "StateTransition.h"
 
 
-StateTransition::StateTransition()
-{
-}
-
-
-StateTransition::~StateTransition()
-{
-}
-
 EVENT_MAP* StateTransition::getTransitionMap()
 {
 	return &this->transitionMap;

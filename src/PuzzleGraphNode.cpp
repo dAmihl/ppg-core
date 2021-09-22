@@ -1,15 +1,6 @@
 #include "PuzzleGraphNode.h"
 
 
-PuzzleGraphNode::PuzzleGraphNode()
-{
-}
-
-
-PuzzleGraphNode::~PuzzleGraphNode()
-{
-}
-
 PuzzleObject* PuzzleGraphNode::getObject()
 {
 	return this->object;

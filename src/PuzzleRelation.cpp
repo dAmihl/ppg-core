@@ -1,15 +1,6 @@
 #include "PuzzleRelation.h"
 
 
-PuzzleRelation::PuzzleRelation()
-{
-}
-
-
-PuzzleRelation::~PuzzleRelation()
-{
-}
-
 T_PuzzlePairList PuzzleRelation::getPairs()
 {
 	return this->pairs;
@@ -151,9 +142,9 @@ void PuzzleRelation::checkDoForAllFollowing(PuzzleNode * N, bool(*Check)(PuzzleN
 bool PuzzleRelation::checkAllLarger(PuzzleNode * N, bool(*Check)(PuzzleNode))
 {
 	bool result = true;
-	for (std::vector<std::pair<PuzzleNode*, PuzzleNode*>>::iterator it = this->pairs.begin(); it != this->pairs.end(); ++it) {
-		if (it->first == N) {
-			result = result && Check(*it->second) && checkAllLarger(it->second, Check);
+	for (auto& it: pairs) {
+		if (it.first == N) {
+			result = result && Check(*it.second) && checkAllLarger(it.second, Check);
 		}
 	}
 	return result;

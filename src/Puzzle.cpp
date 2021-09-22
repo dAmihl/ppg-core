@@ -1,15 +1,5 @@
 #include "Puzzle.h"
 
-
-Puzzle::Puzzle()
-{
-}
-
-
-Puzzle::~Puzzle()
-{
-}
-
 void Puzzle::addNode(PuzzleNode* n, bool isRelevant)
 {
 	this->nodes.push_back(n);
