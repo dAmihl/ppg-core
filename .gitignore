@@ -3,3 +3,9 @@ build/
 out/
 include/
 lib/
+**/*.vcxproj*
+*.sln
+**/CMakeFiles
+**/cmake_install.cmake
+**/CMakeSettings.json
+**/CTestTestfile.cmake

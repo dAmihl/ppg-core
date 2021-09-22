@@ -7,9 +7,8 @@
 class StateTransition
 {
 	using EVENT_MAP = std::unordered_map<std::string, std::vector<std::pair<PuzzleState, PuzzleState>>>;
+
 public:
-	StateTransition();
-	~StateTransition();
 	EVENT_MAP* getTransitionMap();
 	void addTransition(std::string eventName, PuzzleState origState, PuzzleState newState);
 	std::string getTextualOutput();
