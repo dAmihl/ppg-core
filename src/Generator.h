@@ -30,10 +30,10 @@ namespace PPG
 		NodeVec generateNodes(ObjVec objects);
 
 		void setNumberNodes(int n);
-		int getNumberNodes();
+		int getNumberNodes() const;
 
 		void setSeed(unsigned int seed);
-		unsigned int getSeed();
+		unsigned int getSeed() const;
 
 	private:
 

@@ -21,9 +21,9 @@ namespace PPG
 
 		void removePair(NodePair pair);
 
-		std::string getSimpleTextualRepresentation();
-		std::string getRecursiveTextualRepresentationOfNode(NodeVec& alreadyOut, std::string* out, Node* N, int level);
-		std::string getExtendedTextualRepresentation(NodeVec nodes);
+		std::string getSimpleTextualRepresentation() const;
+		std::string getRecursiveTextualRepresentationOfNode(NodeVec& alreadyOut, std::string* out, Node* N, int level) const;
+		std::string getExtendedTextualRepresentation(NodeVec nodes) const;
 
 		Vec<GraphNode*> getGraphRepresentation(NodeVec nodes);
 		GraphNode* getRecursiveGraphRepresentation(Node* N);
@@ -41,14 +41,14 @@ namespace PPG
 
 
 
-		NodePairVec getNextPairs(NodePair P);
-		NodePairVec getParallelPairs(NodePair P);
+		NodePairVec getNextPairs(NodePair P) const;
+		NodePairVec getParallelPairs(NodePair P) const;
 
-		bool hasPrecedingNode(Node* N);
-		bool hasFollowingNode(Node* N);
+		bool hasPrecedingNode(Node* N) const;
+		bool hasFollowingNode(Node* N) const;
 
-		NodeVec getMinima(NodeVec nodes);
-		NodeVec getMaxima(NodeVec nodes);
+		NodeVec getMinima(NodeVec nodes) const;
+		NodeVec getMaxima(NodeVec nodes) const;
 
 		NodeVec getSmallestNodesFromList(NodeVec nodes);
 		NodeVec getLargestNodesFromList(NodeVec nodes);
@@ -72,8 +72,8 @@ namespace PPG
 		NodeVec filterCompatibleNodesByRules(NodeVec nodes, Vec<Rule> rules);
 
 
-		NodeVec getPrecedingNodes(Node* N);
-		NodeVec getFollowingNodes(Node* N);
+		NodeVec getPrecedingNodes(Node* N) const;
+		NodeVec getFollowingNodes(Node* N) const;
 
 		static NodePair makePuzzlePair(Node* N1, Node* N2);
 

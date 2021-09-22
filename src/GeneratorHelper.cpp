@@ -7,7 +7,7 @@ namespace PPG {
 	*	True: Circular Dependency detected
 	*	False: No Circular Dependency with new pair P in Relation R detected
 	*/
-	bool GeneratorHelper::checkCreatesCircularDependency(Pair<Node*, Node*> P, Relation* R)
+	bool GeneratorHelper::checkCreatesCircularDependency(NodePair P, Relation* R)
 	{
 
 		NodePairVec pairs = R->getPairs();
@@ -34,7 +34,7 @@ namespace PPG {
 	*	False: No Exclusive Dependency with new pair P in Relation R detected
 	*	Extension: Parallel nodes must have different related game-objects
 	*/
-	bool GeneratorHelper::checkCreatesExclusiveDependency(Pair<Node*, Node*> P, Relation* R)
+	bool GeneratorHelper::checkCreatesExclusiveDependency(NodePair P, Relation* R)
 	{
 		NodePairVec parallelPairs = R->getParallelPairs(P);
 
@@ -54,7 +54,7 @@ namespace PPG {
 	/*
 	*	Trys to find occurence of N going from /start/ sequential till the end
 	*/
-	bool GeneratorHelper::findNodeSequential(Node* N, Pair<Node*, Node*> start, Relation* R)
+	bool GeneratorHelper::findNodeSequential(Node* N, NodePair start, Relation* R)
 	{
 		// Check starting node if direct successor
 		if (start.second == N) return true;
@@ -117,7 +117,7 @@ namespace PPG {
 		return result;
 	}
 
-	bool GeneratorHelper::checkMetaEqualOccurance(Pair<Node*, Node*> P, Relation* R)
+	bool GeneratorHelper::checkMetaEqualOccurance(NodePair P, Relation* R)
 	{
 		bool result = false;
 

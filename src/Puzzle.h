@@ -22,14 +22,14 @@ namespace PPG
 
 		void setUpdateListener(UpdateListener* PUL);
 
-		NodeVec getNodes();
-		NodeVec getRelevantNodes();
-		EventVec getEvents();
-		Relation getRelation();
+		NodeVec getNodes() const;
+		NodeVec getRelevantNodes() const;
+		EventVec getEvents() const;
+		Relation getRelation() const;
 
-		std::string getSimpleTextualRepresentation();
-		std::string getExtendedTextualRepresentation();
-		std::string getTextualEnvironmentDescription();
+		std::string getSimpleTextualRepresentation() const;
+		std::string getExtendedTextualRepresentation() const;
+		std::string getTextualEnvironmentDescription() const;
 
 		Vec<GraphNode*> getGraphRepresentation();
 

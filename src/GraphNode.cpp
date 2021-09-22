@@ -2,17 +2,17 @@
 
 namespace PPG
 {
-	Object* GraphNode::getObject()
+	Object* GraphNode::getObject() const
 	{
 		return this->object;
 	}
 
-	State* GraphNode::getState()
+	State* GraphNode::getState() const
 	{
 		return this->state;
 	}
 
-	Vec<GraphNode*> GraphNode::getChildren()
+	Vec<GraphNode*> GraphNode::getChildren() const
 	{
 		return this->children;
 	}

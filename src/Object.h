@@ -30,8 +30,6 @@ namespace PPG
 		void setTemplateName(std::string tName);
 		void setIsTemplateObject(bool bTemplate);
 
-
-		bool operator==(const Object& o2);
 		bool sameTemplateAs(const Object& o2);
 
 	private:
@@ -43,6 +41,7 @@ namespace PPG
 		bool bIsTemplate = false;
 		std::string templateName;
 	};
+
 }
 
 

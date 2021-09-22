@@ -49,7 +49,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				bool hasCircularDependency = GeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
 				REQUIRE(hasCircularDependency);
 			}
-
 		}
 
 		WHEN("A Circular dependency would be created as indirect successor") {
@@ -60,7 +59,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				bool hasCircularDependency = GeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
 				REQUIRE(hasCircularDependency);
 			}
-
 		}
 
 		WHEN("No circular dependency would be created, by adding N3->N4") {
@@ -71,7 +69,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				bool hasCircularDependency = GeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
 				REQUIRE_FALSE(hasCircularDependency);
 			}
-
 		}
 
 		WHEN("Looking for a node in sequential order starting from N1-N2") {
@@ -95,7 +92,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				bool hasExclusiveDependency = GeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
 				REQUIRE(hasExclusiveDependency);
 			}
-
 		}
 
 		WHEN("No exclusive dependency would be created by adding N4->N2 where N4 and N1 have different objects but same state") {
@@ -108,7 +104,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				bool hasExclusiveDependency = GeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
 				REQUIRE_FALSE(hasExclusiveDependency);
 			}
-
 		}
 
 		WHEN("No exclusive dependency would be created by adding N4->N2 where N4 and N1 have the same object and same state") {
@@ -120,7 +115,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				bool hasExclusiveDependency = GeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
 				REQUIRE(hasExclusiveDependency);
 			}
-
 		}
 
 		WHEN("An equal node N4 = N1 with Object of N4 == Object of N1 and State of N4 == State of N1 should be added to the relation") {
@@ -131,7 +125,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				bool isEqualToN1 = GeneratorHelper::checkEquality(N4, N1);
 				REQUIRE(isEqualToN1);
 			}
-
 		}
 
 		WHEN("An inequal node N4 = N1 with Object of N4 == Object of N1 and State of N4 != State of N1 should be added to the relation") {
@@ -199,7 +192,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				REQUIRE_FALSE(isRuleObjectEqual);
 				REQUIRE(isRuleStateEqual);
 			}
-
 		}
 
 		WHEN("A list of nodes N1..N5 is given") {
@@ -234,7 +226,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			}
 
 		}
-
 
 	}
 
@@ -506,7 +497,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				
 				Vec<GraphNode*> roots = P->getGraphRepresentation();
 				GraphNode *leaf = roots.at(0);
-
 
 				result = leaf != nullptr;
 				result = result && leaf->getChildren().size() > 0;

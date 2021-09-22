@@ -4,20 +4,20 @@ namespace PPG
 {
 	void Puzzle::addNode(Node* n, bool isRelevant)
 	{
-		this->nodes.push_back(n);
-		if (isRelevant) this->relevantNodes.push_back(n);
+		nodes.push_back(n);
+		if (isRelevant) relevantNodes.push_back(n);
 
 	}
 
 	void Puzzle::setRelation(Relation O)
 	{
-		this->relation = O;
+		relation = O;
 	}
 
 	void Puzzle::setNodes(NodeVec nodes)
 	{
-		this->nodes = nodes;
-		this->relevantNodes = nodes;
+		nodes = nodes;
+		relevantNodes = nodes;
 	}
 
 	bool checkCompleted(Node M) {
@@ -37,13 +37,13 @@ namespace PPG
 		NodeVec compatibleCompletedNodes;
 
 		// Find compatible nodes
-		for (NodeVec::iterator it = this->nodes.begin(); it != this->nodes.end(); ++it) {
-			if (isNodeCompatible(*it, e)) {
-				if ((*it)->isActive()) {
-					compatibleActiveNodes.push_back(*it);
+		for (auto& it: nodes) {
+			if (isNodeCompatible(it, e)) {
+				if (it->isActive()) {
+					compatibleActiveNodes.push_back(it);
 				}
-				else if ((*it)->isCompleted() && this->relation.checkAllFollowing((*it), checkActive)) {
-					compatibleCompletedNodes.push_back(*it);
+				else if (it->isCompleted() && relation.checkAllFollowing(it, checkActive)) {
+					compatibleCompletedNodes.push_back(it);
 				}
 			}
 		}
@@ -51,39 +51,37 @@ namespace PPG
 		Node* N;
 		NodeVec handlingNodes;
 		if (!compatibleActiveNodes.empty()) {
-			handlingNodes = this->relation.getSmallestNodesFromList(compatibleActiveNodes);
+			handlingNodes = relation.getSmallestNodesFromList(compatibleActiveNodes);
 			N = handlingNodes.at(0);
 		}
 		else if (!compatibleCompletedNodes.empty()) {
-			handlingNodes = this->relation.getLargestNodesFromList(compatibleCompletedNodes);
+			handlingNodes = relation.getLargestNodesFromList(compatibleCompletedNodes);
 			N = handlingNodes.at(0);
 		}
 		else {
 			// No Node found to handle that event.
-			if (this->updateListener != nullptr) {
-				this->updateListener->onNoEffect(e.getRelatedObject());
+			if (updateListener != nullptr) {
+				updateListener->onNoEffect(e.getRelatedObject());
 			}
 			return;
 		}
 
 		/* Single Time handling, but every "handling" node will update its status and the status of its following nodes*/
 		if (N->handleEvent(e) == 0) {// object changed
-			if (this->updateListener != nullptr) {
-				this->updateListener->onObjectStateChange(N->getRelatedObject());
+			if (updateListener != nullptr) {
+				updateListener->onObjectStateChange(N->getRelatedObject());
 			}
 		}
 		else {
-			if (this->updateListener != nullptr) {
-				this->updateListener->onNoEffect(N->getRelatedObject());
+			if (updateListener != nullptr) {
+				updateListener->onNoEffect(N->getRelatedObject());
 			}
 		}
 
-		for (NodeVec::iterator it2 = handlingNodes.begin(); it2 != handlingNodes.end(); ++it2) {
-			(*it2)->updateCompletionState();
-			updateNodeProperties(*it2);
+		for (auto& it2: handlingNodes) {
+			it2->updateCompletionState();
+			updateNodeProperties(it2);
 		}
-
-
 
 		// Find nodes
 		/*for (std::vector<PuzzleNode*>::iterator it = this->nodes.begin(); it != this->nodes.end(); ++it) {
@@ -100,20 +98,17 @@ namespace PPG
 	{
 		this->updateListener = PUL;
 
-		for (NodeVec::iterator n = this->nodes.begin(); n != this->nodes.end(); ++n) {
-			(*n)->setPuzzleUpdateListener(this->updateListener);
+		for (auto& n: nodes) {
+			n->setPuzzleUpdateListener(updateListener);
 		}
-
 	}
 
-
-
 	void doSetNodeActive(Node* M) {
-		if (M->isIncomplete()) M->setPuzzleNodeState(PUZZLENODE_STATE::ACTIVE);
+		if (M->isIncomplete()) M->setPuzzleNodeState(ENodeState::ACTIVE);
 	}
 
 	void doSetNodeIncomplete(Node* M) {
-		if (M->isActive()) M->setPuzzleNodeState(PUZZLENODE_STATE::INCOMPLETE);
+		if (M->isActive()) M->setPuzzleNodeState(ENodeState::INCOMPLETE);
 	}
 
 	void doCheckNodeComplete(Node* M) {
@@ -129,8 +124,8 @@ namespace PPG
 
 	void Puzzle::checkPuzzleCompletion()
 	{
-		for (NodeVec::iterator it = this->relevantNodes.begin(); it != this->relevantNodes.end(); ++it) {
-			if (!(*it)->isCompleted()) {
+		for (auto& it: relevantNodes) {
+			if (!it->isCompleted()) {
 				return;
 			}
 		}
@@ -150,75 +145,73 @@ namespace PPG
 		this->events.push_back(e);
 	}
 
-	NodeVec Puzzle::getNodes()
+	NodeVec Puzzle::getNodes() const
 	{
 		return this->nodes;
 	}
 
-	NodeVec Puzzle::getRelevantNodes()
+	NodeVec Puzzle::getRelevantNodes() const
 	{
 		return this->relevantNodes;
 	}
 
-	EventVec Puzzle::getEvents()
+	EventVec Puzzle::getEvents() const
 	{
 		return this->events;
 	}
 
-	Relation Puzzle::getRelation()
+	Relation Puzzle::getRelation() const
 	{
 		return this->relation;
 	}
 
-	std::string Puzzle::getSimpleTextualRepresentation()
+	std::string Puzzle::getSimpleTextualRepresentation() const
 	{
 		std::string out = "";
 
 		out += "<<< Puzzle >>>\n";
-		for (NodeVec::iterator it = this->nodes.begin(); it != this->nodes.end(); ++it) {
-			out += (*it)->getSimpleTextualRepresentation();
+		for (auto& it: nodes) {
+			out += it->getSimpleTextualRepresentation();
 			out += "\n";
 		}
 
 		out += "$$$ Relation $$$ \n";
-		out += this->relation.getSimpleTextualRepresentation();
+		out += relation.getSimpleTextualRepresentation();
 
 		out += "<<<<>>>>\n";
 		return out;
 	}
 
-
-
-	std::string Puzzle::getExtendedTextualRepresentation()
+	std::string Puzzle::getExtendedTextualRepresentation() const
 	{
 		std::string out = "";
 
 		out += "<<< Puzzle >>>\n";
-		for (NodeVec::iterator it = this->nodes.begin(); it != this->nodes.end(); ++it) {
-			out += (*it)->getSimpleTextualRepresentation();
+		for (auto& it: nodes) {
+			out += it->getSimpleTextualRepresentation();
 			out += "\n";
 		}
 
 		out += "$$$ Relation Simple $$$ \n";
-		out += this->relation.getSimpleTextualRepresentation();
+		out += relation.getSimpleTextualRepresentation();
 
 		out += "<<<<>>>>\n";
 
 		out += "$$$ Relation Extended $$$ \n";
-		out += this->relation.getExtendedTextualRepresentation(this->nodes);
+		out += relation.getExtendedTextualRepresentation(nodes);
 
 		out += "<<<<>>>>\n";
 
 		return out;
 	}
 
-	std::string Puzzle::getTextualEnvironmentDescription()
+	std::string Puzzle::getTextualEnvironmentDescription() const
 	{
 		std::string out = "";
 
 		out += "<<< Environment >>>\n";
-		for (NodeVec::iterator it = this->nodes.begin(); it != this->nodes.end(); ++it) {
-			out += (*it)->getRelatedObject()->getObjectName() + " - " + (*it)->getRelatedObject()->getCurrentState().getStateName() + "\n";
+		for (auto& it: nodes) {
+			out += it->getRelatedObject()->getObjectName() + " - " + it->getRelatedObject()->getCurrentState().getStateName() + "\n";
 		}
 		out += "<<<<>>>>\n";
 		return out;
@@ -226,7 +219,7 @@ namespace PPG
 
 	Vec<GraphNode*> Puzzle::getGraphRepresentation()
 	{
-		Vec<GraphNode*> allRoots = this->relation.getGraphRepresentation(this->nodes);
+		Vec<GraphNode*> allRoots = relation.getGraphRepresentation(nodes);
 		return allRoots;
 	}
 
@@ -234,7 +227,7 @@ namespace PPG
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject()->getObjectName() == E.getRelatedObject()->getObjectName();
-		bResult = bResult && (N->isActive() || (N->isCompleted() && this->relation.checkAllFollowing(N, checkActive)));
+		bResult = bResult && (N->isActive() || (N->isCompleted() && relation.checkAllFollowing(N, checkActive)));
 		// Check object relation
 		return bResult;
 	}

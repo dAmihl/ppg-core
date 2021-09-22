@@ -10,9 +10,9 @@ namespace PPG
 	class PPG_EXPORT GraphNode
 	{
 	public:
-		Object* getObject();
-		State* getState();
-		Vec<GraphNode*> getChildren();
+		Object* getObject() const;
+		State* getState() const;
+		Vec<GraphNode*> getChildren() const;
 
 		void setObject(Object* object);
 		void setState(State* state);

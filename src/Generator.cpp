@@ -26,13 +26,13 @@ namespace PPG {
 
 		/* Generate Nodes and add to puzzle P*/
 		std::vector<Node*> nodes = generateNodes(objects);
-		for (std::vector<Node*>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-			P->addNode(*it, true);
+		for (auto& it: nodes) {
+			P->addNode(it, true);
 		}
 
 		/* Add Events to Puzzle P */
-		for (std::vector<Event*>::iterator it = events.begin(); it != events.end(); ++it) {
-			P->addEvent((*it));
+		for (auto& it: events) {
+			P->addEvent(it);
 		}
 
 		/* Generate Relation and add to Puzzle P */
@@ -48,9 +48,6 @@ namespace PPG {
 
 		return P;
 	}
-
-
-
 
 	void Generator::removeNodeFromList(Node* N, NodeVec& nodes) {
 		NodeVec::iterator found = std::find(nodes.begin(), nodes.end(), N);
@@ -71,18 +68,18 @@ namespace PPG {
 		NodeVec nodesToDelete;
 		Relation R = P->getRelation();
 
-		for (NodeVec::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-			if (!R.hasFollowingNode(*it) && !R.hasPrecedingNode(*it)) {
+		for (auto& it: nodes) {
+			if (!R.hasFollowingNode(it) && !R.hasPrecedingNode(it)) {
 				for (NodeVec::iterator find = nodes.begin(); find != nodes.end(); ++find) {
-					if (*find != *it && GeneratorHelper::checkEquality(*it, *find)) {
-						nodesToDelete.push_back(*it);
+					if (*find != it && GeneratorHelper::checkEquality(it, *find)) {
+						nodesToDelete.push_back(it);
 					}
 				}
 			}
 		}
 
-		for (NodeVec::iterator it = nodesToDelete.begin(); it != nodesToDelete.end(); ++it) {
-			removeNodeFromList(*it, nodes);
+		for (auto& it : nodesToDelete) {
+			removeNodeFromList(it, nodes);
 		}
 		P->setNodes(nodes);
 	}
@@ -96,10 +93,10 @@ namespace PPG {
 	Relation* Generator::simpleGenerateRelation(NodeVec nodes)
 	{
 		Relation* rel = new Relation();
-		for (std::vector<Node*>::iterator it = nodes.begin(); it != nodes.end() - 1; ++it) {
-			Node* N1 = *it;
-			Node* N2 = *(it + 1);
-			//if (it == nodes.begin()) N1->setPuzzleNodeState(PUZZLENODE_STATE::ACTIVE);
+		for (auto& it: nodes) {
+			Node* N1 = it;
+			Node* N2 = (it + 1);
+			//if (it == nodes.begin()) N1->setPuzzleNodeState(ENodeState::ACTIVE);
 			Pair<Node*, Node*> pair = Relation::makePuzzlePair(N1, N2);
 			if (!GeneratorHelper::checkEquality(N1, N2)) {
 				rel->addPair(pair);
@@ -108,12 +105,10 @@ namespace PPG {
 					rel->removePair(pair);// TODO
 				}
 			}// else discard
-
 		}
 
 		return rel;
 	}
-
 
 
 	/*
@@ -147,8 +142,8 @@ namespace PPG {
 		*	fulfill the above mentioned.
 		*/
 
-		for (std::vector<Node*>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-			Node* N1 = *it;
+		for (auto& it: nodes) {
+			Node* N1 = it;
 
 			/*
 			* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
@@ -175,8 +170,8 @@ namespace PPG {
 		Node* NStart = Randomizer::getRandomNodeFromList(nodes);
 		nodesInGraph.push_back(NStart);
 
-		for (std::vector<Node*>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-			Node* N1 = *it;
+		for (auto& it: nodes) {
+			Node* N1 = it;
 
 			// Copies nodesInGraph
 			// Add N1 temporary for filterCompatibleNodes
@@ -204,10 +199,9 @@ namespace PPG {
 
 	NodeVec Generator::generateNodes(ObjVec objects)
 	{
-
 		NodeVec nodes;
 
-		for (int i = 0; i < this->NUM_NODES; i++) {
+		for (int i = 0; i < NUM_NODES; i++) {
 			Object* obj = Randomizer::getRandomFromList(objects);
 			if (obj == nullptr) continue;
 			try {
@@ -225,27 +219,24 @@ namespace PPG {
 
 	void Generator::setNumberNodes(int n)
 	{
-		this->NUM_NODES = n;
+		NUM_NODES = n;
 	}
 
-	int Generator::getNumberNodes()
+	int Generator::getNumberNodes() const
 	{
-		return this->NUM_NODES;
+		return NUM_NODES;
 	}
 
 	void Generator::setSeed(unsigned int seed)
 	{
-		this->seed = seed;
-		this->seedSet = true;
+		seed = seed;
+		seedSet = true;
 	}
 
-	unsigned int Generator::getSeed()
+	unsigned int Generator::getSeed() const
 	{
-		return this->seed;
+		return seed;
 	}
-
-
-
 
 	/*
 	*	Initialize all ACTIVE nodes with state ACTIVE
@@ -253,16 +244,13 @@ namespace PPG {
 	*/
 	void Generator::initializeActivePropertyOnNodes(Puzzle* P)
 	{
-
 		NodeVec nodes = P->getNodes();
 
-		for (NodeVec::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-			if (!P->getRelation().hasPrecedingNode(*it)) {
-				(*it)->setPuzzleNodeState(PUZZLENODE_STATE::ACTIVE);
+		for (auto& it: nodes) {
+			if (!P->getRelation().hasPrecedingNode(it)) {
+				it->setPuzzleNodeState(ENodeState::ACTIVE);
 			}
 		}
-
-
 	}
 
 }

@@ -26,7 +26,7 @@ namespace PPG
 		}
 	}
 
-	std::string Relation::getSimpleTextualRepresentation()
+	std::string Relation::getSimpleTextualRepresentation() const
 	{
 		std::string out = "";
 
@@ -41,7 +41,7 @@ namespace PPG
 	}
 
 
-	std::string Relation::getRecursiveTextualRepresentationOfNode(NodeVec& alreadyOut, std::string* out, Node* N, int level) {
+	std::string Relation::getRecursiveTextualRepresentationOfNode(NodeVec& alreadyOut, std::string* out, Node* N, int level) const {
 
 		NodeVec pre = getPrecedingNodes(N);
 		NodeVec fol = getFollowingNodes(N);
@@ -55,9 +55,9 @@ namespace PPG
 		}
 		(*out) += tmp;
 
-		for (NodeVec::iterator pIt = pre.begin(); pIt != pre.end(); ++pIt) {
-			if (std::find(alreadyOut.begin(), alreadyOut.end(), *pIt) == alreadyOut.end()) {
-				getRecursiveTextualRepresentationOfNode(alreadyOut, out, *pIt, level - 1);
+		for (auto& pIt: pre) {
+			if (std::find(alreadyOut.begin(), alreadyOut.end(), pIt) == alreadyOut.end()) {
+				getRecursiveTextualRepresentationOfNode(alreadyOut, out, pIt, level - 1);
 			}
 		}
 
@@ -70,17 +70,16 @@ namespace PPG
 		return (*out);
 	}
 
-	std::string Relation::getExtendedTextualRepresentation(NodeVec nodes)
+	std::string Relation::getExtendedTextualRepresentation(NodeVec nodes) const
 	{
 		std::string out = "";
 		NodeVec alreadyOutputNodes;
 
 		NodeVec leafs = getMaxima(nodes);
 
-		for (NodeVec::iterator it = leafs.begin(); it != leafs.end(); ++it) {
-
-			if (std::find(alreadyOutputNodes.begin(), alreadyOutputNodes.end(), *it) == alreadyOutputNodes.end()) {
-				getRecursiveTextualRepresentationOfNode(alreadyOutputNodes, &out, *it, 0);
+		for (auto& it : leafs) {
+			if (std::find(alreadyOutputNodes.begin(), alreadyOutputNodes.end(), it) == alreadyOutputNodes.end()) {
+				getRecursiveTextualRepresentationOfNode(alreadyOutputNodes, &out, it, 0);
 			}
 			out += "\n\n";
 		}
@@ -93,8 +92,8 @@ namespace PPG
 		NodeVec leafs = getMaxima(nodes);
 		Vec<GraphNode*> rootNodes;
 
-		for (NodeVec::iterator it = leafs.begin(); it != leafs.end(); ++it) {
-			GraphNode* root = getRecursiveGraphRepresentation(*it);
+		for (auto& it: leafs) {
+			GraphNode* root = getRecursiveGraphRepresentation(it);
 			rootNodes.push_back(root);
 		}
 
@@ -109,14 +108,13 @@ namespace PPG
 
 		NodeVec pre = getPrecedingNodes(N);
 		Vec<GraphNode*> children;
-		for (NodeVec::iterator c = pre.begin(); c != pre.end(); ++c) {
-			GraphNode* child = getRecursiveGraphRepresentation(*c);
+		for (auto& it: pre) {
+			GraphNode* child = getRecursiveGraphRepresentation(it);
 			children.push_back(child);
 		}
 		root->setChildren(children);
 		return root;
 	}
-
 
 	void Relation::checkDoForAllPreceding(Node* N, bool(*Check)(Node), void(*Do)(Node*))
 	{
@@ -206,7 +204,7 @@ namespace PPG
 		return result;
 	}
 
-	NodePairVec Relation::getNextPairs(NodePair P)
+	NodePairVec Relation::getNextPairs(NodePair P) const
 	{
 		NodePairVec nextPairs;
 
@@ -219,7 +217,7 @@ namespace PPG
 		return nextPairs;
 	}
 
-	NodePairVec Relation::getParallelPairs(NodePair P)
+	NodePairVec Relation::getParallelPairs(NodePair P) const
 	{
 		NodePairVec parallelPairs;
 
@@ -233,7 +231,7 @@ namespace PPG
 		return parallelPairs;
 	}
 
-	bool Relation::hasPrecedingNode(Node* N)
+	bool Relation::hasPrecedingNode(Node* N) const
 	{
 		for (auto& it: pairs) {
 			if (it.second == N) {
@@ -243,7 +241,7 @@ namespace PPG
 		return false;
 	}
 
-	bool Relation::hasFollowingNode(Node* N)
+	bool Relation::hasFollowingNode(Node* N) const
 	{
 		for (auto& it: pairs) {
 			if (it.first == N) {
@@ -253,7 +251,7 @@ namespace PPG
 		return false;
 	}
 
-	NodeVec Relation::getMinima(NodeVec nodes)
+	NodeVec Relation::getMinima(NodeVec nodes) const
 	{
 		NodeVec mins;
 
@@ -264,7 +262,7 @@ namespace PPG
 		return mins;
 	}
 
-	NodeVec Relation::getMaxima(NodeVec nodes)
+	NodeVec Relation::getMaxima(NodeVec nodes) const
 	{
 		NodeVec maxs;
 
@@ -353,7 +351,6 @@ namespace PPG
 
 		if (fol.empty()) return false;
 
-
 		for (auto& it: fol) {
 			if (it == nodeToFind) {
 				return true;
@@ -437,13 +434,10 @@ namespace PPG
 		return metas;
 	}
 
-
-
 	NodeVec Relation::findNearestFollowingEqualNodesByObject(Node* N)
 	{
 		return findNearestFollowingEqualNodesByObject(N, N);
 	}
-
 
 	NodeVec Relation::findNearestFollowingEqualNodesByObject(Node* N, Node* start)
 	{
@@ -472,7 +466,7 @@ namespace PPG
 	}
 
 
-	NodeVec Relation::getPrecedingNodes(Node* N)
+	NodeVec Relation::getPrecedingNodes(Node* N) const
 	{
 		NodeVec precedingNodes;
 
@@ -485,7 +479,7 @@ namespace PPG
 		return precedingNodes;
 	}
 
-	NodeVec Relation::getFollowingNodes(Node* N)
+	NodeVec Relation::getFollowingNodes(Node* N) const
 	{
 		NodeVec followingNodes;
 

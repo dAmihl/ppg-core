@@ -9,16 +9,16 @@ namespace PPG
 	{}
 
 	std::string Object::getObjectName() const {
-		return this->objectName;
+		return objectName;
 	}
 
 	State Object::getCurrentState() const {
-		return this->currentState;
+		return currentState;
 	}
 
 	StateTransition Object::getStateTransition() const
 	{
-		return this->stateTransition;
+		return stateTransition;
 	}
 
 	std::vector<State> Object::getReachableStates() const

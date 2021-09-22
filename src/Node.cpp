@@ -3,61 +3,56 @@
 namespace PPG
 {
 
-	Node::Node(Object* G, State Sg)
+	Node::Node(Object* G, State Sg) : relatedObject{ G }, goalState{ Sg }, currentNodeState{ENodeState::INCOMPLETE}
+	{}
+
+	Object* Node::getRelatedObject() const
 	{
-		this->relatedObject = G;
-		this->goalState = Sg;
-		this->currentNodeState = PUZZLENODE_STATE::INCOMPLETE;
+		return relatedObject;
 	}
 
-
-	Object* Node::getRelatedObject()
+	State Node::getGoalState() const
 	{
-		return this->relatedObject;
+		return goalState;
 	}
 
-	State Node::getGoalState()
+	ENodeState Node::getCurrentNodeState() const
 	{
-		return this->goalState;
+		return currentNodeState;
 	}
 
-	PUZZLENODE_STATE Node::getCurrentNodeState()
+	bool Node::isActive() const
 	{
-		return this->currentNodeState;
+		return currentNodeState == ENodeState::ACTIVE;
 	}
 
-	bool Node::isActive()
+	bool Node::isCompleted() const
 	{
-		return this->currentNodeState == PUZZLENODE_STATE::ACTIVE;
+		return currentNodeState == ENodeState::COMPLETED;
 	}
 
-	bool Node::isCompleted()
+	bool Node::isIncomplete() const
 	{
-		return this->currentNodeState == PUZZLENODE_STATE::COMPLETED;
-	}
-
-	bool Node::isIncomplete()
-	{
-		return this->currentNodeState == PUZZLENODE_STATE::INCOMPLETE;
+		return currentNodeState == ENodeState::INCOMPLETE;
 	}
 
 
 	int Node::handleEvent(Event e)
 	{
 		State Sc = this->relatedObject->getCurrentState();
-		std::vector<std::pair<State, State>> vec = this->relatedObject->getStateTransition().findTransitions(e.getEventName());
-		for (std::vector<std::pair<State, State>>::iterator vecIt = vec.begin(); vecIt != vec.end(); ++vecIt) {
-			if (vecIt->first.getStateName() == Sc.getStateName()) { // check name equality
-				State nextState = vecIt->second;
-				this->relatedObject->setCurrentState(nextState); // next state set
+		std::vector<std::pair<State, State>> vec = relatedObject->getStateTransition().findTransitions(e.getEventName());
+		for (auto& vecIt : vec) {
+			if (vecIt.first.getStateName() == Sc.getStateName()) { // check name equality
+				State nextState = vecIt.second;
+				relatedObject->setCurrentState(nextState); // next state set
 				return 0;
 				break;
 			}
 			// Test : Two Way state transitions, i.e. reversible state transitions
 			if (e.getIsReversible()) {
-				if (vecIt->second.getStateName() == Sc.getStateName()) { // check name equality
-					State nextState = vecIt->first;
-					this->relatedObject->setCurrentState(nextState); // next state set
+				if (vecIt.second.getStateName() == Sc.getStateName()) { // check name equality
+					State nextState = vecIt.first;
+					relatedObject->setCurrentState(nextState); // next state set
 					return 0;
 					break;
 				}
@@ -67,68 +62,70 @@ namespace PPG
 		return 1;
 	}
 
-	std::string Node::getCompletionStateString() {
+	std::string Node::getCompletionStateString() const {
 		std::string out;
-		switch (this->currentNodeState) {
-		case PUZZLENODE_STATE::ACTIVE: out = "ACTIVE"; break;
-		case PUZZLENODE_STATE::INCOMPLETE: out = "INCOMPLETE"; break;
-		case PUZZLENODE_STATE::COMPLETED: out = "COMPLETED"; break;
+		switch (currentNodeState) {
+		case ENodeState::ACTIVE: out = "ACTIVE"; break;
+		case ENodeState::INCOMPLETE: out = "INCOMPLETE"; break;
+		case ENodeState::COMPLETED: out = "COMPLETED"; break;
 		default: out = "UNKNOWN"; break;
 		}
 		return out;
 	}
 
-	std::string Node::getTextualRepresentation()
+	std::string Node::getTextualRepresentation() const
 	{
 		std::string out = "";
-		out += "<> Puzzlenode (" + this->relatedObject->getObjectName() + " | " + this->goalState.getStateName() + ") <> \n";
-		out += this->relatedObject->getTextualRepresentation();
+		out += "<> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getStateName() + ") <> \n";
+		out += relatedObject->getTextualRepresentation();
 		out += "Puzzlenode-State: ";
 		out += getCompletionStateString();
 		out += "\n";
 		return out;
 	}
-	std::string Node::getSimpleTextualRepresentation()
+	std::string Node::getSimpleTextualRepresentation() const
 	{
-		std::string out = ">> Puzzlenode (" + this->relatedObject->getObjectName() + " | " + this->goalState.getStateName() + ") :: " + getCompletionStateString() + " <> \n";
+		std::string out = ">> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getStateName() + ") :: " + getCompletionStateString() + " <> \n";
 		return out;
 	}
+
 	// Only callable privately after handling event!
 	void Node::updateCompletionState()
 	{
-		if (relatedObject->getCurrentState().getStateName() == this->goalState.getStateName()) { // name equality --> TODO
-			this->setPuzzleNodeState(PUZZLENODE_STATE::COMPLETED);
+		if (relatedObject->getCurrentState().getStateName() == goalState.getStateName()) { // name equality --> TODO
+			setPuzzleNodeState(ENodeState::COMPLETED);
 		}
+
 		// Traverse back in puzzle "graph"
-		else if (relatedObject->getCurrentState().getStateName() != this->goalState.getStateName()) {
-			if (this->currentNodeState == PUZZLENODE_STATE::COMPLETED) {
-				this->setPuzzleNodeState(PUZZLENODE_STATE::ACTIVE);
+		else if (relatedObject->getCurrentState().getStateName() != goalState.getStateName()) {
+			if (currentNodeState == ENodeState::COMPLETED) {
+				setPuzzleNodeState(ENodeState::ACTIVE);
 			}
 		}
 	}
 
-	void Node::setPuzzleNodeState(PUZZLENODE_STATE state)
+	void Node::setPuzzleNodeState(ENodeState state)
 	{
-		PUZZLENODE_STATE oldState = this->currentNodeState;
+		ENodeState oldState = currentNodeState;
 		if (state == oldState) return;
 
-		this->currentNodeState = state;
+		currentNodeState = state;
 
-		if (this->PUL == nullptr) return;
+		if (PUL == nullptr) return;
 
-		if (state == PUZZLENODE_STATE::ACTIVE) {
-			this->PUL->onNodeActive(this);
+		if (state == ENodeState::ACTIVE) {
+			PUL->onNodeActive(this);
 		}
-		if (state == PUZZLENODE_STATE::INCOMPLETE) {
-			this->PUL->onNodeIncomplete(this);
+		if (state == ENodeState::INCOMPLETE) {
+			PUL->onNodeIncomplete(this);
 		}
-		if (state == PUZZLENODE_STATE::COMPLETED) {
-			this->PUL->onNodeComplete(this);
+		if (state == ENodeState::COMPLETED) {
+			PUL->onNodeComplete(this);
 		}
 	}
 
 	void Node::setPuzzleUpdateListener(UpdateListener* updList)
 	{
-		this->PUL = updList;
+		PUL = updList;
 	}
 }

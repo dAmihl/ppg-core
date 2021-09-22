@@ -7,41 +7,39 @@
 
 namespace PPG
 {
-	enum class PUZZLENODE_STATE {
+	enum class ENodeState {
 		INCOMPLETE,
 		ACTIVE,
 		COMPLETED
 	};
 
-
 	class PPG_EXPORT Node
 	{
 	public:
 		Node(Object* G, State Sg);
-		Object* getRelatedObject();
-		State getGoalState();
-		PUZZLENODE_STATE getCurrentNodeState();
-		bool isActive();
-		bool isCompleted();
-		bool isIncomplete();
+		Object* getRelatedObject() const;
+		State getGoalState() const;
+		ENodeState getCurrentNodeState() const;
+		bool isActive() const;
+		bool isCompleted() const;
+		bool isIncomplete() const;
 
 		int handleEvent(Event e);
 		void updateCompletionState();
-
-		void setPuzzleNodeState(PUZZLENODE_STATE state);
-
+		void setPuzzleNodeState(ENodeState state);
 		void setPuzzleUpdateListener(UpdateListener* updList);
 
-		std::string getTextualRepresentation();
-		std::string getSimpleTextualRepresentation();
+		std::string getTextualRepresentation() const;
+		std::string getSimpleTextualRepresentation() const;
 
 	private:
-		Object* relatedObject = NULL;
+		Object* relatedObject = nullptr;
 		State goalState;
-		PUZZLENODE_STATE currentNodeState;
-		UpdateListener* PUL = NULL;
-		std::string getCompletionStateString();
+		ENodeState currentNodeState;
+		UpdateListener* PUL = nullptr;
+		std::string getCompletionStateString() const;
 
 	};
+
 
 }

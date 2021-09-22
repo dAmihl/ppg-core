@@ -2,12 +2,12 @@
 
 namespace PPG
 {
-	void Logger::log(std::string msg)
+	void Logger::log(const std::string msg)
 	{
 		Logger::log(msg, 0);
 	}
 
-	void Logger::log(std::string msg, unsigned int logLevel)
+	void Logger::log(const std::string msg, unsigned int logLevel)
 	{
 		if (logLevel < MINIMUM_LOG_LEVEL) {
 			return;
@@ -20,17 +20,17 @@ namespace PPG
 		file.close();
 	}
 
-	void Logger::error(std::string msg)
+	void Logger::error(const std::string msg)
 	{
 		Logger::log(msg, 3);
 	}
 
-	void Logger::warning(std::string msg)
+	void Logger::warning(const std::string msg)
 	{
 		Logger::log(msg, 2);
 	}
 
-	void Logger::info(std::string msg)
+	void Logger::info(const std::string msg)
 	{
 		Logger::log(msg, 1);
 	}
