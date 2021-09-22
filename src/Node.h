@@ -14,7 +14,7 @@ namespace PPG
 	};
 
 
-	class Node
+	class PPG_EXPORT Node
 	{
 	public:
 		Node(Object* G, State Sg);

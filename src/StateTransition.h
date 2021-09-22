@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PuzzGenCore.h"
 #include <unordered_map>
 #include "State.h"
 
@@ -7,7 +8,7 @@ using EVENT_MAP = std::unordered_map<std::string, std::vector<std::pair<PPG::Sta
 
 namespace PPG
 {
-	class StateTransition
+	class PPG_EXPORT StateTransition
 	{
 	public:
 		EVENT_MAP* getTransitionMap();

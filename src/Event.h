@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PuzzGenCore.h"
 #include "Object.h"
 #include <string>
 

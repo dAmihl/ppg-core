@@ -3,10 +3,12 @@
 #include <cstdlib>
 #include "PuzzGenCore.h"
 #include "State.h"
+#include "Object.h"
+#include "Node.h"
 
 namespace PPG {
 
-	class Randomizer
+	class PPG_EXPORT Randomizer
 	{
 	public:
 		/*

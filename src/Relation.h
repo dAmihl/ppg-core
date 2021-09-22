@@ -4,6 +4,7 @@
 #include "PuzzGenCore.h"
 #include "GraphNode.h"
 #include "Node.h"
+#include "Rule.h"
 
 namespace PPG
 {
@@ -11,7 +12,7 @@ namespace PPG
 	using NodePairVec = Vec<NodePair>;
 	using NodeVec = Vec<Node*>;
 
-	class Relation
+	class PPG_EXPORT Relation
 	{
 	public:
 		NodePairVec getPairs();

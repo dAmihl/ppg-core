@@ -16,7 +16,7 @@ namespace PPG
 	using EventVec = Vec<Event*>;
 	using RuleVec = Vec<Rule>;
 
-	class Generator
+	class PPG_EXPORT Generator
 	{
 	public:
 

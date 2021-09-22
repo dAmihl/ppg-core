@@ -1,11 +1,12 @@
 #pragma once
 
+#include "PuzzGenCore.h"
 #include "Object.h"
 #include "State.h"
 
 namespace PPG
 {
-	class Rule
+	class PPG_EXPORT Rule
 	{
 	public:
 		enum class EPuzzleRuleType {

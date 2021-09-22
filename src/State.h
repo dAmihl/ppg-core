@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PuzzGenCore.h"
 #include <string>
 
 namespace PPG

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "PuzzGenCore.h"
 #include <string>
 #include <vector>
 #include "State.h"
@@ -8,7 +9,7 @@
 
 namespace PPG
 {
-	class Object
+	class PPG_EXPORT Object
 	{
 	public:
 		Object();

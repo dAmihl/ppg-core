@@ -1,12 +1,13 @@
 #pragma once
 
+#include "PuzzGenCore.h"
 #include <iostream>
 #include <fstream>
 #include <ctime>
 
 namespace PPG
 {
-	class Logger {
+	class PPG_EXPORT Logger {
 
 	public:
 		static void log(std::string msg);

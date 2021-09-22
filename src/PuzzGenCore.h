@@ -1,11 +1,10 @@
 #pragma once
 
 #include <vector>
-#include "Rule.h"
-#include "Node.h"
-#include "Object.h"
-#include "Event.h"
-#include "State.h"
+
+#ifndef PPG_EXPORT
+	#define PPG_EXPORT __declspec(dllexport)
+#endif
 
 namespace PPG
 {

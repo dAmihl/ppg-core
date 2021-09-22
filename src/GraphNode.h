@@ -1,10 +1,13 @@
 #pragma once
 
 #include "PuzzGenCore.h"
+#include "Object.h"
+#include "State.h"
+#include "GraphNode.h"
 
 namespace PPG
 {
-	class GraphNode
+	class PPG_EXPORT GraphNode
 	{
 	public:
 		Object* getObject();

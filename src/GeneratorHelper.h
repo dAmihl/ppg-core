@@ -15,7 +15,7 @@ namespace PPG
 	using NodeVec = Vec<Node*>;
 	using RuleVec = Vec<Rule>;
 
-	class GeneratorHelper
+	class PPG_EXPORT GeneratorHelper
 	{
 
 	public:

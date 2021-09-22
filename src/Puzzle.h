@@ -10,7 +10,7 @@ namespace PPG
 	using NodeVec = Vec<Node*>;
 	using EventVec = Vec<Event*>;
 
-	class Puzzle
+	class PPG_EXPORT Puzzle
 	{
 	public:
 		void addNode(Node* n, bool isRelevant);
