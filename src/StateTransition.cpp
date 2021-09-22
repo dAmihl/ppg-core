@@ -27,13 +27,13 @@ namespace PPG
 
 	}
 
-	std::string StateTransition::getTextualOutput()
+	std::string StateTransition::getTextualOutput() const
 	{
 		std::string out = "";
-		for (EVENT_MAP::iterator it = this->transitionMap.begin(); it != this->transitionMap.end(); ++it) {
-			out += "> " + it->first + ": ";
-			for (std::vector<std::pair<State, State>>::iterator vecIt = it->second.begin(); vecIt != it->second.end(); ++vecIt) {
-				out += "<" + vecIt->first.getStateName() + " -> " + vecIt->second.getStateName() + "> ";
+		for (auto& it: transitionMap) {
+			out += "> " + it.first + ": ";
+			for (auto& vecIt: it.second) {
+				out += "<" + vecIt.first.getStateName() + " -> " + vecIt.second.getStateName() + "> ";
 			}
 			out += "\n";
 		}
@@ -41,21 +41,21 @@ namespace PPG
 		return out;
 	}
 
-	std::vector<State> StateTransition::getReachableStates()
+	std::vector<State> StateTransition::getReachableStates() const
 	{
 		std::vector<State> reachables;
-		for (EVENT_MAP::iterator it = this->transitionMap.begin(); it != this->transitionMap.end(); ++it) {
-			for (std::vector<std::pair<State, State>>::iterator vecIt = it->second.begin(); vecIt != it->second.end(); ++vecIt) {
-				reachables.push_back(vecIt->second);
+		for (auto& it: transitionMap) {
+			for (auto& vecIt : it.second) {
+				reachables.push_back(vecIt.second);
 			}
 		}
 		return reachables;
 	}
 
-	std::vector<std::pair<State, State>> StateTransition::findTransitions(const std::string name)
+	std::vector<std::pair<State, State>> StateTransition::findTransitions(const std::string name) const
 	{
-		EVENT_MAP::iterator it = this->transitionMap.find(name);
-		if (it != this->transitionMap.end()) {
+		auto& it = transitionMap.find(name);
+		if (it != transitionMap.end()) {
 			return it->second;
 		}
 

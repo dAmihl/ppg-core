@@ -3,7 +3,8 @@
 #include <vector>
 
 #ifndef PPG_EXPORT
-	#define PPG_EXPORT __declspec(dllexport)
+	//#define PPG_EXPORT __declspec(dllexport)
+	#define PPG_EXPORT
 #endif
 
 namespace PPG

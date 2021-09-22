@@ -2,65 +2,35 @@
 
 namespace PPG
 {
-	Object::Object()
-	{
-		this->objectName = "DefaultObject";
-		this->templateName = this->objectName;
-	}
+	Object::Object() : objectName{ "DefaultObject" }, templateName{ objectName }
+	{}
 
-	Object::Object(std::string name)
-	{
-		this->objectName = name;
-		this->templateName = name;
-	}
-
-
-	Object::~Object()
-	{
-	}
+	Object::Object(std::string name) : objectName{ name }, templateName{ name }
+	{}
 
 	std::string Object::getObjectName() const {
 		return this->objectName;
 	}
 
-	State Object::getCurrentState() {
+	State Object::getCurrentState() const {
 		return this->currentState;
 	}
 
-
-	void Object::setStateTransition(StateTransition F)
-	{
-		this->stateTransition = F;
-	}
-
-	StateTransition Object::getStateTransition()
+	StateTransition Object::getStateTransition() const
 	{
 		return this->stateTransition;
 	}
 
-	void Object::setCurrentState(State Sc)
-	{
-		this->currentState = Sc;
-	}
-
-
-
-	std::vector<State> Object::getReachableStates()
+	std::vector<State> Object::getReachableStates() const
 	{
 		std::vector<State> reachables;
-		reachables = this->stateTransition.getReachableStates();
-
+		reachables = stateTransition.getReachableStates();
 		return reachables;
 	}
 
-	ObjectMetaData Object::getMetaData()
+	ObjectMetaData Object::getMetaData() const
 	{
 		return this->metaData;
-	}
-
-	void Object::setMetaData(ObjectMetaData MD)
-	{
-		this->metaData = MD;
 	}
 
 	std::string Object::getTemplateName() const
@@ -68,14 +38,29 @@ namespace PPG
 		return this->templateName;
 	}
 
-	void Object::setTemplateName(std::string tName)
-	{
-		this->templateName = tName;
-	}
-
 	bool Object::isTemplateObject() const
 	{
 		return this->bIsTemplate;
+	}
+
+	void Object::setStateTransition(StateTransition F)
+	{
+		this->stateTransition = F;
+	}
+
+	void Object::setCurrentState(State Sc)
+	{
+		this->currentState = Sc;
+	}
+
+	void Object::setMetaData(ObjectMetaData MD)
+	{
+		this->metaData = MD;
+	}
+
+	void Object::setTemplateName(std::string tName)
+	{
+		this->templateName = tName;
 	}
 
 	void Object::setIsTemplateObject(bool bTemplate)
@@ -93,12 +78,12 @@ namespace PPG
 	}
 
 
-	std::string Object::getTextualRepresentation()
+	std::string Object::getTextualRepresentation() const
 	{
 		std::string out = "";
 		out += "Gameobject: " + this->objectName + "\n";
 		out += " > StateTransition: \n";
-		out += this->stateTransition.getTextualOutput();
+		out += stateTransition.getTextualOutput();
 		out += " > CurrentState: \n";
 		out += "  - " + this->currentState.getStateName();
 		out += "\n";
@@ -109,7 +94,7 @@ namespace PPG
 	}
 
 
-	std::string Object::getReachableStatesTextualRepresentation()
+	std::string Object::getReachableStatesTextualRepresentation() const
 	{
 		std::vector<State> reachables = getReachableStates();
 		std::string out = "";

@@ -10,7 +10,7 @@ namespace PPG
 	public:
 		State() : m_stateName{ "DefaultState" } {};
 		State(std::string name) : m_stateName{ name } {};
-		std::string getStateName() {
+		std::string getStateName() const {
 			return m_stateName;
 		}
 

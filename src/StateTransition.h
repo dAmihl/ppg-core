@@ -13,9 +13,9 @@ namespace PPG
 	public:
 		EVENT_MAP* getTransitionMap();
 		void addTransition(std::string eventName, State origState, State newState);
-		std::string getTextualOutput();
-		std::vector<State> getReachableStates();
-		std::vector<std::pair<State, State>> findTransitions(const std::string name);
+		std::string getTextualOutput() const;
+		std::vector<State> getReachableStates() const;
+		std::vector<std::pair<State, State>> findTransitions(const std::string name) const;
 
 	private:
 		EVENT_MAP transitionMap;

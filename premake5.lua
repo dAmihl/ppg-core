@@ -26,7 +26,7 @@ project ("PPG-tests")
     targetdir "bin"
     kind "ConsoleApp"
     files {"test/**.cpp"}
-    includedirs {"includes", "src"}
+    includedirs {"vendor/includes", "src"}
     links {"PPG"}
 	
 	filter "configurations:Debug"
