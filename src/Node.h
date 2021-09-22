@@ -1,9 +1,9 @@
 #pragma once
 
-#include "PuzzleObject.h"
-#include "PuzzleState.h"
-#include "PuzzleEvent.h"
-#include "PuzzleUpdateListener.h"
+#include "Object.h"
+#include "State.h"
+#include "Event.h"
+#include "UpdateListener.h"
 
 namespace PPG
 {
@@ -17,29 +17,29 @@ namespace PPG
 	class Node
 	{
 	public:
-		Node(PuzzleObject* G, PuzzleState Sg);
-		PuzzleObject* getRelatedObject();
-		PuzzleState getGoalState();
+		Node(Object* G, State Sg);
+		Object* getRelatedObject();
+		State getGoalState();
 		PUZZLENODE_STATE getCurrentNodeState();
 		bool isActive();
 		bool isCompleted();
 		bool isIncomplete();
 
-		int handleEvent(PuzzleEvent e);
+		int handleEvent(Event e);
 		void updateCompletionState();
 
 		void setPuzzleNodeState(PUZZLENODE_STATE state);
 
-		void setPuzzleUpdateListener(PuzzleUpdateListener* updList);
+		void setPuzzleUpdateListener(UpdateListener* updList);
 
 		std::string getTextualRepresentation();
 		std::string getSimpleTextualRepresentation();
 
 	private:
-		PuzzleObject* relatedObject = NULL;
-		PuzzleState goalState;
+		Object* relatedObject = NULL;
+		State goalState;
 		PUZZLENODE_STATE currentNodeState;
-		PuzzleUpdateListener* PUL = NULL;
+		UpdateListener* PUL = NULL;
 		std::string getCompletionStateString();
 
 	};

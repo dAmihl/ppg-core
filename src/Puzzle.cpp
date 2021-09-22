@@ -9,7 +9,7 @@ namespace PPG
 
 	}
 
-	void Puzzle::setRelation(PuzzleRelation O)
+	void Puzzle::setRelation(Relation O)
 	{
 		this->relation = O;
 	}
@@ -28,7 +28,7 @@ namespace PPG
 		return M.isActive();
 	}
 
-	void Puzzle::handleEvent(PuzzleEvent e)
+	void Puzzle::handleEvent(Event e)
 	{
 		// TODO: Check if in events
 
@@ -96,7 +96,7 @@ namespace PPG
 		checkPuzzleCompletion();
 	}
 
-	void Puzzle::setUpdateListener(PuzzleUpdateListener* PUL)
+	void Puzzle::setUpdateListener(UpdateListener* PUL)
 	{
 		this->updateListener = PUL;
 
@@ -145,7 +145,7 @@ namespace PPG
 
 	}
 
-	void Puzzle::addEvent(PuzzleEvent* e)
+	void Puzzle::addEvent(Event* e)
 	{
 		this->events.push_back(e);
 	}
@@ -165,7 +165,7 @@ namespace PPG
 		return this->events;
 	}
 
-	PuzzleRelation Puzzle::getRelation()
+	Relation Puzzle::getRelation()
 	{
 		return this->relation;
 	}
@@ -224,13 +224,13 @@ namespace PPG
 		return out;
 	}
 
-	Vec<PuzzleGraphNode*> Puzzle::getGraphRepresentation()
+	Vec<GraphNode*> Puzzle::getGraphRepresentation()
 	{
-		Vec<PuzzleGraphNode*> allRoots = this->relation.getGraphRepresentation(this->nodes);
+		Vec<GraphNode*> allRoots = this->relation.getGraphRepresentation(this->nodes);
 		return allRoots;
 	}
 
-	bool Puzzle::canNodeHandleEvent(Node* N, PuzzleEvent E)
+	bool Puzzle::canNodeHandleEvent(Node* N, Event E)
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject()->getObjectName() == E.getRelatedObject()->getObjectName();
@@ -239,7 +239,7 @@ namespace PPG
 		return bResult;
 	}
 
-	bool Puzzle::isNodeCompatible(Node* N, PuzzleEvent E)
+	bool Puzzle::isNodeCompatible(Node* N, Event E)
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject()->getObjectName() == E.getRelatedObject()->getObjectName();

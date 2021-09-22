@@ -1,9 +1,9 @@
 #pragma once
 
 #include <unordered_map>
-#include "PuzzleState.h"
+#include "State.h"
 
-using EVENT_MAP = std::unordered_map<std::string, std::vector<std::pair<PPG::PuzzleState, PPG::PuzzleState>>>;
+using EVENT_MAP = std::unordered_map<std::string, std::vector<std::pair<PPG::State, PPG::State>>>;
 
 namespace PPG
 {
@@ -11,10 +11,10 @@ namespace PPG
 	{
 	public:
 		EVENT_MAP* getTransitionMap();
-		void addTransition(std::string eventName, PuzzleState origState, PuzzleState newState);
+		void addTransition(std::string eventName, State origState, State newState);
 		std::string getTextualOutput();
-		std::vector<PuzzleState> getReachableStates();
-		std::vector<std::pair<PuzzleState, PuzzleState>> findTransitions(const std::string name);
+		std::vector<State> getReachableStates();
+		std::vector<std::pair<State, State>> findTransitions(const std::string name);
 
 	private:
 		EVENT_MAP transitionMap;

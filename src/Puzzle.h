@@ -1,53 +1,53 @@
 #pragma once
 
 #include "Node.h"
-#include "PuzzleEvent.h"
-#include "PuzzleRelation.h"
-#include "PuzzleUpdateListener.h"
+#include "Event.h"
+#include "Relation.h"
+#include "UpdateListener.h"
 
 namespace PPG
 {
 	using NodeVec = Vec<Node*>;
-	using EventVec = Vec<PuzzleEvent*>;
+	using EventVec = Vec<Event*>;
 
 	class Puzzle
 	{
 	public:
 		void addNode(Node* n, bool isRelevant);
-		void addEvent(PuzzleEvent* e);
-		void setRelation(PuzzleRelation O);
+		void addEvent(Event* e);
+		void setRelation(Relation O);
 		void setNodes(NodeVec nodes);
 
-		void handleEvent(PuzzleEvent e);
+		void handleEvent(Event e);
 
-		void setUpdateListener(PuzzleUpdateListener* PUL);
+		void setUpdateListener(UpdateListener* PUL);
 
 		NodeVec getNodes();
 		NodeVec getRelevantNodes();
 		EventVec getEvents();
-		PuzzleRelation getRelation();
+		Relation getRelation();
 
 		std::string getSimpleTextualRepresentation();
 		std::string getExtendedTextualRepresentation();
 		std::string getTextualEnvironmentDescription();
 
-		Vec<PuzzleGraphNode*> getGraphRepresentation();
+		Vec<GraphNode*> getGraphRepresentation();
 
 	private:
 		NodeVec nodes;
 		NodeVec relevantNodes;
 		EventVec events;
-		PuzzleRelation relation;
+		Relation relation;
 
-		PuzzleUpdateListener* updateListener = NULL;
+		UpdateListener* updateListener = NULL;
 
 		/*
 		void doSetNodeActive(PuzzleNode* M);
 		void doCheckNodeComplete(PuzzleNode* M);
 		void doSetNodeIncomplete(PuzzleNode* M);
 		*/
-		bool canNodeHandleEvent(Node* N, PuzzleEvent E);
-		bool isNodeCompatible(Node* N, PuzzleEvent E);
+		bool canNodeHandleEvent(Node* N, Event E);
+		bool isNodeCompatible(Node* N, Event E);
 		void updateNodeProperties(Node* N);
 		void checkPuzzleCompletion();
 		void onPuzzleCompleted();

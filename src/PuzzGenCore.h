@@ -1,11 +1,11 @@
 #pragma once
 
 #include <vector>
-#include "PuzzleRule.h"
+#include "Rule.h"
 #include "Node.h"
-#include "PuzzleObject.h"
-#include "PuzzleEvent.h"
-#include "PuzzleState.h"
+#include "Object.h"
+#include "Event.h"
+#include "State.h"
 
 namespace PPG
 {

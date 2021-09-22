@@ -5,37 +5,37 @@ using namespace PPG;
 
 using NodeVec = Vec<Node*>;
 using NodePair = Pair<Node*, Node*>;
-using RuleVec = Vec<PuzzleRule>;
-using EventVec = Vec<PuzzleEvent*>;
-using ObjVec = Vec<PuzzleObject*>;
+using RuleVec = Vec<Rule>;
+using EventVec = Vec<Event*>;
+using ObjVec = Vec<Object*>;
 
 
 TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 	GIVEN("a simple Puzzle Relation with 4 nodes and a simple Relation N1->N2->N3") {
 
-		PuzzleRelation* R = new PuzzleRelation();
+		Relation* R = new Relation();
 
-		PuzzleGenerator* PG = new PuzzleGenerator();
+		Generator* PG = new Generator();
 		
-		PuzzleObject* O1 = new PuzzleObject("Object_O1");
+		Object* O1 = new Object("Object_O1");
 		PuzzleState* S1 = new PuzzleState("State_S1");
 		Node* N1 = new Node(O1, *S1);
 
-		PuzzleObject* O2 = new PuzzleObject("Object_O2");
+		Object* O2 = new Object("Object_O2");
 		PuzzleState* S2 = new PuzzleState("State_S2");
 		Node* N2 = new Node(O2, *S2);
 
-		PuzzleObject* O3 = new PuzzleObject("Object_O3");
+		Object* O3 = new Object("Object_O3");
 		PuzzleState* S3 = new PuzzleState("State_S3");
 		Node* N3 = new Node(O3, *S3);
 
-		PuzzleObject* O4 = new PuzzleObject("Object_O4");
+		Object* O4 = new Object("Object_O4");
 		PuzzleState* S4 = new PuzzleState("State_S4");
 		Node* N4 = new Node(O4, *S4);
 
-		NodePair n1n2Pair = PuzzleRelation::makePuzzlePair(N1, N2);
-		NodePair n2n3Pair = PuzzleRelation::makePuzzlePair(N2, N3);
+		NodePair n1n2Pair = Relation::makePuzzlePair(N1, N2);
+		NodePair n2n3Pair = Relation::makePuzzlePair(N2, N3);
 
 		R->addPair(n1n2Pair);
 		R->addPair(n2n3Pair);
@@ -43,10 +43,10 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A Circular dependency would be created as direct successor") {
 
-			NodePair circularDependencyPair = PuzzleRelation::makePuzzlePair(N2, N1);
+			NodePair circularDependencyPair = Relation::makePuzzlePair(N2, N1);
 
 			THEN("Return true in _checkCreatesCircularDependency()") {
-				bool hasCircularDependency = PuzzleGeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
+				bool hasCircularDependency = GeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
 				REQUIRE(hasCircularDependency);
 			}
 
@@ -54,10 +54,10 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A Circular dependency would be created as indirect successor") {
 
-			NodePair circularDependencyPair = PuzzleRelation::makePuzzlePair(N3, N1);
+			NodePair circularDependencyPair = Relation::makePuzzlePair(N3, N1);
 
 			THEN("Return true in _checkCreatesCircularDependency()") {
-				bool hasCircularDependency = PuzzleGeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
+				bool hasCircularDependency = GeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
 				REQUIRE(hasCircularDependency);
 			}
 
@@ -65,10 +65,10 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("No circular dependency would be created, by adding N3->N4") {
 
-			NodePair circularDependencyPair = PuzzleRelation::makePuzzlePair(N3, N4);
+			NodePair circularDependencyPair = Relation::makePuzzlePair(N3, N4);
 
 			THEN("Return true in _checkCreatesCircularDependency()") {
-				bool hasCircularDependency = PuzzleGeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
+				bool hasCircularDependency = GeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
 				REQUIRE_FALSE(hasCircularDependency);
 			}
 
@@ -77,11 +77,11 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("Looking for a node in sequential order starting from N1-N2") {
 
 			THEN("Return true because node N3 can be found") {
-				REQUIRE(PuzzleGeneratorHelper::findNodeSequential(N3, n1n2Pair, R));
+				REQUIRE(GeneratorHelper::findNodeSequential(N3, n1n2Pair, R));
 			}
 
 			THEN("Return true because node N2 can be found in the starting node") {
-				REQUIRE(PuzzleGeneratorHelper::findNodeSequential(N2, n1n2Pair, R));
+				REQUIRE(GeneratorHelper::findNodeSequential(N2, n1n2Pair, R));
 			}
 		}
 
@@ -89,10 +89,10 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 			PuzzleState* S1_2 = new PuzzleState("State_S1_2");
 			Node* N4 = new Node(O1, *S1_2);
-			NodePair exclusiveDependencyPair = PuzzleRelation::makePuzzlePair(N4, N2);
+			NodePair exclusiveDependencyPair = Relation::makePuzzlePair(N4, N2);
 
 			THEN("Return true in _checkCreatesExclusiveDependency()") {
-				bool hasExclusiveDependency = PuzzleGeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
+				bool hasExclusiveDependency = GeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
 				REQUIRE(hasExclusiveDependency);
 			}
 
@@ -102,10 +102,10 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 			PuzzleState* S1_2 = new PuzzleState("State_S1_2");
 			Node* N4 = new Node(O2, *S1_2);
-			NodePair exclusiveDependencyPair = PuzzleRelation::makePuzzlePair(N4, N2);
+			NodePair exclusiveDependencyPair = Relation::makePuzzlePair(N4, N2);
 
 			THEN("Return false in _checkCreatesExclusiveDependency()") {
-				bool hasExclusiveDependency = PuzzleGeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
+				bool hasExclusiveDependency = GeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
 				REQUIRE_FALSE(hasExclusiveDependency);
 			}
 
@@ -114,10 +114,10 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("No exclusive dependency would be created by adding N4->N2 where N4 and N1 have the same object and same state") {
 
 			Node* N4 = new Node(O1, *S1);
-			NodePair exclusiveDependencyPair = PuzzleRelation::makePuzzlePair(N4, N2);
+			NodePair exclusiveDependencyPair = Relation::makePuzzlePair(N4, N2);
 
 			THEN("Return false in _checkCreatesExclusiveDependency()") {
-				bool hasExclusiveDependency = PuzzleGeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
+				bool hasExclusiveDependency = GeneratorHelper::checkCreatesExclusiveDependency(exclusiveDependencyPair, R);
 				REQUIRE(hasExclusiveDependency);
 			}
 
@@ -128,7 +128,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			Node* N4 = new Node(O1, *S1);
 
 			THEN("Return true in _checkEquality()") {
-				bool isEqualToN1 = PuzzleGeneratorHelper::checkEquality(N4, N1);
+				bool isEqualToN1 = GeneratorHelper::checkEquality(N4, N1);
 				REQUIRE(isEqualToN1);
 			}
 
@@ -139,22 +139,22 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			Node* N4 = new Node(O1, *S2);
 
 			THEN("Return false in _checkEquality()") {
-				bool isEqualToN1 = PuzzleGeneratorHelper::checkEquality(N4, N1);
+				bool isEqualToN1 = GeneratorHelper::checkEquality(N4, N1);
 				REQUIRE_FALSE(isEqualToN1);
 			}
 		}
 
 		WHEN("A meta-equal node N4 = N2 is to be added to R via N4->N1->N2") {
 
-			PuzzleObject* metaEqualO2 = O2;
+			Object* metaEqualO2 = O2;
 			PuzzleState* metaEqualS2 = S2;
 			Node* N4 = new Node(metaEqualO2, *metaEqualS2);
 
-			NodePair metaEqualPair = PuzzleRelation::makePuzzlePair(N4, N1);
+			NodePair metaEqualPair = Relation::makePuzzlePair(N4, N1);
 			R->addPair(metaEqualPair);
 
 			THEN("Return true in _checkMetaEqualOccurence()") {
-				bool hasMetaEqualOccurence = PuzzleGeneratorHelper::checkMetaEqualOccurance(metaEqualPair, R);
+				bool hasMetaEqualOccurence = GeneratorHelper::checkMetaEqualOccurance(metaEqualPair, R);
 				REQUIRE(hasMetaEqualOccurence);
 			}
 		}
@@ -162,40 +162,40 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A non-meta-equal node N4 ?= N2 is to be added to R via N4->N1->N2, where N4 and N2 have different states") {
 
-			PuzzleObject* metaEqualO2 = O2;
+			Object* metaEqualO2 = O2;
 			PuzzleState* metaEqualS2 = new PuzzleState("State_Sx");
 			Node* N4 = new Node(metaEqualO2, *metaEqualS2);
 
-			NodePair metaEqualPair = PuzzleRelation::makePuzzlePair(N4, N1);
+			NodePair metaEqualPair = Relation::makePuzzlePair(N4, N1);
 			R->addPair(metaEqualPair);
 
 			THEN("Return false in _checkMetaEqualOccurence()") {
-				bool hasMetaEqualOccurence = PuzzleGeneratorHelper::checkMetaEqualOccurance(metaEqualPair, R);
+				bool hasMetaEqualOccurence = GeneratorHelper::checkMetaEqualOccurance(metaEqualPair, R);
 				REQUIRE_FALSE(hasMetaEqualOccurence);
 			}
 		}
 
 		WHEN("A custom rule is used to restrict the generation: (O4, *) < (O2, *)") {
 
-			PuzzleRule* rule1 = new PuzzleRule(N4->getRelatedObject(), nullptr, N2->getRelatedObject(), nullptr, PuzzleRule::EPuzzleRuleType::BEFORE);
+			Rule* rule1 = new Rule(N4->getRelatedObject(), nullptr, N2->getRelatedObject(), nullptr, Rule::EPuzzleRuleType::BEFORE);
 
 			THEN("isRuleObjectEqual and isRuleStateEqual should return true with (O4,*) =R= (O4, S4)") {
-				bool isRuleObjectEqual = PuzzleGeneratorHelper::isRuleObjectEqual(rule1->getLeftHandSideObject(), N4->getRelatedObject());
-				bool isRuleStateEqual = PuzzleGeneratorHelper::isRuleStateEqual(rule1->getLeftHandSideState(), S4);
+				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1->getLeftHandSideObject(), N4->getRelatedObject());
+				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1->getLeftHandSideState(), S4);
 				REQUIRE(isRuleObjectEqual);
 				REQUIRE(isRuleStateEqual);
 			}
 
 			THEN("isRuleObjectEqual and isRuleStateEqual should return true with (O2,*) =R= (O2, S2)"){
-				bool isRuleObjectEqual = PuzzleGeneratorHelper::isRuleObjectEqual(rule1->getRightHandSideObject(), N2->getRelatedObject());
-				bool isRuleStateEqual = PuzzleGeneratorHelper::isRuleStateEqual(rule1->getRightHandSideState(), S2);
+				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1->getRightHandSideObject(), N2->getRelatedObject());
+				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1->getRightHandSideState(), S2);
 				REQUIRE(isRuleObjectEqual);
 				REQUIRE(isRuleStateEqual);
 			}
 
 			THEN("isRuleObjectEqual should return false, isRuleStateEqual true (because of wildcard) with (O2,*) =R= (O3, S2)"){
-				bool isRuleObjectEqual = PuzzleGeneratorHelper::isRuleObjectEqual(rule1->getRightHandSideObject(), N3->getRelatedObject());
-				bool isRuleStateEqual = PuzzleGeneratorHelper::isRuleStateEqual(rule1->getRightHandSideState(), S3);
+				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1->getRightHandSideObject(), N3->getRelatedObject());
+				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1->getRightHandSideState(), S3);
 				REQUIRE_FALSE(isRuleObjectEqual);
 				REQUIRE(isRuleStateEqual);
 			}
@@ -210,17 +210,17 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			nodes.push_back(N4);
 			Node* N5 = new Node(O1, *S2);
 			nodes.push_back(N5);
-			PuzzleObject* O5 = new PuzzleObject("O5");
+			Object* O5 = new Object("O5");
 
 			THEN("findNodesByPattern for Object O1 and S1 should only return N1") {
-				NodeVec foundNodes = R->findNodesByPattern(nodes, O1, S1, PuzzleGeneratorHelper::isRuleObjectEqual, PuzzleGeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = R->findNodesByPattern(nodes, O1, S1, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 1);
 				REQUIRE(foundNodes.at(0) == N1);
 			}
 
 			THEN("findNodesByPattern for Object O1 and * should return N1 and N5") {
-				NodeVec foundNodes = R->findNodesByPattern(nodes, O1, nullptr, PuzzleGeneratorHelper::isRuleObjectEqual, PuzzleGeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = R->findNodesByPattern(nodes, O1, nullptr, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 2);
 				bool result = (foundNodes.at(0) == N1) || (foundNodes.at(0) == N5);
@@ -228,7 +228,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			}
 
 			THEN("findNodesByPattern for Object O5 and * should return nothing") {
-				NodeVec foundNodes = R->findNodesByPattern(nodes, O5, nullptr, PuzzleGeneratorHelper::isRuleObjectEqual, PuzzleGeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = R->findNodesByPattern(nodes, O5, nullptr, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 0);
 			}
@@ -245,44 +245,44 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		// Number of nodes to generate
 		unsigned int numberNodes = 20;
 
-		PuzzleGenerator* PG = new PuzzleGenerator();
+		Generator* PG = new Generator();
 
 		RuleVec rules;
 		EventVec events;
 		ObjVec objects;
 
-		PuzzleObject* O1 = new PuzzleObject("Object_O1");
+		Object* O1 = new Object("Object_O1");
 		objects.push_back(O1);
 		PuzzleState* S1_1 = new PuzzleState("State_S1_1");
 		PuzzleState* S1_2 = new PuzzleState("State_S1_2");
 		StateTransition* T1 = new StateTransition();
-		PuzzleEvent* E1 = new PuzzleEvent("Event_E1", O1);
+		Event* E1 = new Event("Event_E1", O1);
 		T1->addTransition(E1->getEventName(), *S1_1, *S1_2);
 		T1->addTransition(E1->getEventName(), *S1_2, *S1_1);
 		O1->setStateTransition(*T1);
 		events.push_back(E1);
 		Node* N1 = new Node(O1, *S1_1);
 
-		PuzzleObject* O2 = new PuzzleObject("Object_O2");
+		Object* O2 = new Object("Object_O2");
 		objects.push_back(O2);
 		PuzzleState* S2_1 = new PuzzleState("State_S2_1");
 		PuzzleState* S2_2 = new PuzzleState("State_S2_2");
 		StateTransition* T2 = new StateTransition();
-		PuzzleEvent* E2 = new PuzzleEvent("Event_E2", O2);
+		Event* E2 = new Event("Event_E2", O2);
 		T2->addTransition(E2->getEventName(), *S2_1, *S2_2);
 		T2->addTransition(E2->getEventName(), *S2_2, *S2_1);
 		O2->setStateTransition(*T2);
 		events.push_back(E2);
 		Node* N2 = new Node(O2, *S2_1);
 
-		PuzzleObject* O3 = new PuzzleObject("Object_O3");
+		Object* O3 = new Object("Object_O3");
 		objects.push_back(O3);
 		PuzzleState* S3_1 = new PuzzleState("State_S3_1");
 		PuzzleState* S3_2 = new PuzzleState("State_S3_2");
 		PuzzleState* S3_3 = new PuzzleState("State_S3_3");
 		StateTransition* T3 = new StateTransition();
-		PuzzleEvent* E3_1 = new PuzzleEvent("Event_E3_1", O3);
-		PuzzleEvent* E3_2 = new PuzzleEvent("Event_E3_2", O3);
+		Event* E3_1 = new Event("Event_E3_1", O3);
+		Event* E3_2 = new Event("Event_E3_2", O3);
 		T3->addTransition(E3_1->getEventName(),*S3_1, *S3_2);
 		T3->addTransition(E3_2->getEventName(),*S3_2, *S3_3);
 		events.push_back(E3_1);
@@ -290,14 +290,14 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		O3->setStateTransition(*T3);
 		Node* N3 = new Node(O3, *S3_1);
 
-		NodePair n1n2Pair = PuzzleRelation::makePuzzlePair(N1, N2);
-		NodePair n2n3Pair = PuzzleRelation::makePuzzlePair(N2, N3);
+		NodePair n1n2Pair = Relation::makePuzzlePair(N1, N2);
+		NodePair n2n3Pair = Relation::makePuzzlePair(N2, N3);
 
-		PuzzleRule* R1 = new PuzzleRule(O1, S1_2, O2, S2_1, PuzzleRule::EPuzzleRuleType::BEFORE);
-		PuzzleRule* R2 = new PuzzleRule(O2, S2_2, O3, nullptr, PuzzleRule::EPuzzleRuleType::BEFORE);
-		PuzzleRule* R3 = new PuzzleRule(O1, nullptr, O3, nullptr, PuzzleRule::EPuzzleRuleType::STRICT_BEFORE);
-		PuzzleRule* R4 = new PuzzleRule(O1, nullptr, O3, nullptr, PuzzleRule::EPuzzleRuleType::AFTER);
-		PuzzleRule* R5 = new PuzzleRule(O2, S2_2, O3, nullptr, PuzzleRule::EPuzzleRuleType::STRICT_AFTER);
+		Rule* R1 = new Rule(O1, S1_2, O2, S2_1, Rule::EPuzzleRuleType::BEFORE);
+		Rule* R2 = new Rule(O2, S2_2, O3, nullptr, Rule::EPuzzleRuleType::BEFORE);
+		Rule* R3 = new Rule(O1, nullptr, O3, nullptr, Rule::EPuzzleRuleType::STRICT_BEFORE);
+		Rule* R4 = new Rule(O1, nullptr, O3, nullptr, Rule::EPuzzleRuleType::AFTER);
+		Rule* R5 = new Rule(O2, S2_2, O3, nullptr, Rule::EPuzzleRuleType::STRICT_AFTER);
 
 		//PG->setSeed(seed);
 		PG->setNumberNodes(numberNodes);
@@ -321,7 +321,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				NodeVec nodes = P->getNodes();
 
-				PuzzleRelation R = P->getRelation();
+				Relation R = P->getRelation();
 
 				bool result = true;
 				int count = 0;
@@ -357,7 +357,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				NodeVec nodes = P->getNodes();
 
-				PuzzleRelation R = P->getRelation();
+				Relation R = P->getRelation();
 
 				bool result = true;
 				int count = 0;
@@ -393,7 +393,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				NodeVec nodes = P->getNodes();
 
-				PuzzleRelation R = P->getRelation();
+				Relation R = P->getRelation();
 
 				bool result = true;
 				int count = 0;
@@ -429,7 +429,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				NodeVec nodes = P->getNodes();
 
-				PuzzleRelation R = P->getRelation();
+				Relation R = P->getRelation();
 
 				bool result = true;
 				int count = 0;
@@ -465,7 +465,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				NodeVec nodes = P->getNodes();
 
-				PuzzleRelation R = P->getRelation();
+				Relation R = P->getRelation();
 
 				bool result = true;
 				int count = 0;
@@ -500,12 +500,12 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 				NodeVec nodes = P->getNodes();
 
-				PuzzleRelation R = P->getRelation();
+				Relation R = P->getRelation();
 
 				bool result = false;
 				
-				Vec<PuzzleGraphNode*> roots = P->getGraphRepresentation();
-				PuzzleGraphNode *leaf = roots.at(0);
+				Vec<GraphNode*> roots = P->getGraphRepresentation();
+				GraphNode *leaf = roots.at(0);
 
 
 				result = leaf != nullptr;

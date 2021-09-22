@@ -3,7 +3,7 @@
 namespace PPG
 {
 
-	Node::Node(PuzzleObject* G, PuzzleState Sg)
+	Node::Node(Object* G, State Sg)
 	{
 		this->relatedObject = G;
 		this->goalState = Sg;
@@ -11,12 +11,12 @@ namespace PPG
 	}
 
 
-	PuzzleObject* Node::getRelatedObject()
+	Object* Node::getRelatedObject()
 	{
 		return this->relatedObject;
 	}
 
-	PuzzleState Node::getGoalState()
+	State Node::getGoalState()
 	{
 		return this->goalState;
 	}
@@ -42,13 +42,13 @@ namespace PPG
 	}
 
 
-	int Node::handleEvent(PuzzleEvent e)
+	int Node::handleEvent(Event e)
 	{
-		PuzzleState Sc = this->relatedObject->getCurrentState();
-		std::vector<std::pair<PuzzleState, PuzzleState>> vec = this->relatedObject->getStateTransition().findTransitions(e.getEventName());
-		for (std::vector<std::pair<PuzzleState, PuzzleState>>::iterator vecIt = vec.begin(); vecIt != vec.end(); ++vecIt) {
+		State Sc = this->relatedObject->getCurrentState();
+		std::vector<std::pair<State, State>> vec = this->relatedObject->getStateTransition().findTransitions(e.getEventName());
+		for (std::vector<std::pair<State, State>>::iterator vecIt = vec.begin(); vecIt != vec.end(); ++vecIt) {
 			if (vecIt->first.getStateName() == Sc.getStateName()) { // check name equality
-				PuzzleState nextState = vecIt->second;
+				State nextState = vecIt->second;
 				this->relatedObject->setCurrentState(nextState); // next state set
 				return 0;
 				break;
@@ -56,7 +56,7 @@ namespace PPG
 			// Test : Two Way state transitions, i.e. reversible state transitions
 			if (e.getIsReversible()) {
 				if (vecIt->second.getStateName() == Sc.getStateName()) { // check name equality
-					PuzzleState nextState = vecIt->first;
+					State nextState = vecIt->first;
 					this->relatedObject->setCurrentState(nextState); // next state set
 					return 0;
 					break;
@@ -127,7 +127,7 @@ namespace PPG
 		}
 	}
 
-	void Node::setPuzzleUpdateListener(PuzzleUpdateListener* updList)
+	void Node::setPuzzleUpdateListener(UpdateListener* updList)
 	{
 		this->PUL = updList;
 	}
