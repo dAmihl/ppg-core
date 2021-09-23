@@ -16,7 +16,7 @@ namespace PPG
 			STRICT_AFTER
 		};
 
-		Rule(Object* leftO, State* leftS, Object* rightO, State* rightS, EPuzzleRuleType t)
+		Rule(const Object* leftO, const State* leftS, const Object* rightO, const State* rightS, EPuzzleRuleType t)
 			: m_lhsObj{ leftO }, m_lhsState{ leftS }, m_rhsObj{ rightO }, m_rhsState{ rightS }, m_type{ t }
 		{};
 
@@ -25,11 +25,11 @@ namespace PPG
 
 		EPuzzleRuleType getRuleType() { return m_type; };
 
-		Object* getLeftHandSideObject() { return m_lhsObj; };
-		State* getLeftHandSideState() { return m_lhsState; };
+		const Object* getLeftHandSideObject() const { return m_lhsObj; };
+		const State* getLeftHandSideState() const { return m_lhsState; };
 
-		Object* getRightHandSideObject() { return m_rhsObj; };
-		State* getRightHandSideState() { return m_rhsState; };
+		const Object* getRightHandSideObject() const { return m_rhsObj; };
+		const State* getRightHandSideState() const { return m_rhsState; };
 
 		std::string getTextualRepresentation();
 
@@ -37,11 +37,11 @@ namespace PPG
 	private:
 		EPuzzleRuleType m_type;
 
-		Object* m_lhsObj;
-		State* m_lhsState;
+		const Object* m_lhsObj;
+		const State* m_lhsState;
 
-		Object* m_rhsObj;
-		State* m_rhsState;
+		const Object* m_rhsObj;
+		const State* m_rhsState;
 
 		std::string getRuleTypeString();
 

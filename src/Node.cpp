@@ -3,7 +3,7 @@
 namespace PPG
 {
 
-	Node::Node(Object* G, State Sg) : relatedObject{ G }, goalState{ Sg }, currentNodeState{ENodeState::INCOMPLETE}
+	Node::Node(Object* G, State* Sg) : relatedObject{ G }, goalState{ Sg }, currentNodeState{ENodeState::INCOMPLETE}
 	{}
 
 	Object* Node::getRelatedObject() const
@@ -11,7 +11,7 @@ namespace PPG
 		return relatedObject;
 	}
 
-	State Node::getGoalState() const
+	const State* Node::getGoalState() const
 	{
 		return goalState;
 	}
@@ -39,19 +39,19 @@ namespace PPG
 
 	int Node::handleEvent(Event e)
 	{
-		State Sc = this->relatedObject->getCurrentState();
-		std::vector<std::pair<State, State>> vec = relatedObject->getStateTransition().findTransitions(e.getEventName());
+		State* Sc = this->relatedObject->getCurrentState();
+		std::vector<std::pair<State*, State*>> vec = relatedObject->getStateTransition().findTransitions(e.getEventName());
 		for (auto& vecIt : vec) {
-			if (vecIt.first.getStateName() == Sc.getStateName()) { // check name equality
-				State nextState = vecIt.second;
+			if (vecIt.first->getStateName() == Sc->getStateName()) { // check name equality
+				State* nextState = vecIt.second;
 				relatedObject->setCurrentState(nextState); // next state set
 				return 0;
 				break;
 			}
 			// Test : Two Way state transitions, i.e. reversible state transitions
 			if (e.getIsReversible()) {
-				if (vecIt.second.getStateName() == Sc.getStateName()) { // check name equality
-					State nextState = vecIt.first;
+				if (vecIt.second->getStateName() == Sc->getStateName()) { // check name equality
+					State* nextState = vecIt.first;
 					relatedObject->setCurrentState(nextState); // next state set
 					return 0;
 					break;
@@ -76,7 +76,7 @@ namespace PPG
 	std::string Node::getTextualRepresentation() const
 	{
 		std::string out = "";
-		out += "<> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getStateName() + ") <> \n";
+		out += "<> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState->getStateName() + ") <> \n";
 		out += relatedObject->getTextualRepresentation();
 		out += "Puzzlenode-State: ";
 		out += getCompletionStateString();
@@ -85,19 +85,19 @@ namespace PPG
 	}
 	std::string Node::getSimpleTextualRepresentation() const
 	{
-		std::string out = ">> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getStateName() + ") :: " + getCompletionStateString() + " <> \n";
+		std::string out = ">> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState->getStateName() + ") :: " + getCompletionStateString() + " <> \n";
 		return out;
 	}
 
 	// Only callable privately after handling event!
 	void Node::updateCompletionState()
 	{
-		if (relatedObject->getCurrentState().getStateName() == goalState.getStateName()) { // name equality --> TODO
+		if (relatedObject->getCurrentState()->getStateName() == goalState->getStateName()) { // name equality --> TODO
 			setPuzzleNodeState(ENodeState::COMPLETED);
 		}
 
 		// Traverse back in puzzle "graph"
-		else if (relatedObject->getCurrentState().getStateName() != goalState.getStateName()) {
+		else if (relatedObject->getCurrentState()->getStateName() != goalState->getStateName()) {
 			if (currentNodeState == ENodeState::COMPLETED) {
 				setPuzzleNodeState(ENodeState::ACTIVE);
 			}

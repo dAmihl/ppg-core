@@ -12,7 +12,7 @@ namespace PPG
 		return objectName;
 	}
 
-	State Object::getCurrentState() const {
+	State* Object::getCurrentState() const {
 		return currentState;
 	}
 
@@ -21,9 +21,9 @@ namespace PPG
 		return stateTransition;
 	}
 
-	std::vector<State> Object::getReachableStates() const
+	std::vector<State*> Object::getReachableStates() const
 	{
-		std::vector<State> reachables;
+		std::vector<State*> reachables;
 		reachables = stateTransition.getReachableStates();
 		return reachables;
 	}
@@ -48,7 +48,7 @@ namespace PPG
 		this->stateTransition = F;
 	}
 
-	void Object::setCurrentState(State Sc)
+	void Object::setCurrentState(State* Sc)
 	{
 		this->currentState = Sc;
 	}
@@ -68,10 +68,9 @@ namespace PPG
 		this->bIsTemplate = bTemplate;
 	}
 
-	bool Object::sameTemplateAs(const Object& o2)
+	bool Object::sameTemplateAs(const Object& o2) const
 	{
-
-		std::string id1 = this->isTemplateObject() ? this->getTemplateName() : this->getObjectName();
+		std::string id1 = isTemplateObject() ? getTemplateName() : getObjectName();
 		std::string id2 = o2.isTemplateObject() ? o2.getTemplateName() : o2.getObjectName();
 
 		return id1 == id2;
@@ -85,7 +84,7 @@ namespace PPG
 		out += " > StateTransition: \n";
 		out += stateTransition.getTextualOutput();
 		out += " > CurrentState: \n";
-		out += "  - " + this->currentState.getStateName();
+		out += "  - " + this->currentState->getStateName();
 		out += "\n";
 		out += " > Reachable States: \n";
 		out += getReachableStatesTextualRepresentation();
@@ -96,9 +95,9 @@ namespace PPG
 
 	std::string Object::getReachableStatesTextualRepresentation() const
 	{
-		std::vector<State> reachables = getReachableStates();
+		std::vector<State*> reachables = getReachableStates();
 		std::string out = "";
-		for (std::vector<State>::iterator vecIt = reachables.begin(); vecIt != reachables.end(); ++vecIt) {
+		for (auto& vecIt: reachables) {
 			out += "  - " + vecIt->getStateName() + "\n";
 		}
 		out += "\n";

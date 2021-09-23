@@ -37,8 +37,8 @@ namespace PPG
 		static bool checkMetaEqualOccuranceByNode(Node* N, Relation* R);
 
 		static bool isRuleNodeEqual(Node* N, Object* ruleObject, State* ruleState);
-		static bool isRuleObjectEqual(Object* o1, Object* o2);
-		static bool isRuleStateEqual(State* s1, State* s2);
+		static bool isRuleObjectEqual(const Object* o1, const Object* o2);
+		static bool isRuleStateEqual(const State* s1, const State* s2);
 
 	};
 

@@ -211,7 +211,7 @@ namespace PPG
 
 		out += "<<< Environment >>>\n";
 		for (auto& it: nodes) {
-			out += it->getRelatedObject()->getObjectName() + " - " + it->getRelatedObject()->getCurrentState().getStateName() + "\n";
+			out += it->getRelatedObject()->getObjectName() + " - " + it->getRelatedObject()->getCurrentState()->getStateName() + "\n";
 		}
 		out += "<<<<>>>>\n";
 		return out;

@@ -22,7 +22,7 @@ namespace PPG
 		return list.at(index);
 	}
 
-	State  Randomizer::getRandomStateFromList(PuzzleList<State>::Type list)
+	State*  Randomizer::getRandomStateFromList(PuzzleList<State*>::Type list)
 	{
 		if (list.empty()) throw - 1;
 		int index = rand() % list.size();

@@ -205,7 +205,7 @@ namespace PPG {
 			Object* obj = Randomizer::getRandomFromList(objects);
 			if (obj == nullptr) continue;
 			try {
-				State state = Randomizer::getRandomStateFromList(obj->getReachableStates());
+				State* state = Randomizer::getRandomStateFromList(obj->getReachableStates());
 				Node* newNode = new Node(obj, state);
 				nodes.push_back(newNode);
 			}

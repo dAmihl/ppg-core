@@ -31,9 +31,9 @@ namespace PPG
 		std::string out = "";
 
 		for (auto& it: pairs) {
-			out += "[" + it.first->getRelatedObject()->getObjectName() + "::" + it.first->getGoalState().getStateName() + "]";
+			out += "[" + it.first->getRelatedObject()->getObjectName() + "::" + it.first->getGoalState()->getStateName() + "]";
 			out += " <<< ";
-			out += "[" + it.second->getRelatedObject()->getObjectName() + "::" + it.second->getGoalState().getStateName() + "]";
+			out += "[" + it.second->getRelatedObject()->getObjectName() + "::" + it.second->getGoalState()->getStateName() + "]";
 			out += "\n";
 		}
 
@@ -50,7 +50,7 @@ namespace PPG
 			for (int hyph = 0; hyph > level; hyph--) {
 				tmp += "-";
 			}
-			tmp += "[(L" + std::to_string(level) + ")" + N->getRelatedObject()->getObjectName() + "::" + N->getGoalState().getStateName() + "]\n";
+			tmp += "[(L" + std::to_string(level) + ")" + N->getRelatedObject()->getObjectName() + "::" + N->getGoalState()->getStateName() + "]\n";
 			alreadyOut.push_back(N);
 		}
 		(*out) += tmp;
@@ -104,7 +104,7 @@ namespace PPG
 	{
 		GraphNode* root = new GraphNode();
 		root->setObject(N->getRelatedObject());
-		root->setState(&(N->getRelatedObject()->getCurrentState()));
+		root->setState(N->getRelatedObject()->getCurrentState());
 
 		NodeVec pre = getPrecedingNodes(N);
 		Vec<GraphNode*> children;
@@ -394,13 +394,13 @@ namespace PPG
 		return false;
 	}
 
-	NodeVec Relation::findNodesByPattern(NodeVec nodes, Object* O, State* S, bool(*EqualObject)(Object*, Object*), bool(*EqualState)(State*, State*))
+	NodeVec Relation::findNodesByPattern(NodeVec nodes, const Object* O, const State* S, bool(*EqualObject)(const Object*, const Object*), bool(*EqualState)(const State*, const State*)) const
 	{
 		NodeVec foundNodes;
 
 		// BIG TODO
 		for (auto& it : nodes) {
-			if (EqualObject(O, it->getRelatedObject()) && EqualState(S, &it->getGoalState())) {
+			if (EqualObject(O, it->getRelatedObject()) && EqualState(S, it->getGoalState())) {
 				foundNodes.push_back(it);
 			}
 		}

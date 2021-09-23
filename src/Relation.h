@@ -62,7 +62,7 @@ namespace PPG
 		bool findDirectlyFollowingNode(Node* start, Node* nodeToFind);
 
 
-		NodeVec findNodesByPattern(NodeVec nodes, Object* O, State* S, bool(*EqualObject)(Object*, Object*), bool(*EqualState)(State*, State*));
+		NodeVec findNodesByPattern(NodeVec nodes, const Object* O, const State* S, bool(*EqualObject)(const Object*, const Object*), bool(*EqualState)(const State*, const State*)) const;
 
 		NodeVec findNearestPrecedingEqualNodesByObject(Node* N);
 		NodeVec findNearestPrecedingEqualNodesByObject(Node* N, Node* start);
