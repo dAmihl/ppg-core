@@ -20,6 +20,9 @@ namespace PPG
 	{
 	public:
 
+		Generator() : numberNodes{ 0 }{ }
+		Generator(uint32_t numNodes) : numberNodes{ numNodes }{}
+
 		Puzzle* generatePuzzle(ObjVec objects, EventVec events, RuleVec rules);
 
 		Relation* simpleGenerateRelation(NodeVec nodes);
@@ -27,10 +30,7 @@ namespace PPG
 		Relation* generateRelation(NodeVec nodes, RuleVec rules);
 		Relation* generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec rules);
 
-		NodeVec generateNodes(ObjVec objects);
-
-		void setNumberNodes(int n);
-		int getNumberNodes() const;
+		NodeVec generateNodes(ObjVec objects, size_t numNodes);
 
 		void setSeed(unsigned int seed);
 		unsigned int getSeed() const;
@@ -41,8 +41,8 @@ namespace PPG
 
 		void cleanupNodes(Puzzle* P);
 		void removeNodeFromList(Node* N, NodeVec& nodes);
-		int NUM_NODES = 0;
 		unsigned int seed = 0;
+		uint32_t numberNodes;
 		bool seedSet = false;
 	};
 

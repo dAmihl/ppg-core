@@ -26,10 +26,6 @@ namespace PPG {
 			return list.at(index);
 		};
 
-		static Object* getRandomObjectFromList(PuzzleList<Object*>::Type list);
-		static State* getRandomStateFromList(PuzzleList<State*>::Type list);
-		static Node* getRandomNodeFromList(PuzzleList<Node*>::Type list);
-
 		static unsigned int getRandomUintFromRange(unsigned int min, unsigned int max);
 
 	};

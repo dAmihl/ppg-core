@@ -20,12 +20,9 @@ namespace PPG {
 
 		Puzzle* P = new Puzzle();
 
-		if (this->NUM_NODES == 0) {
-			this->NUM_NODES = (int)objects.size();
-		}
-
 		/* Generate Nodes and add to puzzle P*/
-		std::vector<Node*> nodes = generateNodes(objects);
+		if (numberNodes == 0) numberNodes = objects.size();
+		std::vector<Node*> nodes = generateNodes(objects, numberNodes);
 		for (auto& it: nodes) {
 			P->addNode(it, true);
 		}
@@ -36,8 +33,6 @@ namespace PPG {
 		}
 
 		/* Generate Relation and add to Puzzle P */
-		//Relation *R = __simple_generateRelation(P->getNodes());
-		//Relation *R = generateRelation(P->getNodes(), rules);
 		Relation* R = generateRelationExperimental(P, P->getNodes(), rules);
 
 		P->setRelation(*R);
@@ -151,7 +146,7 @@ namespace PPG {
 			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, nodes, rules);
 
 			// returns nullptr if list is empty
-			Node* N2 = Randomizer::getRandomNodeFromList(compList);
+			Node* N2 = Randomizer::getRandomFromList(compList);
 
 			if (N2 != nullptr) {
 				rel->addPair(N1, N2);
@@ -167,7 +162,7 @@ namespace PPG {
 
 		NodeVec nodesInGraph;
 
-		Node* NStart = Randomizer::getRandomNodeFromList(nodes);
+		Node* NStart = Randomizer::getRandomFromList(nodes);
 		nodesInGraph.push_back(NStart);
 
 		for (auto& it: nodes) {
@@ -184,7 +179,7 @@ namespace PPG {
 			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, tmpNodes, rules);
 
 			// returns nullptr if list is empty
-			Node* N2 = Randomizer::getRandomNodeFromList(compList);
+			Node* N2 = Randomizer::getRandomFromList(compList);
 
 			if (N2 != nullptr) {
 				rel->addPair(N1, N2);
@@ -197,15 +192,15 @@ namespace PPG {
 		return rel;
 	}
 
-	NodeVec Generator::generateNodes(ObjVec objects)
+	NodeVec Generator::generateNodes(ObjVec objects, size_t numNodes)
 	{
 		NodeVec nodes;
 
-		for (int i = 0; i < NUM_NODES; i++) {
+		for (size_t i = 0; i < numNodes; i++) {
 			Object* obj = Randomizer::getRandomFromList(objects);
 			if (obj == nullptr) continue;
 			try {
-				State* state = Randomizer::getRandomStateFromList(obj->getReachableStates());
+				State* state = Randomizer::getRandomFromList(obj->getReachableStates());
 				Node* newNode = new Node(obj, state);
 				nodes.push_back(newNode);
 			}
@@ -217,15 +212,6 @@ namespace PPG {
 		return nodes;
 	}
 
-	void Generator::setNumberNodes(int n)
-	{
-		NUM_NODES = n;
-	}
-
-	int Generator::getNumberNodes() const
-	{
-		return NUM_NODES;
-	}
 
 	void Generator::setSeed(unsigned int seed)
 	{

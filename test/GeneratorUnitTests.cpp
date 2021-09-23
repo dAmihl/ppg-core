@@ -236,7 +236,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		// Number of nodes to generate
 		unsigned int numberNodes = 20;
 
-		Generator* PG = new Generator();
+		Generator* PG = new Generator(numberNodes);
 
 		RuleVec rules;
 		EventVec events;
@@ -290,9 +290,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		Rule* R4 = new Rule(O1, &STATE_ANY, O3, &STATE_ANY, Rule::EPuzzleRuleType::AFTER);
 		Rule* R5 = new Rule(O2, S2_2, O3, &STATE_ANY, Rule::EPuzzleRuleType::STRICT_AFTER);
 
-		//PG->setSeed(seed);
-		PG->setNumberNodes(numberNodes);
-		
+		//PG->setSeed(seed);		
 
 		WHEN("A puzzle is generated") {
 			Puzzle* P = PG->generatePuzzle(objects, events, rules);
