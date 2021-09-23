@@ -16,9 +16,9 @@ namespace PPG
 	class PPG_EXPORT Node
 	{
 	public:
-		Node(Object* G, State* Sg);
+		Node(Object* G, State Sg);
 		Object* getRelatedObject() const;
-		const State* getGoalState() const;
+		const State getGoalState() const;
 		ENodeState getCurrentNodeState() const;
 		bool isActive() const;
 		bool isCompleted() const;
@@ -33,8 +33,8 @@ namespace PPG
 		std::string getSimpleTextualRepresentation() const;
 
 	private:
-		Object* relatedObject = nullptr;
-		State* goalState;
+		Object* relatedObject;
+		State goalState;
 		ENodeState currentNodeState;
 		UpdateListener* PUL = nullptr;
 		std::string getCompletionStateString() const;

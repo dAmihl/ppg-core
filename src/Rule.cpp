@@ -7,14 +7,14 @@ namespace PPG
 	{
 
 		std::string lhS;
-		if (this->getLeftHandSideState() == nullptr) lhS = "{}";
-		else lhS = this->getLeftHandSideState()->getStateName();
+		if (getLeftHandSideState() == STATE_ANY) lhS = "{}";
+		else lhS = getLeftHandSideState().getName();
 
 		std::string rhS;
-		if (this->getRightHandSideState() == nullptr) rhS = "{}";
-		else rhS = this->getRightHandSideState()->getStateName();
+		if (getRightHandSideState() == STATE_ANY) rhS = "{}";
+		else rhS = getRightHandSideState().getName();
 
-		std::string out = ">> Rule (" + this->getLeftHandSideObject()->getObjectName() + " | " + lhS + ") " + this->getRuleTypeString() + " (" + this->getRightHandSideObject()->getObjectName() + " | " + rhS + ") \n";
+		std::string out = ">> Rule (" + getLeftHandSideObject()->getObjectName() + " | " + lhS + ") " + getRuleTypeString() + " (" + getRightHandSideObject()->getObjectName() + " | " + rhS + ") \n";
 		return out;
 	}
 

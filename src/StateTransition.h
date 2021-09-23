@@ -4,21 +4,23 @@
 #include <unordered_map>
 #include "State.h"
 
-using EVENT_MAP = std::unordered_map<std::string, std::vector<std::pair<PPG::State*, PPG::State*>>>;
+using EventMapVal = std::vector<std::pair<PPG::State, PPG::State>>;
+using EventMap = std::unordered_map<std::string, EventMapVal>;
+
 
 namespace PPG
 {
 	class PPG_EXPORT StateTransition
 	{
 	public:
-		EVENT_MAP* getTransitionMap();
-		void addTransition(std::string eventName, State* origState, State* newState);
+		EventMap& getTransitionMap();
+		void addTransition(std::string eventName, State origState, State newState);
 		std::string getTextualOutput() const;
-		std::vector<State*> getReachableStates() const;
-		std::vector<std::pair<State*, State*>> findTransitions(const std::string name) const;
+		Vec<State> getReachableStates() const;
+		EventMapVal findTransitions(const std::string name) const;
 
 	private:
-		EVENT_MAP transitionMap;
+		EventMap transitionMap;
 	};
 
 

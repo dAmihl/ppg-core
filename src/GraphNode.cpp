@@ -4,32 +4,32 @@ namespace PPG
 {
 	Object* GraphNode::getObject() const
 	{
-		return this->object;
+		return object;
 	}
 
-	State* GraphNode::getState() const
+	State GraphNode::getState() const
 	{
-		return this->state;
+		return state;
 	}
 
 	Vec<GraphNode*> GraphNode::getChildren() const
 	{
-		return this->children;
+		return children;
 	}
 
-	void GraphNode::setObject(Object* object)
+	void GraphNode::setObject(Object* obj)
 	{
-		this->object = object;
+		object = obj;
 	}
 
-	void GraphNode::setState(State* state)
+	void GraphNode::setState(State s)
 	{
-		this->state = state;
+		state = s;
 	}
 
-	void GraphNode::setChildren(Vec<GraphNode*> children)
+	void GraphNode::setChildren(Vec<GraphNode*> v)
 	{
-		this->children = children;
+		children = v;
 	}
 
 	void GraphNode::addChild(GraphNode* child)

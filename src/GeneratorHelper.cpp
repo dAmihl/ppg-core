@@ -7,16 +7,16 @@ namespace PPG {
 	*	True: Circular Dependency detected
 	*	False: No Circular Dependency with new pair P in Relation R detected
 	*/
-	bool GeneratorHelper::checkCreatesCircularDependency(NodePair P, Relation* R)
+	bool GeneratorHelper::checkCreatesCircularDependency(NodePair P, Relation& R)
 	{
 
-		NodePairVec pairs = R->getPairs();
+		NodePairVec pairs = R.getPairs();
 
 		bool result = false;
 
 		/*
 		* Get first successor of pair P.
-		* Then search sequentially for a reoccurance of P->First, which causes a circular dependency
+		* Then search sequentially for a occurrences of P->First, which causes a circular dependency
 		*/
 		for (auto& it: pairs) {
 			if (it.first == P.second) {
@@ -34,9 +34,9 @@ namespace PPG {
 	*	False: No Exclusive Dependency with new pair P in Relation R detected
 	*	Extension: Parallel nodes must have different related game-objects
 	*/
-	bool GeneratorHelper::checkCreatesExclusiveDependency(NodePair P, Relation* R)
+	bool GeneratorHelper::checkCreatesExclusiveDependency(NodePair P, Relation& R)
 	{
-		NodePairVec parallelPairs = R->getParallelPairs(P);
+		NodePairVec parallelPairs = R.getParallelPairs(P);
 
 		for (auto& it: parallelPairs) {
 
@@ -52,14 +52,14 @@ namespace PPG {
 
 
 	/*
-	*	Trys to find occurence of N going from /start/ sequential till the end
+	*	Trys to find occurrence of N going from /start/ sequential till the end
 	*/
-	bool GeneratorHelper::findNodeSequential(Node* N, NodePair start, Relation* R)
+	bool GeneratorHelper::findNodeSequential(Node* N, NodePair start, Relation& R)
 	{
 		// Check starting node if direct successor
 		if (start.second == N) return true;
 
-		NodePairVec nextPairs = R->getNextPairs(start);
+		NodePairVec nextPairs = R.getNextPairs(start);
 
 		if (nextPairs.size() < 1) return false;
 
@@ -82,7 +82,7 @@ namespace PPG {
 	bool GeneratorHelper::checkEquality(Node* N1, Node* N2)
 	{
 		return N1->getRelatedObject() == N2->getRelatedObject() &&
-			*N1->getGoalState() == *N2->getGoalState();
+			N1->getGoalState() == N2->getGoalState();
 	}
 
 
@@ -94,10 +94,10 @@ namespace PPG {
 	*	but N1(Obj1, S1) -> ... -> N3(Obj1, S2) --> ... --> N2(Obj1, S1) :: IS ALLOWED!
 	*/
 
-	bool GeneratorHelper::checkMetaEqualOccuranceByNode(Node* N, Relation* R) {
+	bool GeneratorHelper::checkMetaEqualOccuranceByNode(Node* N, Relation& R) {
 
 		bool result = false;
-		NodeVec nextMetas = R->findNearestFollowingEqualNodesByObject(N);
+		NodeVec nextMetas = R.findNearestFollowingEqualNodesByObject(N);
 
 		for (auto& it: nextMetas){
 			if (it->getGoalState() == N->getGoalState()) {
@@ -105,7 +105,7 @@ namespace PPG {
 			}
 		}
 
-		NodeVec prevMetas = R->findNearestPrecedingEqualNodesByObject(N);
+		NodeVec prevMetas = R.findNearestPrecedingEqualNodesByObject(N);
 
 		for (auto& it: prevMetas){
 			if (it->getGoalState() == N->getGoalState()) {
@@ -117,7 +117,7 @@ namespace PPG {
 		return result;
 	}
 
-	bool GeneratorHelper::checkMetaEqualOccurance(NodePair P, Relation* R)
+	bool GeneratorHelper::checkMetaEqualOccurance(NodePair P, Relation& R)
 	{
 		bool result = false;
 
@@ -136,7 +136,7 @@ namespace PPG {
 	*
 	*
 	*/
-	NodeVec GeneratorHelper::filterCompatibleNodes(Node* N, Relation* R, NodeVec nodes, RuleVec rules)
+	NodeVec GeneratorHelper::filterCompatibleNodes(Node* N, Relation& R, NodeVec nodes, RuleVec rules)
 	{
 		NodeVec compatibles;
 
@@ -156,18 +156,18 @@ namespace PPG {
 	*	Checks compatibility of two nodes S and N by Basic Rules (Rule)s
 	*/
 
-	bool GeneratorHelper::checkCompatibilityBasicRules(Node* S, Node* N, Relation* R)
+	bool GeneratorHelper::checkCompatibilityBasicRules(Node* S, Node* N, Relation& R)
 	{
 		Pair<Node*, Node*> pair = Relation::makePuzzlePair(S, N);
 		if (!checkEquality(S, N)) { // check node equality
-			R->addPair(pair);
+			R.addPair(pair);
 			if (GeneratorHelper::checkCreatesCircularDependency(pair, R) || GeneratorHelper::checkCreatesExclusiveDependency(pair, R) ||
 				GeneratorHelper::checkMetaEqualOccurance(pair, R)) {
-				R->removePair(pair);// TODO
+				R.removePair(pair);// TODO
 				return false;
 			}
 			else {
-				R->removePair(pair); // TODO ? 
+				R.removePair(pair); // TODO ? 
 				return true;
 			}
 		}// else discard
@@ -179,7 +179,7 @@ namespace PPG {
 	/*
 	*	Checks compatibility of two nodes S and N by User-made Custom Rules (Rule)s
 	*/
-	bool GeneratorHelper::checkCompatibilityCustomRules(NodeVec nodes, Node* S, Node* N, Relation* R, RuleVec rules)
+	bool GeneratorHelper::checkCompatibilityCustomRules(NodeVec nodes, Node* S, Node* N, Relation& R, RuleVec rules)
 	{
 		for (auto& r: rules) {
 
@@ -187,7 +187,7 @@ namespace PPG {
 			Logger::log("S: " + S->getSimpleTextualRepresentation());
 			Logger::log("N: " + N->getSimpleTextualRepresentation());
 
-			bool (*FN) (NodeVec, Node*, Node*, Relation*, Rule, bool) = NULL;
+			bool (*FN) (NodeVec, Node*, Node*, Relation&, Rule, bool) = NULL;
 			bool strict = false;
 
 			switch (r.getRuleType()) {
@@ -237,24 +237,24 @@ namespace PPG {
 	*
 	*	IF S is not LHS of the rule and N is not the RHS, then the inverse rule must apply, i.e. (N < S) or (N <! S)
 	*/
-	bool GeneratorHelper::checkCompatibilityRuleTypeAfter(NodeVec nodes, Node* S, Node* N, Relation* R, Rule rule, bool isStrict)
+	bool GeneratorHelper::checkCompatibilityRuleTypeAfter(NodeVec nodes, Node* S, Node* N, Relation& R, Rule rule, bool isStrict)
 	{
 		/* */
 		const Object* lhsO = rule.getLeftHandSideObject();
-		const State* lhsS = rule.getLeftHandSideState();
+		const State lhsS = rule.getLeftHandSideState();
 
 		const Object* rhsO = rule.getRightHandSideObject();
-		const State* rhsS = rule.getRightHandSideState();
+		const State rhsS = rule.getRightHandSideState();
 
 		// Find all existing Right-Hand-side nodes of rule
-		NodeVec existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
-		NodeVec existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+		NodeVec existingRHS = R.findNodesByPattern(nodes, rhsO, rhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+		NodeVec existingLHS = R.findNodesByPattern(nodes, lhsO, lhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 
 		if (isRuleObjectEqual(lhsO, S->getRelatedObject()) && isRuleStateEqual(lhsS, S->getGoalState())) {
 
 			if (isStrict) {
 				for (auto& n: existingRHS) {
-					if (!R->findDirectlyPrecedingNode(N, n)) {
+					if (!R.findDirectlyPrecedingNode(N, n)) {
 						Logger::log("LHS = S and RHS = N; There is no directly preceding RHS found; FALSE");
 						return false;
 					}
@@ -262,7 +262,7 @@ namespace PPG {
 			}
 			else {
 				for (auto& n: existingRHS) {
-					if (!R->findPrecedingNode(N, n, false)) {
+					if (!R.findPrecedingNode(N, n, false)) {
 						Logger::log("LHS = S and RHS = N; There is no preceding RHS found; FALSE");
 						return false;
 					}
@@ -280,7 +280,7 @@ namespace PPG {
 			// Otherwise, S has to atleast have RHS as a preceding node
 			else {
 				for (auto& n: existingRHS) {
-					if (!R->findPrecedingNode(N, n, false)) {
+					if (!R.findPrecedingNode(N, n, false)) {
 						Logger::log("RHS = S and LHS = N; There is no preceding RHS found in S; FALSE");
 						return false;
 					}
@@ -307,14 +307,14 @@ namespace PPG {
 	*	True = Compatible!
 	*	False = INCOMPATIBLE!
 	*/
-	bool GeneratorHelper::checkCompatibilityRuleTypeBefore(NodeVec nodes, Node* S, Node* N, Relation* R, Rule rule, bool isStrict)
+	bool GeneratorHelper::checkCompatibilityRuleTypeBefore(NodeVec nodes, Node* S, Node* N, Relation& R, Rule rule, bool isStrict)
 	{
 		/* */
 		const Object* lhsO = rule.getLeftHandSideObject();
-		const State* lhsS = rule.getLeftHandSideState();
+		const State lhsS = rule.getLeftHandSideState();
 
 		const Object* rhsO = rule.getRightHandSideObject();
-		const State* rhsS = rule.getRightHandSideState();
+		const State rhsS = rule.getRightHandSideState();
 
 		// LHS = N and RHS = S
 		// S < N automatically false
@@ -325,8 +325,8 @@ namespace PPG {
 		}
 
 		// Find all existing Right-Hand-side nodes of rule
-		NodeVec existingRHS = R->findNodesByPattern(nodes, rhsO, rhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
-		NodeVec existingLHS = R->findNodesByPattern(nodes, lhsO, lhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+		NodeVec existingRHS = R.findNodesByPattern(nodes, rhsO, rhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+		NodeVec existingLHS = R.findNodesByPattern(nodes, lhsO, lhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 
 		// LHS = S and RHS = N
 		// S < N for all N
@@ -334,9 +334,9 @@ namespace PPG {
 		if (isRuleObjectEqual(lhsO, S->getRelatedObject()) && isRuleStateEqual(lhsS, S->getGoalState())) {
 
 			if (isRuleObjectEqual(rhsO, N->getRelatedObject()) && isRuleStateEqual(rhsS, N->getGoalState())) {
-				// check if this is the smallest occurance of N? so S is not after any other occurance of N
+				// check if this is the smallest occurence of N? so S is not after any other occurence of N
 				for (auto& n: existingRHS) {
-					if (R->findPrecedingNode(N, n, false)) {
+					if (R.findPrecedingNode(N, n, false)) {
 						Logger::log("LHS = S and RHS = N; There is a smaller RHS found; FALSE");
 						return false;
 					}
@@ -354,10 +354,10 @@ namespace PPG {
 
 		// Check if S is RHS or has RHS as a preceding node
 		for (auto& n: existingRHS) {
-			if (R->findPrecedingNode(S, n, true)) {
+			if (R.findPrecedingNode(S, n, true)) {
 				// Then N is not allowed to be LHS or to have LHS as a following node
 				for (auto& k: existingLHS) {
-					if (R->findFollowingNode(N, k, true)) {
+					if (R.findFollowingNode(N, k, true)) {
 						Logger::log("S is RHS or has RHS as a preceding node - N is LHS or has LHS as following node; FALSE");
 						return false;
 					}
@@ -367,10 +367,10 @@ namespace PPG {
 
 		// Check if S is LHS or has LHS as a preceding node
 		for (auto& n: existingLHS) {
-			if (R->findPrecedingNode(S, n, true)) {
+			if (R.findPrecedingNode(S, n, true)) {
 				// Then N is not allowed to have RHS as a preceding node
 				for (auto& k: existingRHS) {
-					if (R->findPrecedingNode(N, k, false)) {
+					if (R.findPrecedingNode(N, k, false)) {
 						Logger::log("S is LHS or has LHS as a preceding node - N has RHS as preceding node; FALSE");
 						return false;
 					}
@@ -380,10 +380,10 @@ namespace PPG {
 
 		// Check if N is LHS or has LHS as a following node
 		for (auto& n: existingLHS) {
-			if (R->findFollowingNode(N, n, true)) {
+			if (R.findFollowingNode(N, n, true)) {
 				// Then S is not allowed to be RHS or have RHS as a preceding node
 				for (auto& k: existingRHS) {
-					if (R->findPrecedingNode(S, k, true)) {
+					if (R.findPrecedingNode(S, k, true)) {
 						Logger::log("N is LHS or has LHS as a following node - S is RHS or has RHS as preceding node; FALSE");
 						return false;
 					}
@@ -397,10 +397,10 @@ namespace PPG {
 	}
 
 
-	bool GeneratorHelper::isRuleNodeEqual(Node* N, Object* ruleObject, State* ruleState)
+	bool GeneratorHelper::isRuleNodeEqual(Node* N, Object* ruleObject, State ruleState)
 	{
 		Object* nodeObject = N->getRelatedObject();
-		const State* nodeState = N->getGoalState();
+		const State nodeState = N->getGoalState();
 
 		return isRuleObjectEqual(nodeObject, ruleObject) && isRuleStateEqual(nodeState, ruleState);
 	}
@@ -410,8 +410,8 @@ namespace PPG {
 		return (o1->sameTemplateAs(*o2));
 	}
 
-	bool GeneratorHelper::isRuleStateEqual(const State* s1, const State* s2) {
-		if (*s1 == STATE_ANY || *s2 == STATE_ANY) return true;
+	bool GeneratorHelper::isRuleStateEqual(const State s1, const State s2) {
+		if (s1 == STATE_ANY || s2 == STATE_ANY) return true;
 		return (s1 == s2);
 	}
 

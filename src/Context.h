@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include "PuzzGenCore.h"
 #include "Object.h"
 #include "Event.h"
@@ -8,42 +7,45 @@
 
 namespace PPG
 {
-	template<typename T> using UPtr = std::unique_ptr<T>;
 
-	struct Context
+	class Context
 	{
 
+	public:
 		template<class T, class... _Ts>
-		T& add(_Ts&&... params) {
-			T* x = new T(params...);
-			auto t = std::make_unique<T>(params...);
-			return addInt(x);
-		}
-
-		Object& addInt(Object* u)
-		{
-			objects.push_back(std::move(u));
-			return *objects.back();
-		}
-
-		State& addInt(State* u)
-		{
-			states.push_back(u);
-			return *states.back();
-		}
-
-		Event& addInt(Event* u)
-		{
-			events.push_back(u);
-			return *events.back();
+		Ptr<T> add(_Ts&&... params) {
+			auto t = std::make_shared<T>(params...);
+			return addInt(std::move(t));
 		}
 		
-		Vec<Object*>& getObjects() { return objects; }
+		inline Vec<Ptr<Object>>& getObjects() { return objects; }
+		inline Vec<Ptr<Event>>& getEvents() { return events; }
+		inline Vec<Ptr<Rule>>& getRules() { return rules; }
 
 	private:
-		Vec<Object*> objects;
-		Vec<State*> states;
-		Vec<Event*> events;
+		Ptr<Object>& addInt(Ptr<Object>&& u)
+		{
+			objects.push_back(std::move(u));
+			return objects.back();
+		}
+
+
+		Ptr<Event>& addInt(Ptr<Event>&& u)
+		{
+			events.push_back(std::move(u));
+			return events.back();
+		}
+
+		Ptr<Rule>& addInt(Ptr<Rule>&& u)
+		{
+			rules.push_back(std::move(u));
+			return rules.back();
+		}
+		
+	private:
+		Vec<Ptr<Object>> objects;
+		Vec<Ptr<Event>> events;
+		Vec<Ptr<Rule>> rules;
 
 	};
 }

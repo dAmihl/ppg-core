@@ -95,8 +95,8 @@ namespace PPG {
 			Pair<Node*, Node*> pair = Relation::makePuzzlePair(N1, N2);
 			if (!GeneratorHelper::checkEquality(N1, N2)) {
 				rel->addPair(pair);
-				if (GeneratorHelper::checkCreatesCircularDependency(pair, rel) || GeneratorHelper::checkCreatesExclusiveDependency(pair, rel) ||
-					GeneratorHelper::checkMetaEqualOccurance(pair, rel)) {
+				if (GeneratorHelper::checkCreatesCircularDependency(pair, *rel) || GeneratorHelper::checkCreatesExclusiveDependency(pair, *rel) ||
+					GeneratorHelper::checkMetaEqualOccurance(pair, *rel)) {
 					rel->removePair(pair);// TODO
 				}
 			}// else discard
@@ -143,7 +143,7 @@ namespace PPG {
 			/*
 			* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
 			*/
-			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, nodes, rules);
+			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, *rel, nodes, rules);
 
 			// returns nullptr if list is empty
 			Node* N2 = Randomizer::getRandomFromList(compList);
@@ -176,7 +176,7 @@ namespace PPG {
 			/*
 			* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
 			*/
-			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, tmpNodes, rules);
+			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, *rel, tmpNodes, rules);
 
 			// returns nullptr if list is empty
 			Node* N2 = Randomizer::getRandomFromList(compList);
@@ -200,7 +200,7 @@ namespace PPG {
 			Object* obj = Randomizer::getRandomFromList(objects);
 			if (obj == nullptr) continue;
 			try {
-				State* state = Randomizer::getRandomFromList(obj->getReachableStates());
+				State state = Randomizer::getRandomFromList(obj->getReachableStates());
 				Node* newNode = new Node(obj, state);
 				nodes.push_back(newNode);
 			}

@@ -31,9 +31,9 @@ namespace PPG
 		std::string out = "";
 
 		for (auto& it: pairs) {
-			out += "[" + it.first->getRelatedObject()->getObjectName() + "::" + it.first->getGoalState()->getStateName() + "]";
+			out += "[" + it.first->getRelatedObject()->getObjectName() + "::" + it.first->getGoalState().getName() + "]";
 			out += " <<< ";
-			out += "[" + it.second->getRelatedObject()->getObjectName() + "::" + it.second->getGoalState()->getStateName() + "]";
+			out += "[" + it.second->getRelatedObject()->getObjectName() + "::" + it.second->getGoalState().getName() + "]";
 			out += "\n";
 		}
 
@@ -50,7 +50,7 @@ namespace PPG
 			for (int hyph = 0; hyph > level; hyph--) {
 				tmp += "-";
 			}
-			tmp += "[(L" + std::to_string(level) + ")" + N->getRelatedObject()->getObjectName() + "::" + N->getGoalState()->getStateName() + "]\n";
+			tmp += "[(L" + std::to_string(level) + ")" + N->getRelatedObject()->getObjectName() + "::" + N->getGoalState().getName() + "]\n";
 			alreadyOut.push_back(N);
 		}
 		(*out) += tmp;
@@ -394,7 +394,7 @@ namespace PPG
 		return false;
 	}
 
-	NodeVec Relation::findNodesByPattern(NodeVec nodes, const Object* O, const State* S, bool(*EqualObject)(const Object*, const Object*), bool(*EqualState)(const State*, const State*)) const
+	NodeVec Relation::findNodesByPattern(NodeVec nodes, const Object* O, const State S, bool(*EqualObject)(const Object*, const Object*), bool(*EqualState)(const State, const State)) const
 	{
 		NodeVec foundNodes;
 

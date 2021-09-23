@@ -3,16 +3,16 @@
 namespace PPG
 {
 
-	Node::Node(Object* G, State* Sg) : relatedObject{ G }, goalState{ Sg }, currentNodeState{ENodeState::INCOMPLETE}
+	Node::Node(Object* G, State Sg) : relatedObject{ G }, goalState{ Sg }, currentNodeState{ENodeState::INCOMPLETE}
 	{}
 
-	Object* Node::getRelatedObject() const
-	{
+	PPG::Object* Node::getRelatedObject() const
+{
 		return relatedObject;
 	}
 
-	const State* Node::getGoalState() const
-	{
+	const PPG::State Node::getGoalState() const
+{
 		return goalState;
 	}
 
@@ -39,11 +39,11 @@ namespace PPG
 
 	int Node::handleEvent(Event e)
 	{
-		State* Sc = this->relatedObject->getCurrentState();
-		std::vector<std::pair<State*, State*>> vec = relatedObject->getStateTransition().findTransitions(e.getEventName());
+		State Sc = relatedObject->getCurrentState();
+		EventMapVal vec = relatedObject->getStateTransition().findTransitions(e.getEventName());
 		for (auto& vecIt : vec) {
 			if (vecIt.first == Sc) { // check name equality
-				State* nextState = vecIt.second;
+				State nextState = vecIt.second;
 				relatedObject->setCurrentState(nextState); // next state set
 				return 0;
 				break;
@@ -51,7 +51,7 @@ namespace PPG
 			// Test : Two Way state transitions, i.e. reversible state transitions
 			if (e.getIsReversible()) {
 				if (vecIt.second == Sc) { // check name equality
-					State* nextState = vecIt.first;
+					State nextState = vecIt.first;
 					relatedObject->setCurrentState(nextState); // next state set
 					return 0;
 					break;
@@ -76,7 +76,7 @@ namespace PPG
 	std::string Node::getTextualRepresentation() const
 	{
 		std::string out = "";
-		out += "<> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState->getStateName() + ") <> \n";
+		out += "<> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getName() + ") <> \n";
 		out += relatedObject->getTextualRepresentation();
 		out += "Puzzlenode-State: ";
 		out += getCompletionStateString();
@@ -85,7 +85,7 @@ namespace PPG
 	}
 	std::string Node::getSimpleTextualRepresentation() const
 	{
-		std::string out = ">> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState->getStateName() + ") :: " + getCompletionStateString() + " <> \n";
+		std::string out = ">> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getName() + ") :: " + getCompletionStateString() + " <> \n";
 		return out;
 	}
 

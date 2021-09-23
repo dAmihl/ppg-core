@@ -3,26 +3,26 @@
 namespace PPG
 {
 
-	EVENT_MAP* StateTransition::getTransitionMap()
-	{
-		return &this->transitionMap;
+	EventMap& StateTransition::getTransitionMap()
+{
+		return transitionMap;
 	}
 
-	void StateTransition::addTransition(std::string eventName, State* origState, State* newState)
+	void StateTransition::addTransition(std::string eventName, State origState, State newState)
 	{
 
-		bool eventEntryFound = (this->transitionMap.find(eventName) != this->transitionMap.end());
-		std::pair<State*, State*> newStatePair;
+		bool eventEntryFound = (transitionMap.find(eventName) != transitionMap.end());
+		std::pair<State, State> newStatePair;
 		newStatePair.first = origState;
 		newStatePair.second = newState;
 
 		if (eventEntryFound) {
-			this->transitionMap.find(eventName)->second.push_back(newStatePair);
+			transitionMap.find(eventName)->second.push_back(newStatePair);
 		}
 		else {
-			std::vector<std::pair<State*, State*>> newVector;
+			std::vector<std::pair<State, State>> newVector;
 			newVector.push_back(newStatePair);
-			this->transitionMap.insert(std::make_pair(eventName, newVector));
+			transitionMap.insert(std::make_pair(eventName, newVector));
 		}
 
 	}
@@ -33,7 +33,7 @@ namespace PPG
 		for (auto& it: transitionMap) {
 			out += "> " + it.first + ": ";
 			for (auto& vecIt: it.second) {
-				out += "<" + vecIt.first->getStateName() + " -> " + vecIt.second->getStateName() + "> ";
+				out += "<" + vecIt.first.getName() + " -> " + vecIt.second.getName() + "> ";
 			}
 			out += "\n";
 		}
@@ -41,9 +41,9 @@ namespace PPG
 		return out;
 	}
 
-	std::vector<State*> StateTransition::getReachableStates() const
+	Vec<State> StateTransition::getReachableStates() const
 	{
-		std::vector<State*> reachables;
+		Vec<State> reachables;
 		for (auto& it: transitionMap) {
 			for (auto& vecIt : it.second) {
 				reachables.push_back(vecIt.second);
@@ -52,14 +52,14 @@ namespace PPG
 		return reachables;
 	}
 
-	std::vector<std::pair<State*, State*>> StateTransition::findTransitions(const std::string name) const
+	EventMapVal StateTransition::findTransitions(const std::string name) const
 	{
 		auto& it = transitionMap.find(name);
 		if (it != transitionMap.end()) {
 			return it->second;
 		}
 
-		std::vector<std::pair<State*, State*>> a;
+		EventMapVal a;
 		return a;
 	}
 }

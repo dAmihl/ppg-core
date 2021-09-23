@@ -11,17 +11,17 @@ namespace PPG
 	{
 	public:
 		Object* getObject() const;
-		State* getState() const;
+		State getState() const;
 		Vec<GraphNode*> getChildren() const;
 
 		void setObject(Object* object);
-		void setState(State* state);
+		void setState(State state);
 		void setChildren(Vec<GraphNode*> children);
 		void addChild(GraphNode* child);
 
 	private:
 		Object* object;
-		State* state;
+		State state;
 		Vec<GraphNode*> children;
 
 	};

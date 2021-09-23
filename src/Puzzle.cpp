@@ -32,7 +32,7 @@ namespace PPG
 	{
 		// TODO: Check if in events
 
-		/* Impleementation wrt Definition 3.8 Formal Description*/
+		/* Implementation wrt Definition 3.8 Formal Description*/
 		NodeVec compatibleActiveNodes;
 		NodeVec compatibleCompletedNodes;
 
@@ -162,7 +162,7 @@ namespace PPG
 
 	Relation Puzzle::getRelation() const
 	{
-		return this->relation;
+		return relation;
 	}
 
 	std::string Puzzle::getSimpleTextualRepresentation() const
@@ -211,7 +211,7 @@ namespace PPG
 
 		out += "<<< Environment >>>\n";
 		for (auto& it: nodes) {
-			out += it->getRelatedObject()->getObjectName() + " - " + it->getRelatedObject()->getCurrentState()->getStateName() + "\n";
+			out += it->getRelatedObject()->getObjectName() + " - " + it->getRelatedObject()->getCurrentState().getName() + "\n";
 		}
 		out += "<<<<>>>>\n";
 		return out;
