@@ -33,9 +33,9 @@ namespace PPG {
 		}
 
 		/* Generate Relation and add to Puzzle P */
-		Relation* R = generateRelationExperimental(P, P->getNodes(), rules);
+		Relation R = generateRelationExperimental(P, P->getNodes(), rules);
 
-		P->setRelation(*R);
+		P->setRelation(R);
 
 		cleanupNodes(P);
 
@@ -85,19 +85,19 @@ namespace PPG {
 	*	Simple sequential Relation of the given nodes.
 	*	Used for testing purposes
 	*/
-	Relation* Generator::simpleGenerateRelation(NodeVec nodes)
+	Relation Generator::simpleGenerateRelation(NodeVec nodes)
 	{
-		Relation* rel = new Relation();
+		Relation rel;
 		for (auto& it: nodes) {
 			Node* N1 = it;
 			Node* N2 = (it + 1);
 			//if (it == nodes.begin()) N1->setPuzzleNodeState(ENodeState::ACTIVE);
 			Pair<Node*, Node*> pair = Relation::makePuzzlePair(N1, N2);
 			if (!GeneratorHelper::checkEquality(N1, N2)) {
-				rel->addPair(pair);
-				if (GeneratorHelper::checkCreatesCircularDependency(pair, *rel) || GeneratorHelper::checkCreatesExclusiveDependency(pair, *rel) ||
-					GeneratorHelper::checkMetaEqualOccurance(pair, *rel)) {
-					rel->removePair(pair);// TODO
+				rel.addPair(pair);
+				if (GeneratorHelper::checkCreatesCircularDependency(pair, rel) || GeneratorHelper::checkCreatesExclusiveDependency(pair, rel) ||
+					GeneratorHelper::checkMetaEqualOccurance(pair, rel)) {
+					rel.removePair(pair);// TODO
 				}
 			}// else discard
 		}
@@ -111,9 +111,9 @@ namespace PPG {
 	*	Generating a relation of given nodes;
 	*	by keeping invariants and thus solvability within this system
 	*/
-	Relation* Generator::generateRelation(NodeVec nodes, RuleVec rules)
+	Relation Generator::generateRelation(NodeVec nodes, RuleVec rules)
 	{
-		Relation* rel = new Relation();
+		Relation rel;
 
 		/*
 		* For Reference  a simple sequential generation of a relation
@@ -143,22 +143,22 @@ namespace PPG {
 			/*
 			* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
 			*/
-			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, *rel, nodes, rules);
+			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, nodes, rules);
 
 			// returns nullptr if list is empty
 			Node* N2 = Randomizer::getRandomFromList(compList);
 
 			if (N2 != nullptr) {
-				rel->addPair(N1, N2);
+				rel.addPair(N1, N2);
 			}
 		}
 
 		return rel;
 	}
 
-	Relation* Generator::generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec rules)
+	PPG::Relation Generator::generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec rules)
 	{
-		Relation* rel = new Relation();
+		Relation rel;
 
 		NodeVec nodesInGraph;
 
@@ -176,13 +176,13 @@ namespace PPG {
 			/*
 			* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
 			*/
-			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, *rel, tmpNodes, rules);
+			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, tmpNodes, rules);
 
 			// returns nullptr if list is empty
 			Node* N2 = Randomizer::getRandomFromList(compList);
 
 			if (N2 != nullptr) {
-				rel->addPair(N1, N2);
+				rel.addPair(N1, N2);
 				nodesInGraph.push_back(N1);
 			}
 		}

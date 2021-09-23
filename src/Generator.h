@@ -25,10 +25,10 @@ namespace PPG
 
 		Puzzle* generatePuzzle(ObjVec objects, EventVec events, RuleVec rules);
 
-		Relation* simpleGenerateRelation(NodeVec nodes);
+		Relation simpleGenerateRelation(NodeVec nodes);
 
-		Relation* generateRelation(NodeVec nodes, RuleVec rules);
-		Relation* generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec rules);
+		Relation generateRelation(NodeVec nodes, RuleVec rules);
+		Relation generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec rules);
 
 		NodeVec generateNodes(ObjVec objects, size_t numNodes);
 
