@@ -16,7 +16,7 @@ namespace PPG
 		void addNode(Node* n, bool isRelevant);
 		void addEvent(Event* e);
 		void setRelation(Relation O);
-		void setNodes(NodeVec nodes);
+		void setNodes(NodeVec ns);
 
 		void handleEvent(Event e);
 

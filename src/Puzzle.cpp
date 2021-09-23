@@ -14,10 +14,10 @@ namespace PPG
 		relation = O;
 	}
 
-	void Puzzle::setNodes(NodeVec nodes)
+	void Puzzle::setNodes(NodeVec ns)
 	{
-		nodes = nodes;
-		relevantNodes = nodes;
+		nodes = ns;
+		relevantNodes = ns;
 	}
 
 	bool checkCompleted(Node M) {

@@ -70,8 +70,8 @@ namespace PPG {
 
 		for (auto& it: nodes) {
 			if (!R.hasFollowingNode(it) && !R.hasPrecedingNode(it)) {
-				for (NodeVec::iterator find = nodes.begin(); find != nodes.end(); ++find) {
-					if (*find != it && GeneratorHelper::checkEquality(it, *find)) {
+				for (auto& find: nodes) {
+					if (find != it && GeneratorHelper::checkEquality(it, find)) {
 						nodesToDelete.push_back(it);
 					}
 				}
