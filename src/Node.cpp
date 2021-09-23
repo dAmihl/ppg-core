@@ -42,7 +42,7 @@ namespace PPG
 		State* Sc = this->relatedObject->getCurrentState();
 		std::vector<std::pair<State*, State*>> vec = relatedObject->getStateTransition().findTransitions(e.getEventName());
 		for (auto& vecIt : vec) {
-			if (vecIt.first->getStateName() == Sc->getStateName()) { // check name equality
+			if (vecIt.first == Sc) { // check name equality
 				State* nextState = vecIt.second;
 				relatedObject->setCurrentState(nextState); // next state set
 				return 0;
@@ -50,7 +50,7 @@ namespace PPG
 			}
 			// Test : Two Way state transitions, i.e. reversible state transitions
 			if (e.getIsReversible()) {
-				if (vecIt.second->getStateName() == Sc->getStateName()) { // check name equality
+				if (vecIt.second == Sc) { // check name equality
 					State* nextState = vecIt.first;
 					relatedObject->setCurrentState(nextState); // next state set
 					return 0;
@@ -92,12 +92,12 @@ namespace PPG
 	// Only callable privately after handling event!
 	void Node::updateCompletionState()
 	{
-		if (relatedObject->getCurrentState()->getStateName() == goalState->getStateName()) { // name equality --> TODO
+		if (relatedObject->getCurrentState() == goalState) { // name equality --> TODO
 			setPuzzleNodeState(ENodeState::COMPLETED);
 		}
 
 		// Traverse back in puzzle "graph"
-		else if (relatedObject->getCurrentState()->getStateName() != goalState->getStateName()) {
+		else if (relatedObject->getCurrentState() != goalState) {
 			if (currentNodeState == ENodeState::COMPLETED) {
 				setPuzzleNodeState(ENodeState::ACTIVE);
 			}

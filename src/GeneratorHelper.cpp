@@ -108,7 +108,7 @@ namespace PPG {
 		NodeVec prevMetas = R->findNearestPrecedingEqualNodesByObject(N);
 
 		for (auto& it: prevMetas){
-			if (it->getGoalState()->getStateName() == N->getGoalState()->getStateName()) {
+			if (it->getGoalState() == N->getGoalState()) {
 				return true;
 			}
 		}
@@ -412,7 +412,7 @@ namespace PPG {
 
 	bool GeneratorHelper::isRuleStateEqual(const State* s1, const State* s2) {
 		if (*s1 == STATE_ANY || *s2 == STATE_ANY) return true;
-		return (s1->getStateName() == s2->getStateName());
+		return (s1 == s2);
 	}
 
 
