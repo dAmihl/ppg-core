@@ -22,7 +22,7 @@ namespace PPG {
 
 		/* Generate Nodes and add to puzzle P*/
 		if (numberNodes == 0) numberNodes = objects.size();
-		Vec<Node*> nodes = generateNodes(objects, numberNodes);
+		Vec<Ptr<Node>> nodes = generateNodes(objects, numberNodes);
 		for (auto& it: nodes) {
 			P->addNode(it, true);
 		}
@@ -48,7 +48,7 @@ namespace PPG {
 		return generatePuzzle(objects, events, rules);
 	}
 
-	void Generator::removeNodeFromList(Node* N, NodeVec& nodes) {
+	void Generator::removeNodeFromList(Ptr<Node> N, NodeVec& nodes) {
 		NodeVec::iterator found = std::find(nodes.begin(), nodes.end(), N);
 		if (found != nodes.end()) {
 			nodes.erase(found);
@@ -116,7 +116,7 @@ namespace PPG {
 		*/
 
 		for (auto& it: nodes) {
-			Node* N1 = it;
+			Ptr<Node> N1 = it;
 
 			/*
 			* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
@@ -124,7 +124,7 @@ namespace PPG {
 			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, nodes, rules);
 
 			// returns nullptr if list is empty
-			Node* N2 = Randomizer::getRandomFromList(compList);
+			Ptr<Node> N2 = Randomizer::getRandomFromList(compList);
 
 			if (N2 != nullptr) {
 				rel.addPair(N1, N2);
@@ -140,11 +140,11 @@ namespace PPG {
 
 		NodeVec nodesInGraph;
 
-		Node* NStart = Randomizer::getRandomFromList(nodes);
+		Ptr<Node> NStart = Randomizer::getRandomFromList(nodes);
 		nodesInGraph.push_back(NStart);
 
 		for (auto& it: nodes) {
-			Node* N1 = it;
+			Ptr<Node> N1 = it;
 
 			// Copies nodesInGraph
 			// Add N1 temporary for filterCompatibleNodes
@@ -157,7 +157,7 @@ namespace PPG {
 			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, tmpNodes, rules);
 
 			// returns nullptr if list is empty
-			Node* N2 = Randomizer::getRandomFromList(compList);
+			Ptr<Node> N2 = Randomizer::getRandomFromList(compList);
 
 			if (N2 != nullptr) {
 				rel.addPair(N1, N2);
@@ -179,7 +179,7 @@ namespace PPG {
 			if (obj == nullptr) continue;
 			try {
 				State state = Randomizer::getRandomFromList(obj->getReachableStates());
-				Node* newNode = new Node(obj, state);
+				Ptr<Node> newNode = std::make_shared<Node>(obj, state);
 				nodes.push_back(newNode);
 			}
 			catch (int error) {

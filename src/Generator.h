@@ -12,7 +12,7 @@
 namespace PPG 
 {
 
-	using NodeVec = Vec<Node*>;
+	using NodeVec = Vec<Ptr<Node>>;
 	using ObjVec = Vec<Ptr<Object>>;
 	using EventVec = Vec<Ptr<Event>>;
 	using RuleVec = Vec<Rule>;
@@ -41,7 +41,7 @@ namespace PPG
 		void initializeActivePropertyOnNodes(Puzzle* P);
 
 		void cleanupNodes(Puzzle* P);
-		void removeNodeFromList(Node* N, NodeVec& nodes);
+		void removeNodeFromList(Ptr<Node> N, NodeVec& nodes);
 		unsigned int seed = 0;
 		uint32_t numberNodes;
 		bool seedSet = false;

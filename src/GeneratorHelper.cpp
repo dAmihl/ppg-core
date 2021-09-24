@@ -54,7 +54,7 @@ namespace PPG {
 	/*
 	*	Trys to find occurrence of N going from /start/ sequential till the end
 	*/
-	bool GeneratorHelper::findNodeSequential(Node* N, NodePair start, Relation& R)
+	bool GeneratorHelper::findNodeSequential(Ptr<Node> N, NodePair start, Relation& R)
 	{
 		// Check starting node if direct successor
 		if (start.second == N) return true;
@@ -79,7 +79,7 @@ namespace PPG {
 		return false;
 	}
 
-	bool GeneratorHelper::checkEquality(Node* N1, Node* N2)
+	bool GeneratorHelper::checkEquality(Ptr<Node> N1, Ptr<Node> N2)
 	{
 		return N1->getRelatedObject() == N2->getRelatedObject() &&
 			N1->getGoalState() == N2->getGoalState();
@@ -94,7 +94,7 @@ namespace PPG {
 	*	but N1(Obj1, S1) -> ... -> N3(Obj1, S2) --> ... --> N2(Obj1, S1) :: IS ALLOWED!
 	*/
 
-	bool GeneratorHelper::checkMetaEqualOccuranceByNode(Node* N, Relation& R) {
+	bool GeneratorHelper::checkMetaEqualOccuranceByNode(Ptr<Node> N, Relation& R) {
 
 		bool result = false;
 		NodeVec nextMetas = R.findNearestFollowingEqualNodesByObject(N);
@@ -136,7 +136,7 @@ namespace PPG {
 	*
 	*
 	*/
-	NodeVec GeneratorHelper::filterCompatibleNodes(Node* N, Relation& R, NodeVec nodes, RuleVec& rules)
+	NodeVec GeneratorHelper::filterCompatibleNodes(Ptr<Node> N, Relation& R, NodeVec nodes, RuleVec& rules)
 	{
 		NodeVec compatibles;
 
@@ -156,9 +156,9 @@ namespace PPG {
 	*	Checks compatibility of two nodes S and N by Basic Rules (Rule)s
 	*/
 
-	bool GeneratorHelper::checkCompatibilityBasicRules(Node* S, Node* N, Relation& R)
+	bool GeneratorHelper::checkCompatibilityBasicRules(Ptr<Node> S, Ptr<Node> N, Relation& R)
 	{
-		Pair<Node*, Node*> pair = Relation::makePuzzlePair(S, N);
+		Pair<Ptr<Node>, Ptr<Node>> pair = Relation::makePuzzlePair(S, N);
 		if (!checkEquality(S, N)) { // check node equality
 			R.addPair(pair);
 			if (GeneratorHelper::checkCreatesCircularDependency(pair, R) || GeneratorHelper::checkCreatesExclusiveDependency(pair, R) ||
@@ -179,7 +179,7 @@ namespace PPG {
 	/*
 	*	Checks compatibility of two nodes S and N by User-made Custom Rules (Rule)s
 	*/
-	bool GeneratorHelper::checkCompatibilityCustomRules(NodeVec nodes, Node* S, Node* N, Relation& R, RuleVec& rules)
+	bool GeneratorHelper::checkCompatibilityCustomRules(NodeVec nodes, Ptr<Node> S, Ptr<Node> N, Relation& R, RuleVec& rules)
 	{
 		for (auto& r: rules) {
 
@@ -187,7 +187,7 @@ namespace PPG {
 			Logger::log("S: " + S->getSimpleTextualRepresentation());
 			Logger::log("N: " + N->getSimpleTextualRepresentation());
 
-			bool (*FN) (NodeVec, Node*, Node*, Relation&, const Rule&, bool) = NULL;
+			bool (*FN) (NodeVec, Ptr<Node>, Ptr<Node>, Relation&, const Rule&, bool) = NULL;
 			bool strict = false;
 
 			switch (r.getRuleType()) {
@@ -237,7 +237,7 @@ namespace PPG {
 	*
 	*	IF S is not LHS of the rule and N is not the RHS, then the inverse rule must apply, i.e. (N < S) or (N <! S)
 	*/
-	bool GeneratorHelper::checkCompatibilityRuleTypeAfter(NodeVec nodes, Node* S, Node* N, Relation& R, const Rule& rule, bool isStrict)
+	bool GeneratorHelper::checkCompatibilityRuleTypeAfter(NodeVec nodes, Ptr<Node> S, Ptr<Node> N, Relation& R, const Rule& rule, bool isStrict)
 	{
 		/* */
 		const Object& lhsO = rule.getLeftHandSideObject();
@@ -307,7 +307,7 @@ namespace PPG {
 	*	True = Compatible!
 	*	False = INCOMPATIBLE!
 	*/
-	bool GeneratorHelper::checkCompatibilityRuleTypeBefore(NodeVec nodes, Node* S, Node* N, Relation& R, const Rule& rule, bool isStrict)
+	bool GeneratorHelper::checkCompatibilityRuleTypeBefore(NodeVec nodes, Ptr<Node> S, Ptr<Node> N, Relation& R, const Rule& rule, bool isStrict)
 	{
 		/* */
 		const Object& lhsO = rule.getLeftHandSideObject();
@@ -397,7 +397,7 @@ namespace PPG {
 	}
 
 
-	bool GeneratorHelper::isRuleNodeEqual(Node* N, const Object& ruleObject, State ruleState)
+	bool GeneratorHelper::isRuleNodeEqual(Ptr<Node> N, const Object& ruleObject, State ruleState)
 	{
 		const Object& nodeObject = N->getRelatedObject();
 		const State nodeState = N->getGoalState();

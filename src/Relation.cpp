@@ -7,7 +7,7 @@ namespace PPG
 		return pairs;
 	}
 
-	void Relation::addPair(Node* lhs, Node* rhs)
+	void Relation::addPair(Ptr<Node> lhs, Ptr<Node> rhs)
 	{
 		NodePair newPair = std::make_pair(lhs, rhs);
 		this->pairs.push_back(newPair);
@@ -41,7 +41,7 @@ namespace PPG
 	}
 
 
-	Str Relation::getRecursiveTextualRepresentationOfNode(Vec<const Node*>& alreadyOut, Str* out, const Node* N, int level) const {
+	Str Relation::getRecursiveTextualRepresentationOfNode(Vec<Ptr<Node>>& alreadyOut, Str* out, const Ptr<Node> N, int level) const {
 
 		NodeVec pre = getPrecedingNodes(N);
 		NodeVec fol = getFollowingNodes(N);
@@ -73,7 +73,7 @@ namespace PPG
 	Str Relation::getExtendedTextualRepresentation(const NodeVec nodes) const
 	{
 		Str out = "";
-		Vec<const Node*> alreadyOutputNodes;
+		Vec<Ptr<Node>> alreadyOutputNodes;
 
 		NodeVec leafs = getMaxima(nodes);
 
@@ -100,7 +100,7 @@ namespace PPG
 		return rootNodes;
 	}
 
-	PPG::GraphNode* Relation::getRecursiveGraphRepresentation(const Node* N) const
+	PPG::GraphNode* Relation::getRecursiveGraphRepresentation(const Ptr<Node> N) const
 	{
 		GraphNode* root = new GraphNode(N->getRelatedObject(), N->getRelatedObject().getCurrentState());
 
@@ -114,7 +114,7 @@ namespace PPG
 		return root;
 	}
 
-	void Relation::checkDoForAllPreceding(const Node* N, bool(*Check)(const Node&), void(*Do)(Node&))
+	void Relation::checkDoForAllPreceding(const Ptr<Node> N, bool(*Check)(const Node&), void(*Do)(Node&))
 	{
 		for (auto& it: pairs) {
 			if ((it.first) == N) {
@@ -125,7 +125,7 @@ namespace PPG
 		}
 	}
 
-	void Relation::checkDoForAllFollowing(const Node* N, bool(*Check)(const Node&), void(*Do)(Node&))
+	void Relation::checkDoForAllFollowing(const Ptr<Node> N, bool(*Check)(const Node&), void(*Do)(Node&))
 	{
 		for (auto& it: pairs) {
 			if (it.first == N) {
@@ -136,7 +136,7 @@ namespace PPG
 		}
 	}
 
-	bool Relation::checkAllLarger(const Node* N, bool(*Check)(const Node&)) const
+	bool Relation::checkAllLarger(const Ptr<Node> N, bool(*Check)(const Node&)) const
 	{
 		bool result = true;
 		for (auto& it : pairs) {
@@ -147,7 +147,7 @@ namespace PPG
 		return result;
 	}
 
-	bool Relation::checkAllSmaller(const Node* N, bool(*Check)(const Node&)) const
+	bool Relation::checkAllSmaller(const Ptr<Node> N, bool(*Check)(const Node&)) const
 	{
 		bool result = true;
 		for (auto& it: pairs) {
@@ -158,7 +158,7 @@ namespace PPG
 		return result;
 	}
 
-	bool Relation::checkAllFollowing(const Node* N, bool(*Check)(const Node&)) const
+	bool Relation::checkAllFollowing(const Ptr<Node> N, bool(*Check)(const Node&)) const
 	{
 		bool result = true;
 		for (auto& it: pairs) {
@@ -169,7 +169,7 @@ namespace PPG
 		return result;
 	}
 
-	bool Relation::checkAllPreceding(const Node* N, bool(*Check)(const Node&)) const
+	bool Relation::checkAllPreceding(const Ptr<Node> N, bool(*Check)(const Node&)) const
 	{
 		bool result = true;
 		for (auto& it: pairs) {
@@ -180,7 +180,7 @@ namespace PPG
 		return result;
 	}
 
-	bool Relation::checkAtLeastOneFollowing(const Node* N, bool(*Check)(const Node&)) const
+	bool Relation::checkAtLeastOneFollowing(const Ptr<Node> N, bool(*Check)(const Node&)) const
 	{
 		bool result = false;
 		for (auto& it: pairs) {
@@ -191,7 +191,7 @@ namespace PPG
 		return result;
 	}
 
-	bool Relation::checkAtLeastOnePreceding(const Node* N, bool(*Check)(const Node&)) const
+	bool Relation::checkAtLeastOnePreceding(const Ptr<Node> N, bool(*Check)(const Node&)) const
 	{
 		bool result = false;
 		for (auto& it: pairs) {
@@ -229,7 +229,7 @@ namespace PPG
 		return parallelPairs;
 	}
 
-	bool Relation::hasPrecedingNode(const Node* N) const
+	bool Relation::hasPrecedingNode(const Ptr<Node> N) const
 	{
 		for (auto& it: pairs) {
 			if (it.second == N) {
@@ -239,7 +239,7 @@ namespace PPG
 		return false;
 	}
 
-	bool Relation::hasFollowingNode(const Node* N) const
+	bool Relation::hasFollowingNode(const Ptr<Node> N) const
 	{
 		for (auto& it: pairs) {
 			if (it.first == N) {
@@ -304,17 +304,17 @@ namespace PPG
 		return maxs;
 	}
 
-	bool Relation::findPrecedingNode(const Node* start, const Node* nodeToFind) const
+	bool Relation::findPrecedingNode(const Ptr<Node> start, const Ptr<Node> nodeToFind) const
 	{
 		return findPrecedingNode(start, nodeToFind, false);
 	}
 
-	bool Relation::findFollowingNode(const Node* start, const Node* nodeToFind) const
+	bool Relation::findFollowingNode(const Ptr<Node> start, const Ptr<Node> nodeToFind) const
 	{
 		return findFollowingNode(start, nodeToFind, false);
 	}
 
-	bool Relation::findPrecedingNode(const Node* start, const Node* nodeToFind, bool includeStart) const
+	bool Relation::findPrecedingNode(const Ptr<Node> start, const Ptr<Node> nodeToFind, bool includeStart) const
 	{
 		bool result = false;
 		if (includeStart) {
@@ -338,7 +338,7 @@ namespace PPG
 		return result;
 	}
 
-	bool Relation::findFollowingNode(const Node* start, const Node* nodeToFind, bool includeStart) const
+	bool Relation::findFollowingNode(const Ptr<Node> start, const Ptr<Node> nodeToFind, bool includeStart) const
 	{
 		bool result = false;
 		if (includeStart) {
@@ -362,7 +362,7 @@ namespace PPG
 		return result;
 	}
 
-	bool Relation::findDirectlyPrecedingNode(const Node* start, const Node* nodeToFind) const
+	bool Relation::findDirectlyPrecedingNode(const Ptr<Node> start, const Ptr<Node> nodeToFind) const
 	{
 		NodeVec pre = getPrecedingNodes(start);
 
@@ -377,7 +377,7 @@ namespace PPG
 		return false;
 	}
 
-	bool Relation::findDirectlyFollowingNode(const Node* start, const Node* nodeToFind) const
+	bool Relation::findDirectlyFollowingNode(const Ptr<Node> start, const Ptr<Node> nodeToFind) const
 	{
 		NodeVec fol = getFollowingNodes(start);
 
@@ -408,12 +408,12 @@ namespace PPG
 
 
 
-	NodeVec Relation::findNearestPrecedingEqualNodesByObject(const Node* N) const
+	NodeVec Relation::findNearestPrecedingEqualNodesByObject(const Ptr<Node> N) const
 	{
 		return findNearestPrecedingEqualNodesByObject(N, N);
 	}
 
-	NodeVec Relation::findNearestPrecedingEqualNodesByObject(const Node* N, const Node* start) const 
+	NodeVec Relation::findNearestPrecedingEqualNodesByObject(const Ptr<Node> N, const Ptr<Node> start) const 
 	{
 		NodeVec preNodes = getPrecedingNodes(start);
 
@@ -433,12 +433,12 @@ namespace PPG
 		return metas;
 	}
 
-	NodeVec Relation::findNearestFollowingEqualNodesByObject(const Node* N) const
+	NodeVec Relation::findNearestFollowingEqualNodesByObject(const Ptr<Node> N) const
 	{
 		return findNearestFollowingEqualNodesByObject(N, N);
 	}
 
-	NodeVec Relation::findNearestFollowingEqualNodesByObject(const Node* N, const Node* start) const
+	NodeVec Relation::findNearestFollowingEqualNodesByObject(const Ptr<Node> N, const Ptr<Node> start) const
 	{
 		NodeVec nextNodes = getFollowingNodes(start);
 
@@ -465,7 +465,7 @@ namespace PPG
 	}
 
 
-	NodeVec Relation::getPrecedingNodes(const Node* N) const
+	NodeVec Relation::getPrecedingNodes(const Ptr<Node> N) const
 	{
 		NodeVec precedingNodes;
 
@@ -478,7 +478,7 @@ namespace PPG
 		return precedingNodes;
 	}
 
-	NodeVec Relation::getFollowingNodes(const Node* N) const
+	NodeVec Relation::getFollowingNodes(const Ptr<Node> N) const
 	{
 		NodeVec followingNodes;
 
@@ -494,7 +494,7 @@ namespace PPG
 	/*
 	*	Static: Pair Factory
 	*/
-	NodePair Relation::makePuzzlePair(Node* N1, Node* N2)
+	NodePair Relation::makePuzzlePair(Ptr<Node> N1, Ptr<Node> N2)
 	{
 		NodePair newPair = std::make_pair(N1, N2);
 		return newPair;

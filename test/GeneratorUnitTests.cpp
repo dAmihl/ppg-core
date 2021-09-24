@@ -3,8 +3,8 @@
 
 using namespace PPG;
 
-using NodeVec = Vec<Node*>;
-using NodePair = Pair<Node*, Node*>;
+using NodeVec = Vec<Ptr<Node>>;
+using NodePair = Pair<Ptr<Node>, Ptr<Node>>;
 using RuleVec = Vec<Rule>;
 using EventVec = Vec<Ptr<Event>>;
 using ObjVec = Vec<Ptr<Object>>;
@@ -20,19 +20,19 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		
 		auto O1 = c.add<Object>("Object_O1");
 		auto S1 = State("State_S1");
-		Node* N1 = new Node(O1, S1);
+		Ptr<Node> N1 = std::make_shared<Node>(O1, S1);
 
 		auto O2 = c.add<Object>("Object_O2");
 		State S2("State_S2");
-		Node* N2 = new Node(O2, S2);
+		Ptr<Node> N2 = std::make_shared<Node>(O2, S2);
 
 		auto O3 = c.add<Object>("Object_O3");
 		State S3("State_S3");
-		Node* N3 = new Node(O3, S3);
+		Ptr<Node> N3 = std::make_shared<Node>(O3, S3);
 
 		auto O4 = c.add<Object>("Object_O4");
 		State S4("State_S4");
-		Node* N4 = new Node(O4, S4);
+		Ptr<Node> N4 = std::make_shared<Node>(O4, S4);
 
 		NodePair n1n2Pair = Relation::makePuzzlePair(N1, N2);
 		NodePair n2n3Pair = Relation::makePuzzlePair(N2, N3);
@@ -85,7 +85,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("A exclusive dependency would be created by adding N4->N2 where N4 and N1 have the same object and different states") {
 
 			State S1_2("State_S1_2");
-			Node* N4 = new Node(O1, S1_2);
+			Ptr<Node> N4 = std::make_shared<Node>(O1, S1_2);
 			NodePair exclusiveDependencyPair = Relation::makePuzzlePair(N4, N2);
 
 			THEN("Return true in _checkCreatesExclusiveDependency()") {
@@ -97,7 +97,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("No exclusive dependency would be created by adding N4->N2 where N4 and N1 have different objects but same state") {
 
 			State S1_2("State_S1_2");
-			Node* N4 = new Node(O2, S1_2);
+			Ptr<Node> N4 = std::make_shared<Node>(O2, S1_2);
 			NodePair exclusiveDependencyPair = Relation::makePuzzlePair(N4, N2);
 
 			THEN("Return false in _checkCreatesExclusiveDependency()") {
@@ -108,7 +108,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("No exclusive dependency would be created by adding N4->N2 where N4 and N1 have the same object and same state") {
 
-			Node* N4 = new Node(O1, S1);
+			Ptr<Node> N4 = std::make_shared<Node>(O1, S1);
 			NodePair exclusiveDependencyPair = Relation::makePuzzlePair(N4, N2);
 
 			THEN("Return false in _checkCreatesExclusiveDependency()") {
@@ -119,7 +119,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("An equal node N4 = N1 with Object of N4 == Object of N1 and State of N4 == State of N1 should be added to the relation") {
 
-			Node* N4 = new Node(O1, S1);
+			Ptr<Node> N4 = std::make_shared<Node>(O1, S1);
 
 			THEN("Return true in _checkEquality()") {
 				bool isEqualToN1 = GeneratorHelper::checkEquality(N4, N1);
@@ -129,7 +129,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("An inequal node N4 = N1 with Object of N4 == Object of N1 and State of N4 != State of N1 should be added to the relation") {
 
-			Node* N4 = new Node(O1, S2);
+			Ptr<Node> N4 = std::make_shared<Node>(O1, S2);
 
 			THEN("Return false in _checkEquality()") {
 				bool isEqualToN1 = GeneratorHelper::checkEquality(N4, N1);
@@ -141,7 +141,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 			Ptr<Object> metaEqualO2 = O2;
 			State metaEqualS2 = S2;
-			Node* N4 = new Node(metaEqualO2, metaEqualS2);
+			Ptr<Node> N4 = std::make_shared<Node>(metaEqualO2, metaEqualS2);
 
 			NodePair metaEqualPair = Relation::makePuzzlePair(N4, N1);
 			R.addPair(metaEqualPair);
@@ -157,7 +157,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 			Ptr<Object> metaEqualO2 = O2;
 			State metaEqualS2("State_Sx");
-			Node* N4 = new Node(metaEqualO2, metaEqualS2);
+			Ptr<Node> N4 = std::make_shared<Node>(metaEqualO2, metaEqualS2);
 
 			NodePair metaEqualPair = Relation::makePuzzlePair(N4, N1);
 			R.addPair(metaEqualPair);
@@ -200,7 +200,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			nodes.push_back(N2);
 			nodes.push_back(N3);
 			nodes.push_back(N4);
-			Node* N5 = new Node(O1, S2);
+			Ptr<Node> N5 = std::make_shared<Node>(O1, S2);
 			nodes.push_back(N5);
 			Ptr<Object> O5 = c.add<Object>("O5"); 
 
@@ -251,7 +251,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		T1.addTransition(E1->getEventName(), S1_2, S1_1);
 		O1->setStateTransition(T1);
 		events.push_back(E1);
-		Node* N1 = new Node(O1, S1_1);
+		Ptr<Node> N1 = std::make_shared<Node>(O1, S1_1);
 
 		Ptr<Object> O2 = c.add<Object>("Object_O2");
 		objects.push_back(O2);
@@ -263,7 +263,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		T2.addTransition(E2->getEventName(), S2_2, S2_1);
 		O2->setStateTransition(T2);
 		events.push_back(E2);
-		Node* N2 = new Node(O2, S2_1);
+		Ptr<Node> N2 = std::make_shared<Node>(O2, S2_1);
 
 		Ptr<Object> O3 = c.add<Object>("Object_O3");
 		objects.push_back(O3);
@@ -278,7 +278,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		events.push_back(E3_1);
 		events.push_back(E3_2);
 		O3->setStateTransition(T3);
-		Node* N3 = new Node(O3, S3_1);
+		Ptr<Node> N3 = std::make_shared<Node>(O3, S3_1);
 
 		NodePair n1n2Pair = Relation::makePuzzlePair(N1, N2);
 		NodePair n2n3Pair = Relation::makePuzzlePair(N2, N3);

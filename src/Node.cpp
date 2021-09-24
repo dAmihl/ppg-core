@@ -119,13 +119,13 @@ namespace PPG
 		if (PUL == nullptr) return;
 
 		if (state == ENodeState::ACTIVE) {
-			PUL->onNodeActive(this);
+			PUL->onNodeActive(*this);
 		}
 		if (state == ENodeState::INCOMPLETE) {
-			PUL->onNodeIncomplete(this);
+			PUL->onNodeIncomplete(*this);
 		}
 		if (state == ENodeState::COMPLETED) {
-			PUL->onNodeComplete(this);
+			PUL->onNodeComplete(*this);
 		}
 	}
 

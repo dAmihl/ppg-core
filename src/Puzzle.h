@@ -7,13 +7,13 @@
 
 namespace PPG
 {
-	using NodeVec = Vec<Node*>;
+	using NodeVec = Vec<Ptr<Node>>;
 	using EventVec = Vec<Ptr<Event>>;
 
 	class PPG_EXPORT Puzzle
 	{
 	public:
-		void addNode(Node* n, bool isRelevant);
+		void addNode(Ptr<Node> n, bool isRelevant);
 		void setRelation(Relation O);
 		void setNodes(NodeVec ns);
 
@@ -37,9 +37,9 @@ namespace PPG
 
 		UpdateListener* updateListener = nullptr;
 
-		bool canNodeHandleEvent(const Node* N, Event E) const;
-		bool isNodeCompatible(const Node* N, Event E) const;
-		void updateNodeProperties(Node* N);
+		bool canNodeHandleEvent(const Ptr<Node> N, Event E) const;
+		bool isNodeCompatible(const Ptr<Node> N, Event E) const;
+		void updateNodeProperties(Ptr<Node> N);
 		void checkPuzzleCompletion() const;
 		void onPuzzleCompleted() const;
 

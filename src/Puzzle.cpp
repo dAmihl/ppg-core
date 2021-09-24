@@ -2,7 +2,7 @@
 
 namespace PPG
 {
-	void Puzzle::addNode(Node* n, bool isRelevant)
+	void Puzzle::addNode(Ptr<Node> n, bool isRelevant)
 	{
 		nodes.push_back(n);
 		if (isRelevant) relevantNodes.push_back(n);
@@ -48,7 +48,7 @@ namespace PPG
 			}
 		}
 
-		Node* N;
+		Ptr<Node> N;
 		NodeVec handlingNodes;
 		if (!compatibleActiveNodes.empty()) {
 			handlingNodes = relation.getSmallestNodesFromList(compatibleActiveNodes);
@@ -115,7 +115,7 @@ namespace PPG
 		if (!M.isCompleted()) M.updateCompletionState();
 	}
 
-	void Puzzle::updateNodeProperties(Node* N)
+	void Puzzle::updateNodeProperties(Ptr<Node> N)
 	{
 		this->relation.checkDoForAllFollowing(N, checkCompleted, doSetNodeActive);
 		//this->relation.checkDoForAllFollowing(N, checkCompleted, doCheckNodeComplete); // check node already complete by definition
@@ -207,7 +207,7 @@ namespace PPG
 		return allRoots;
 	}
 
-	bool Puzzle::canNodeHandleEvent(const Node* N, Event E) const
+	bool Puzzle::canNodeHandleEvent(const Ptr<Node> N, Event E) const
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject().getObjectName() == E.getRelatedObject().getObjectName();
@@ -216,7 +216,7 @@ namespace PPG
 		return bResult;
 	}
 
-	bool Puzzle::isNodeCompatible(const Node* N, Event E) const
+	bool Puzzle::isNodeCompatible(const Ptr<Node> N, Event E) const
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject().getObjectName() == E.getRelatedObject().getObjectName();
