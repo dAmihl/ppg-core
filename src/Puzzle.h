@@ -14,7 +14,6 @@ namespace PPG
 	{
 	public:
 		void addNode(Node* n, bool isRelevant);
-		void addEvent(Ptr<Event> e);
 		void setRelation(Relation O);
 		void setNodes(NodeVec ns);
 
@@ -23,8 +22,6 @@ namespace PPG
 		void setUpdateListener(UpdateListener* PUL);
 
 		NodeVec getNodes() const;
-		NodeVec getRelevantNodes() const;
-		EventVec& getEvents();
 		Relation getRelation() const;
 
 		Str getSimpleTextualRepresentation() const;
@@ -36,7 +33,6 @@ namespace PPG
 	private:
 		NodeVec nodes;
 		NodeVec relevantNodes;
-		EventVec events;
 		Relation relation;
 
 		UpdateListener* updateListener = nullptr;

@@ -27,11 +27,6 @@ namespace PPG {
 			P->addNode(it, true);
 		}
 
-		/* Add Events to Puzzle P */
-		for (auto& it: events) {
-			P->addEvent(it);
-		}
-
 		/* Generate Relation and add to Puzzle P */
 		Relation R = generateRelationExperimental(P, P->getNodes(), rules);
 
@@ -86,32 +81,6 @@ namespace PPG {
 			removeNodeFromList(it, nodes);
 		}
 		P->setNodes(nodes);
-	}
-
-
-	/*
-	*
-	*	Simple sequential Relation of the given nodes.
-	*	Used for testing purposes
-	*/
-	Relation Generator::simpleGenerateRelation(NodeVec nodes)
-	{
-		Relation rel;
-		for (auto& it: nodes) {
-			Node* N1 = it;
-			Node* N2 = (it + 1);
-			//if (it == nodes.begin()) N1->setPuzzleNodeState(ENodeState::ACTIVE);
-			Pair<Node*, Node*> pair = Relation::makePuzzlePair(N1, N2);
-			if (!GeneratorHelper::checkEquality(N1, N2)) {
-				rel.addPair(pair);
-				if (GeneratorHelper::checkCreatesCircularDependency(pair, rel) || GeneratorHelper::checkCreatesExclusiveDependency(pair, rel) ||
-					GeneratorHelper::checkMetaEqualOccurance(pair, rel)) {
-					rel.removePair(pair);// TODO
-				}
-			}// else discard
-		}
-
-		return rel;
 	}
 
 

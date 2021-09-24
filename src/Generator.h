@@ -28,8 +28,6 @@ namespace PPG
 
 		Puzzle* generatePuzzle(Context& context);
 
-		Relation simpleGenerateRelation(NodeVec nodes);
-
 		Relation generateRelation(NodeVec nodes, RuleVec rules);
 		Relation generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec& rules);
 

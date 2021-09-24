@@ -123,7 +123,7 @@ namespace PPG
 	}
 
 	void Puzzle::checkPuzzleCompletion() const
-{
+	{
 		for (auto& it: relevantNodes) {
 			if (!it->isCompleted()) {
 				return;
@@ -133,31 +133,15 @@ namespace PPG
 	}
 
 	void Puzzle::onPuzzleCompleted() const
-{
+	{
 		if (this->updateListener != nullptr) {
 			this->updateListener->onPuzzleComplete();
 		}
-
-	}
-
-	void Puzzle::addEvent(Ptr<Event> e)
-	{
-		this->events.push_back(e);
 	}
 
 	NodeVec Puzzle::getNodes() const
 	{
 		return this->nodes;
-	}
-
-	NodeVec Puzzle::getRelevantNodes() const
-	{
-		return this->relevantNodes;
-	}
-
-	EventVec& Puzzle::getEvents()
-	{
-		return events;
 	}
 
 	Relation Puzzle::getRelation() const
