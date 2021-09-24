@@ -1,6 +1,6 @@
 # PPG - Procedural Puzzle Generator
 
-My abandoned bachelor's project experimenting with procedurally generating puzzles for video games.
+My (abandoned) bachelor's project experimenting with procedurally generating puzzles for video games.
 
 ## Disclaimer:
 
@@ -14,7 +14,6 @@ __This is the core repository. For extending projects please refer to these link
 [gdppg; A Godot module for ppg-yaml](https://github.com/dAmihl/gdppg)
 
 ## Examples:
-
 
 I have also created a small game in Godot Engine using this system which can be found here: [simplePPG](https://github.com/dAmihl/simplePPG)
 
