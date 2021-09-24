@@ -292,7 +292,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		//PG.setSeed(seed);		
 
 		WHEN("A puzzle is generated") {
-			Puzzle* P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(objects, events, rules);
 			UNSCOPED_INFO("Generated Puzzle:");
 			UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
 			THEN("It is definitely generated..") {
@@ -304,7 +304,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("A puzzle is generated with the Rule (O2,S2_2) < (O3, *)") {
 			rules.clear();
 			rules.push_back(R2);
-			Puzzle* P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(objects, events, rules);
 			THEN("Every node (O2, S2_2) has to occur before every other node referencing O3") {
 
 				NodeVec nodes = P->getNodes();
@@ -339,7 +339,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("A puzzle is generated with the Rule (O1,S1_2) < (O2, S2_1)") {
 			rules.clear();
 			rules.push_back(R1);
-			Puzzle* P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(objects, events, rules);
 
 			THEN("Every node (O1, S1_2) has to occur before every other node referencing O2 and Stage S2_1") {
 
@@ -375,7 +375,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("A puzzle is generated with the Rule (O1,*) <! (O3,*)") {
 			rules.clear();
 			rules.push_back(R3);
-			Puzzle* P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(objects, events, rules);
 
 			THEN("Every node (O1,*) has to occur STRICTLY (directly and only) before a node referencing O3") {
 
@@ -411,7 +411,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("A puzzle is generated with the Rule (O1,*) > (O3,*)") {
 			rules.clear();
 			rules.push_back(R4);
-			Puzzle* P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(objects, events, rules);
 
 			THEN("Every node (O1,*) has to be after every other node referencing O3") {
 
@@ -448,7 +448,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		WHEN("A puzzle is generated with the Rule (O2,S2_2) >! (O3, *)") {
 			rules.clear();
 			rules.push_back(R5);
-			Puzzle* P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(objects, events, rules);
 			THEN("Every node (O2, S2_2) has to occur STRICTLY (directly and only) after another node referencing O3") {
 
 				NodeVec nodes = P->getNodes();
@@ -483,7 +483,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated without Rules") {
 			rules.clear();
-			Puzzle* P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(objects, events, rules);
 			THEN("getGraphRepresentation() returns the recursive representation of the puzzle starting from the leaf (ending) nodes") {
 
 				NodeVec nodes = P->getNodes();

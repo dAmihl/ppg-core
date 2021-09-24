@@ -18,11 +18,9 @@ int main()
 		o1->setStateTransition(to1);
 
 		PPG::Generator generator;
-		PPG::Puzzle* P = generator.generatePuzzle(c);
+		auto P = generator.generatePuzzle(c);
 		objPtr = &*o1;
 		std::cout << P->getExtendedTextualRepresentation() << "\n";
-
-		delete P;
 	}
 	return 0;
 }

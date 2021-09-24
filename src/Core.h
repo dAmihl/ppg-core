@@ -29,6 +29,12 @@ namespace PPG
 		return t;
 	}
 
+	template<class T, class... _Ts>
+	UPtr<T> makeU(_Ts&&... params) {
+		auto t = std::make_unique<T>(params...);
+		return t;
+	}
+
 	template<class T, class U>
 	Pair<T, U> makePair(T a, U b)
 	{

@@ -2,7 +2,7 @@
 
 namespace PPG {
 
-	Puzzle* Generator::generatePuzzle(ObjVec& objects, EventVec& events, RuleVec& rules)
+	UPtr<Puzzle> Generator::generatePuzzle(ObjVec& objects, EventVec& events, RuleVec& rules)
 	{
 		Logger::log("Start generating a new Puzzle.");
 		Logger::log("Using rules:");
@@ -18,7 +18,7 @@ namespace PPG {
 			Randomizer::init();
 		}
 
-		Puzzle* P = new Puzzle();
+		UPtr<Puzzle> P = makeU<Puzzle>();
 
 		/* Generate Nodes and add to puzzle P*/
 		if (numberNodes == 0) numberNodes = objects.size();
@@ -37,7 +37,7 @@ namespace PPG {
 		return P;
 	}
 
-	PPG::Puzzle* Generator::generatePuzzle(Context& context)
+	UPtr<Puzzle> Generator::generatePuzzle(Context& context)
 	{
 		Vec<Ptr<Object>>& objects = context.getObjects();
 		Vec<Ptr<Event>>& events = context.getEvents();
@@ -60,7 +60,7 @@ namespace PPG {
 	*
 	*/
 
-	void Generator::cleanupNodes(Puzzle* P) {
+	void Generator::cleanupNodes(UPtr<Puzzle>& P) {
 		NodeVec& nodes = P->getNodes();
 		NodeVec nodesToDelete;
 		const Relation& R = P->getRelation();
@@ -129,7 +129,7 @@ namespace PPG {
 		return rel;
 	}
 
-	PPG::Relation Generator::generateRelationExperimental(Puzzle* P, NodeVec& nodes, RuleVec& rules)
+	PPG::Relation Generator::generateRelationExperimental(UPtr<Puzzle>& P, NodeVec& nodes, RuleVec& rules)
 	{
 		Relation rel;
 
@@ -200,7 +200,7 @@ namespace PPG {
 	*	Initialize all ACTIVE nodes with state ACTIVE
 	*	Remember: Only active nodes are initially able to handle events
 	*/
-	void Generator::initializeActivePropertyOnNodes(Puzzle* P)
+	void Generator::initializeActivePropertyOnNodes(UPtr<Puzzle>& P)
 	{
 		NodeVec nodes = P->getNodes();
 
