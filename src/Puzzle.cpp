@@ -2,7 +2,7 @@
 
 namespace PPG
 {
-	void Puzzle::addNode(Ptr<Node> n, bool isRelevant)
+	void Puzzle::addNode(Ptr<Node> n)
 	{
 		nodes.push_back(n);
 	}

@@ -69,8 +69,6 @@ namespace PPG
 		NodeVec getPrecedingNodes(const Ptr<Node>& N) const;
 		NodeVec getFollowingNodes(const Ptr<Node>& N) const;
 
-		static NodePair makePuzzlePair(Ptr<Node> N1, Ptr<Node> N2);
-
 	private:
 		NodePairVec pairs;
 

@@ -485,13 +485,5 @@ namespace PPG
 		return followingNodes;
 	}
 
-	/*
-	*	Static: Pair Factory
-	*/
-	NodePair Relation::makePuzzlePair(Ptr<Node> N1, Ptr<Node> N2)
-	{
-		NodePair newPair = std::make_pair(N1, N2);
-		return newPair;
-	}
 
 }

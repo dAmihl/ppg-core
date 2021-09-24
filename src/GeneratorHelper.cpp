@@ -158,7 +158,7 @@ namespace PPG {
 
 	bool GeneratorHelper::checkCompatibilityBasicRules(Ptr<Node> S, Ptr<Node> N, Relation& R)
 	{
-		Pair<Ptr<Node>, Ptr<Node>> pair = Relation::makePuzzlePair(S, N);
+		Pair<Ptr<Node>, Ptr<Node>> pair = makePair(S, N);
 		if (!checkEquality(S, N)) { // check node equality
 			R.addPair(pair);
 			if (GeneratorHelper::checkCreatesCircularDependency(pair, R) || GeneratorHelper::checkCreatesExclusiveDependency(pair, R) ||

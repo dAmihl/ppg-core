@@ -13,7 +13,7 @@ namespace PPG
 	class PPG_EXPORT Puzzle
 	{
 	public:
-		void addNode(Ptr<Node> n, bool isRelevant);
+		void addNode(Ptr<Node> n);
 		void setRelation(Relation O);
 		void setNodes(NodeVec ns);
 

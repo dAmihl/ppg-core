@@ -23,4 +23,16 @@ namespace PPG
 
 	using Str = std::string;
 
+	template<class T, class... _Ts>
+	Ptr<T> make(_Ts&&... params) {
+		auto t = std::make_shared<T>(params...);
+		return t;
+	}
+
+	template<class T, class U>
+	Pair<T, U> makePair(T a, U b)
+	{
+		return std::make_pair(a, b);
+	}
+
 }

@@ -28,8 +28,8 @@ namespace PPG
 
 		Puzzle* generatePuzzle(Context& context);
 
-		Relation generateRelation(NodeVec nodes, RuleVec rules);
-		Relation generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec& rules);
+		Relation generateRelation(NodeVec& nodes, RuleVec rules);
+		Relation generateRelationExperimental(Puzzle* P, NodeVec& nodes, RuleVec& rules);
 
 		void setSeed(unsigned int seed);
 		unsigned int getSeed() const;
@@ -41,7 +41,7 @@ namespace PPG
 		void initializeActivePropertyOnNodes(Puzzle* P);
 
 		void cleanupNodes(Puzzle* P);
-		void removeNodeFromList(Ptr<Node> N, NodeVec& nodes);
+		void removeNodeFromList(const Ptr<Node>& N, NodeVec& nodes);
 		unsigned int seed = 0;
 		uint32_t numberNodes;
 		bool seedSet = false;

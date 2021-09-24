@@ -23,9 +23,7 @@ namespace PPG {
 		/* Generate Nodes and add to puzzle P*/
 		if (numberNodes == 0) numberNodes = objects.size();
 		Vec<Ptr<Node>> nodes = generateNodes(objects, numberNodes);
-		for (auto& it: nodes) {
-			P->addNode(it, true);
-		}
+		P->setNodes(nodes);
 
 		/* Generate Relation and add to Puzzle P */
 		Relation R = generateRelationExperimental(P, P->getNodes(), rules);
@@ -48,7 +46,7 @@ namespace PPG {
 		return generatePuzzle(objects, events, rules);
 	}
 
-	void Generator::removeNodeFromList(Ptr<Node> N, NodeVec& nodes) {
+	void Generator::removeNodeFromList(const Ptr<Node>& N, NodeVec& nodes) {
 		NodeVec::iterator found = std::find(nodes.begin(), nodes.end(), N);
 		if (found != nodes.end()) {
 			nodes.erase(found);
@@ -63,9 +61,9 @@ namespace PPG {
 	*/
 
 	void Generator::cleanupNodes(Puzzle* P) {
-		NodeVec nodes = P->getNodes();
+		NodeVec& nodes = P->getNodes();
 		NodeVec nodesToDelete;
-		Relation R = P->getRelation();
+		const Relation& R = P->getRelation();
 
 		for (auto& it: nodes) {
 			if (!R.hasFollowingNode(it) && !R.hasPrecedingNode(it)) {
@@ -80,7 +78,6 @@ namespace PPG {
 		for (auto& it : nodesToDelete) {
 			removeNodeFromList(it, nodes);
 		}
-		P->setNodes(nodes);
 	}
 
 
@@ -89,7 +86,7 @@ namespace PPG {
 	*	Generating a relation of given nodes;
 	*	by keeping invariants and thus solvability within this system
 	*/
-	Relation Generator::generateRelation(NodeVec nodes, RuleVec rules)
+	PPG::Relation Generator::generateRelation(NodeVec& nodes, RuleVec rules)
 	{
 		Relation rel;
 
@@ -132,7 +129,7 @@ namespace PPG {
 		return rel;
 	}
 
-	PPG::Relation Generator::generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec& rules)
+	PPG::Relation Generator::generateRelationExperimental(Puzzle* P, NodeVec& nodes, RuleVec& rules)
 	{
 		Relation rel;
 
@@ -176,7 +173,7 @@ namespace PPG {
 			if (obj == nullptr) continue;
 			try {
 				State state = Randomizer::getRandomFromList(obj->getReachableStates());
-				Ptr<Node> newNode = std::make_shared<Node>(obj, state);
+				Ptr<Node> newNode = make<Node>(obj, state);
 				nodes.push_back(newNode);
 			}
 			catch (int error) {
