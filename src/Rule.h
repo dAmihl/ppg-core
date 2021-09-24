@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "core/Core.h"
 #include "Object.h"
 #include "State.h"
 

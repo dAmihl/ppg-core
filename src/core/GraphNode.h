@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core.h"
-#include "Object.h"
-#include "State.h"
+#include "../Object.h"
+#include "../State.h"
 #include "GraphNode.h"
 
 namespace PPG

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Node.h"
+#include "core/Node.h"
 #include "Event.h"
-#include "Relation.h"
+#include "core/Relation.h"
 #include "UpdateListener.h"
 
 namespace PPG

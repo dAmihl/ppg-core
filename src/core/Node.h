@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Core.h"
-#include "Object.h"
-#include "State.h"
-#include "Event.h"
-#include "UpdateListener.h"
+#include "../Object.h"
+#include "../State.h"
+#include "../Event.h"
+#include "../UpdateListener.h"
 
 namespace PPG
 {

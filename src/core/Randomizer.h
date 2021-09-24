@@ -2,8 +2,8 @@
 
 #include <cstdlib>
 #include "Core.h"
-#include "State.h"
-#include "Object.h"
+#include "../State.h"
+#include "../Object.h"
 #include "Node.h"
 
 namespace PPG {

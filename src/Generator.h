@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Core.h"
-#include "Randomizer.h"
-#include "Node.h"
-#include "Relation.h"
+#include "core/Core.h"
+#include "core/Randomizer.h"
+#include "core/Node.h"
+#include "core/Relation.h"
 #include "Puzzle.h"
-#include "GeneratorHelper.h"
-#include "Logger.h"
+#include "core/GeneratorHelper.h"
+#include "core/Logger.h"
 #include "Context.h"
 
 namespace PPG 

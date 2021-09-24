@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core.h"
-#include <unordered_map>
+#include "core/Core.h"
 #include "State.h"
 
 namespace PPG

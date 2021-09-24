@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Core.h"
+#include "core/Core.h"
 #include "State.h"
 #include "StateTransition.h"
-#include "ObjectMetaData.h"
+#include "core/ObjectMetaData.h"
 
 namespace PPG
 {

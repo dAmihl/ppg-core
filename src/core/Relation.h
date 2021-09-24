@@ -3,7 +3,7 @@
 #include "Core.h"
 #include "GraphNode.h"
 #include "Node.h"
-#include "Rule.h"
+#include "../Rule.h"
 
 namespace PPG
 {
