@@ -1,71 +1,65 @@
 #include "StateTransition.h"
 
-
-StateTransition::StateTransition()
+namespace PPG
 {
-}
 
-
-StateTransition::~StateTransition()
+	EventMap& StateTransition::getTransitionMap()
 {
-}
-
-EVENT_MAP* StateTransition::getTransitionMap()
-{
-	return &this->transitionMap;
-}
-
-void StateTransition::addTransition(std::string eventName, PuzzleState origState, PuzzleState newState)
-{
-	
-	bool eventEntryFound = (this->transitionMap.find(eventName) != this->transitionMap.end());
-	std::pair<PuzzleState, PuzzleState> newStatePair;
-	newStatePair.first = origState;
-	newStatePair.second = newState;
-
-	if (eventEntryFound) {
-		this->transitionMap.find(eventName)->second.push_back(newStatePair);
+		return transitionMap;
 	}
-	else {
-		std::vector<std::pair<PuzzleState, PuzzleState>> newVector;
-		newVector.push_back(newStatePair);
-		this->transitionMap.insert(std::make_pair(eventName, newVector));
-	}
-	
-}
 
-std::string StateTransition::getTextualOutput()
-{
-	std::string out = "";
-	for (EVENT_MAP::iterator it = this->transitionMap.begin(); it != this->transitionMap.end(); ++it) {
-		out += "> " + it->first + ": ";
-		for (std::vector<std::pair<PuzzleState, PuzzleState>>::iterator vecIt = it->second.begin(); vecIt != it->second.end(); ++vecIt) {
-			out += "<" + vecIt->first.getStateName() + " -> " + vecIt->second.getStateName() + "> ";
+	void StateTransition::addTransition(Str eventName, State origState, State newState)
+	{
+
+		bool eventEntryFound = (transitionMap.find(eventName) != transitionMap.end());
+		std::pair<State, State> newStatePair;
+		newStatePair.first = origState;
+		newStatePair.second = newState;
+
+		if (eventEntryFound) {
+			transitionMap.find(eventName)->second.push_back(newStatePair);
 		}
-		out += "\n";
-	}
-
-	return out;
-}
-
-std::vector<PuzzleState> StateTransition::getReachableStates()
-{
-	std::vector<PuzzleState> reachables;
-	for (EVENT_MAP::iterator it = this->transitionMap.begin(); it != this->transitionMap.end(); ++it) {
-		for (std::vector<std::pair<PuzzleState, PuzzleState>>::iterator vecIt = it->second.begin(); vecIt != it->second.end(); ++vecIt) {
-			reachables.push_back(vecIt->second);
+		else {
+			Vec<Pair<State, State>> newVector;
+			newVector.push_back(newStatePair);
+			transitionMap.insert(std::make_pair(eventName, newVector));
 		}
-	}
-	return reachables;
-}
 
-std::vector<std::pair<PuzzleState, PuzzleState>> StateTransition::findTransitions(const std::string name)
-{
-	EVENT_MAP::iterator it = this->transitionMap.find(name);
-	if (it != this->transitionMap.end()) {
-		return it->second;
 	}
 
-	std::vector<std::pair<PuzzleState, PuzzleState>> a;
-	return a;
+	Str StateTransition::getTextualOutput() const
+	{
+		Str out = "";
+		for (auto& it: transitionMap) {
+			out += "> " + it.first + ": ";
+			for (auto& vecIt: it.second) {
+				out += "<" + vecIt.first.getName() + " -> " + vecIt.second.getName() + "> ";
+			}
+			out += "\n";
+		}
+
+		return out;
+	}
+
+	Vec<State> StateTransition::getReachableStates() const
+	{
+		Vec<State> reachables;
+		for (auto& it: transitionMap) {
+			for (auto& vecIt : it.second) {
+				reachables.push_back(vecIt.second);
+			}
+		}
+		return reachables;
+	}
+
+	EventMapVal StateTransition::findTransitions(const Str name) const
+	{
+		auto& it = transitionMap.find(name);
+		if (it != transitionMap.end()) {
+			return it->second;
+		}
+
+		EventMapVal a;
+		return a;
+	}
 }

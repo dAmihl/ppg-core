@@ -1,54 +1,47 @@
 #pragma once
 
-#include "PuzzleNode.h"
-#include "PuzzleEvent.h"
-#include "PuzzleRelation.h"
-#include "PuzzleUpdateListener.h"
+#include "core/Node.h"
+#include "Event.h"
+#include "core/Relation.h"
+#include "UpdateListener.h"
 
-class Puzzle
+namespace PPG
 {
-public:
-	Puzzle();
-	~Puzzle();
+	using NodeVec = Vec<Ptr<Node>>;
+	using EventVec = Vec<Ptr<Event>>;
 
-	void addNode(PuzzleNode* n, bool isRelevant);
-	void addEvent(PuzzleEvent* e);
-	void setRelation(PuzzleRelation O);
-	void setNodes(T_PuzzleNodeList nodes);
+	class PPG_EXPORT Puzzle
+	{
+	public:
+		void addNode(Ptr<Node> n);
+		void setRelation(Relation O);
+		void setNodes(NodeVec ns);
 
-	void handleEvent(PuzzleEvent e);
+		void handleEvent(Event e);
 
-	void setUpdateListener(PuzzleUpdateListener* PUL);
+		void setUpdateListener(UpdateListener* PUL);
 
-	T_PuzzleNodeList getNodes();
-	T_PuzzleNodeList getRelevantNodes();
-	T_PuzzleEventList getEvents();
-	PuzzleRelation getRelation();
+		NodeVec& getNodes();
+		Relation& getRelation();
 
-	std::string getSimpleTextualRepresentation();
-	std::string getExtendedTextualRepresentation();
-	std::string getTextualEnvironmentDescription();
+		Str getSimpleTextualRepresentation() const;
+		Str getExtendedTextualRepresentation() const;
+		Str getTextualEnvironmentDescription() const;
 
-	T_PuzzleGraphNodeList getGraphRepresentation();
+		Vec<GraphNode*> getGraphRepresentation() const;
 
-private: 
-	T_PuzzleNodeList nodes;
-	T_PuzzleNodeList relevantNodes;
-	T_PuzzleEventList events;
-	PuzzleRelation relation;
+	private:
+		NodeVec nodes;
+		Relation relation;
 
-	PuzzleUpdateListener* updateListener = NULL;
+		UpdateListener* updateListener = nullptr;
 
-	/*
-	void doSetNodeActive(PuzzleNode* M);
-	void doCheckNodeComplete(PuzzleNode* M);
-	void doSetNodeIncomplete(PuzzleNode* M);
-	*/
-	bool canNodeHandleEvent(PuzzleNode* N, PuzzleEvent E);
-	bool isNodeCompatible(PuzzleNode *N, PuzzleEvent E);
-	void updateNodeProperties(PuzzleNode* N);
-	void checkPuzzleCompletion();
-	void onPuzzleCompleted();
+		bool canNodeHandleEvent(const Ptr<Node>& N, Event E) const;
+		bool isNodeCompatible(const Ptr<Node>& N, Event E) const;
+		void updateNodeProperties(Ptr<Node>& N);
+		void checkPuzzleCompletion() const;
+		void onPuzzleCompleted() const;
 
-};
+	};
 
+}

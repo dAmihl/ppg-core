@@ -1,24 +1,25 @@
 #pragma once
 
-#include <unordered_map>
-#include "PuzzleState.h"
+#include "core/Core.h"
+#include "State.h"
 
-#ifndef EVENT_MAP
-	#define EVENT_MAP std::unordered_map<std::string, std::vector<std::pair<PuzzleState, PuzzleState>>>
-#endif
-
-class StateTransition
+namespace PPG
 {
-public:
-	StateTransition();
-	~StateTransition();
-	EVENT_MAP* getTransitionMap();
-	void addTransition(std::string eventName, PuzzleState origState, PuzzleState newState);
-	std::string getTextualOutput();
-	std::vector<PuzzleState> getReachableStates();
-	std::vector<std::pair<PuzzleState, PuzzleState>> findTransitions(const std::string name);
+	using EventMapVal = Vec<Pair<State, State>>;
+	using EventMap = Map<Str, EventMapVal>;
 
-private:
-	EVENT_MAP transitionMap;
-};
+	class PPG_EXPORT StateTransition
+	{
+	public:
+		EventMap& getTransitionMap();
+		void addTransition(Str eventName, State origState, State newState);
+		Str getTextualOutput() const;
+		Vec<State> getReachableStates() const;
+		EventMapVal findTransitions(const Str name) const;
 
+	private:
+		EventMap transitionMap;
+	};
+
+
+}

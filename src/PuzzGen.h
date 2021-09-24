@@ -1,21 +1,19 @@
 // PuzzGenLibrary.h - Contains declaration of Function class  
 #pragma once  
 
+#include "core/Core.h"
 
-#include "PuzzleObject.h"
+#include "core/EventManager.h"
+#include "core/Logger.h"
+#include "core/GraphNode.h"
+#include "core/Node.h"
+#include "core/Relation.h"
+#include "core/Randomizer.h"
+
+#include "Object.h"
+#include "Rule.h"
+#include "Event.h"
+
 #include "Puzzle.h"
-#include "PuzzleRule.h"
-#include "PuzzleGenerator.h"
-#include "PuzzleGraphNode.h"
-#include "PuzzleNode.h"
-#include "PuzzleRelation.h"
-#include "PuzzleRandomizer.h"
-#include "PuzzleEvent.h"
-#include "PuzzleEventManager.h"
-#include "PUZZGEN_TYPES.h"
-#include "PuzzleLogger.h"
-
-namespace PuzzGen
-{
-
-}
+#include "Context.h"
+#include "Generator.h"
