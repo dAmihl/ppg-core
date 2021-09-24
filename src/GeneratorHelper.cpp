@@ -52,7 +52,7 @@ namespace PPG {
 
 
 	/*
-	*	Trys to find occurrence of N going from /start/ sequential till the end
+	*	Tries to find occurrence of N going from /start/ sequential till the end
 	*/
 	bool GeneratorHelper::findNodeSequential(Ptr<Node> N, NodePair start, Relation& R)
 	{
@@ -93,7 +93,6 @@ namespace PPG {
 	*	e.g. N1(Obj1, S1) -> .. -> N2(Obj1, S1) :: Is not allowed!
 	*	but N1(Obj1, S1) -> ... -> N3(Obj1, S2) --> ... --> N2(Obj1, S1) :: IS ALLOWED!
 	*/
-
 	bool GeneratorHelper::checkMetaEqualOccuranceByNode(Ptr<Node> N, Relation& R) {
 
 		bool result = false;
@@ -127,8 +126,6 @@ namespace PPG {
 	}
 
 
-
-
 	/*
 	*	Filters node-list nodes by compatibility
 	*		- by basic rules (Exclusive / Circular dependency, direct equality, etc)
@@ -151,11 +148,9 @@ namespace PPG {
 	}
 
 
-
 	/*
 	*	Checks compatibility of two nodes S and N by Basic Rules (Rule)s
 	*/
-
 	bool GeneratorHelper::checkCompatibilityBasicRules(Ptr<Node> S, Ptr<Node> N, Relation& R)
 	{
 		Pair<Ptr<Node>, Ptr<Node>> pair = makePair(S, N);
@@ -226,7 +221,7 @@ namespace PPG {
 	*	True = Compatible!
 	*	False = INCOMPATIBLE!
 	*
-	*	This ruletype works a little different.
+	*	This rule type works a little different.
 	*	IF node S is LHS of rule, S is only allowed to connect to another node, if S already has RHS as a precing node.
 	*	If the rule is strict, S needs a RHS as a directly preceding node.
 	*
@@ -277,7 +272,7 @@ namespace PPG {
 			if (isStrict) {
 				return isRuleObjectEqual(rhsO, S->getRelatedObject()) && isRuleStateEqual(rhsS, S->getGoalState());
 			}
-			// Otherwise, S has to atleast have RHS as a preceding node
+			// Otherwise, S has to at least have RHS as a preceding node
 			else {
 				for (auto& n: existingRHS) {
 					if (!R.findPrecedingNode(N, n, false)) {
@@ -393,7 +388,6 @@ namespace PPG {
 
 		Logger::log("Node is compatible! TRUE");
 		return true;
-
 	}
 
 
