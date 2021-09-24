@@ -170,25 +170,25 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A custom rule is used to restrict the generation: (O4, *) < (O2, *)") {
 
-			Rule* rule1 = new Rule(N4->getRelatedObject(), STATE_ANY, N2->getRelatedObject(), STATE_ANY, Rule::EPuzzleRuleType::BEFORE);
+			Rule rule1(N4->getRelatedObject(), STATE_ANY, N2->getRelatedObject(), STATE_ANY, Rule::EPuzzleRuleType::BEFORE);
 
 			THEN("isRuleObjectEqual and isRuleStateEqual should return true with (O4,*) =R= (O4, S4)") {
-				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1->getLeftHandSideObject(), N4->getRelatedObject());
-				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1->getLeftHandSideState(), S4);
+				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1.getLeftHandSideObject(), N4->getRelatedObject());
+				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1.getLeftHandSideState(), S4);
 				REQUIRE(isRuleObjectEqual);
 				REQUIRE(isRuleStateEqual);
 			}
 
 			THEN("isRuleObjectEqual and isRuleStateEqual should return true with (O2,*) =R= (O2, S2)"){
-				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1->getRightHandSideObject(), N2->getRelatedObject());
-				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1->getRightHandSideState(), S2);
+				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1.getRightHandSideObject(), N2->getRelatedObject());
+				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1.getRightHandSideState(), S2);
 				REQUIRE(isRuleObjectEqual);
 				REQUIRE(isRuleStateEqual);
 			}
 
 			THEN("isRuleObjectEqual should return false, isRuleStateEqual true (because of wildcard) with (O2,*) =R= (O3, S2)"){
-				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1->getRightHandSideObject(), N3->getRelatedObject());
-				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1->getRightHandSideState(), S3);
+				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1.getRightHandSideObject(), N3->getRelatedObject());
+				bool isRuleStateEqual = GeneratorHelper::isRuleStateEqual(rule1.getRightHandSideState(), S3);
 				REQUIRE_FALSE(isRuleObjectEqual);
 				REQUIRE(isRuleStateEqual);
 			}
@@ -234,7 +234,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		// Number of nodes to generate
 		unsigned int numberNodes = 20;
 
-		Generator* PG = new Generator(numberNodes);
+		Generator PG(numberNodes);
 		Context c;
 
 		RuleVec rules;
@@ -245,11 +245,11 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		objects.push_back(O1);
 		State S1_1("State_S1_1");
 		State S1_2("State_S1_2");
-		StateTransition* T1 = new StateTransition();
+		StateTransition T1;
 		Ptr<Event> E1 = c.add<Event>("Event_E1", O1);
-		T1->addTransition(E1->getEventName(), S1_1, S1_2);
-		T1->addTransition(E1->getEventName(), S1_2, S1_1);
-		O1->setStateTransition(*T1);
+		T1.addTransition(E1->getEventName(), S1_1, S1_2);
+		T1.addTransition(E1->getEventName(), S1_2, S1_1);
+		O1->setStateTransition(T1);
 		events.push_back(E1);
 		Node* N1 = new Node(O1, S1_1);
 
@@ -257,11 +257,11 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		objects.push_back(O2);
 		State S2_1("State_S2_1");
 		State S2_2("State_S2_2");
-		StateTransition* T2 = new StateTransition();
+		StateTransition T2;
 		Ptr<Event> E2 = c.add<Event>("Event_E2", O2);
-		T2->addTransition(E2->getEventName(), S2_1, S2_2);
-		T2->addTransition(E2->getEventName(), S2_2, S2_1);
-		O2->setStateTransition(*T2);
+		T2.addTransition(E2->getEventName(), S2_1, S2_2);
+		T2.addTransition(E2->getEventName(), S2_2, S2_1);
+		O2->setStateTransition(T2);
 		events.push_back(E2);
 		Node* N2 = new Node(O2, S2_1);
 
@@ -270,29 +270,29 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		State S3_1("State_S3_1");
 		State S3_2("State_S3_2");
 		State S3_3("State_S3_3");
-		StateTransition* T3 = new StateTransition();
+		StateTransition T3;
 		Ptr<Event> E3_1 = c.add<Event>("Event_E3_1", O3);
 		Ptr<Event> E3_2 = c.add<Event>("Event_E3_2", O3);
-		T3->addTransition(E3_1->getEventName(),S3_1, S3_2);
-		T3->addTransition(E3_2->getEventName(),S3_2, S3_3);
+		T3.addTransition(E3_1->getEventName(),S3_1, S3_2);
+		T3.addTransition(E3_2->getEventName(),S3_2, S3_3);
 		events.push_back(E3_1);
 		events.push_back(E3_2);
-		O3->setStateTransition(*T3);
+		O3->setStateTransition(T3);
 		Node* N3 = new Node(O3, S3_1);
 
 		NodePair n1n2Pair = Relation::makePuzzlePair(N1, N2);
 		NodePair n2n3Pair = Relation::makePuzzlePair(N2, N3);
 
-		Rule* R1 = new Rule(O1, S1_2, O2, S2_1, Rule::EPuzzleRuleType::BEFORE);
-		Rule* R2 = new Rule(O2, S2_2, O3, STATE_ANY, Rule::EPuzzleRuleType::BEFORE);
-		Rule* R3 = new Rule(O1, STATE_ANY, O3, STATE_ANY, Rule::EPuzzleRuleType::STRICT_BEFORE);
-		Rule* R4 = new Rule(O1, STATE_ANY, O3, STATE_ANY, Rule::EPuzzleRuleType::AFTER);
-		Rule* R5 = new Rule(O2, S2_2, O3, STATE_ANY, Rule::EPuzzleRuleType::STRICT_AFTER);
+		Rule R1(O1, S1_2, O2, S2_1, Rule::EPuzzleRuleType::BEFORE);
+		Rule R2(O2, S2_2, O3, STATE_ANY, Rule::EPuzzleRuleType::BEFORE);
+		Rule R3(O1, STATE_ANY, O3, STATE_ANY, Rule::EPuzzleRuleType::STRICT_BEFORE);
+		Rule R4(O1, STATE_ANY, O3, STATE_ANY, Rule::EPuzzleRuleType::AFTER);
+		Rule R5(O2, S2_2, O3, STATE_ANY, Rule::EPuzzleRuleType::STRICT_AFTER);
 
-		//PG->setSeed(seed);		
+		//PG.setSeed(seed);		
 
 		WHEN("A puzzle is generated") {
-			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			Puzzle* P = PG.generatePuzzle(objects, events, rules);
 			UNSCOPED_INFO("Generated Puzzle:");
 			UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
 			THEN("It is definitely generated..") {
@@ -303,8 +303,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O2,S2_2) < (O3, *)") {
 			rules.clear();
-			rules.push_back(*R2);
-			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			rules.push_back(R2);
+			Puzzle* P = PG.generatePuzzle(objects, events, rules);
 			THEN("Every node (O2, S2_2) has to occur before every other node referencing O3") {
 
 				NodeVec nodes = P->getNodes();
@@ -326,7 +326,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 					if (!result) break;
 				}
 				UNSCOPED_INFO("Rule:");
-				UNSCOPED_INFO(R2->getTextualRepresentation());
+				UNSCOPED_INFO(R2.getTextualRepresentation());
 				UNSCOPED_INFO("Checked nodes:");
 				UNSCOPED_INFO(count);
 				UNSCOPED_INFO("Generated Puzzle:");
@@ -338,8 +338,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O1,S1_2) < (O2, S2_1)") {
 			rules.clear();
-			rules.push_back(*R1);
-			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			rules.push_back(R1);
+			Puzzle* P = PG.generatePuzzle(objects, events, rules);
 
 			THEN("Every node (O1, S1_2) has to occur before every other node referencing O2 and Stage S2_1") {
 
@@ -362,7 +362,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 					if (!result) break;
 				}
 				UNSCOPED_INFO("Rule:");
-				UNSCOPED_INFO(R1->getTextualRepresentation());
+				UNSCOPED_INFO(R1.getTextualRepresentation());
 				UNSCOPED_INFO("Checked Nodes:");
 				UNSCOPED_INFO(count);
 				UNSCOPED_INFO("Generated Puzzle:");
@@ -374,8 +374,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O1,*) <! (O3,*)") {
 			rules.clear();
-			rules.push_back(*R3);
-			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			rules.push_back(R3);
+			Puzzle* P = PG.generatePuzzle(objects, events, rules);
 
 			THEN("Every node (O1,*) has to occur STRICTLY (directly and only) before a node referencing O3") {
 
@@ -398,7 +398,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 					if (!result) break;
 				}
 				UNSCOPED_INFO("Rule:");
-				UNSCOPED_INFO(R3->getTextualRepresentation());
+				UNSCOPED_INFO(R3.getTextualRepresentation());
 				UNSCOPED_INFO("Checked Nodes:");
 				UNSCOPED_INFO(count);
 				UNSCOPED_INFO("Generated Puzzle:");
@@ -410,8 +410,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O1,*) > (O3,*)") {
 			rules.clear();
-			rules.push_back(*R4);
-			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			rules.push_back(R4);
+			Puzzle* P = PG.generatePuzzle(objects, events, rules);
 
 			THEN("Every node (O1,*) has to be after every other node referencing O3") {
 
@@ -434,7 +434,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 					if (!result) break;
 				}
 				UNSCOPED_INFO("Rule:");
-				UNSCOPED_INFO(R4->getTextualRepresentation());
+				UNSCOPED_INFO(R4.getTextualRepresentation());
 				UNSCOPED_INFO("Checked Nodes:");
 				UNSCOPED_INFO(count);
 				UNSCOPED_INFO("Generated Puzzle:");
@@ -447,8 +447,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O2,S2_2) >! (O3, *)") {
 			rules.clear();
-			rules.push_back(*R5);
-			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			rules.push_back(R5);
+			Puzzle* P = PG.generatePuzzle(objects, events, rules);
 			THEN("Every node (O2, S2_2) has to occur STRICTLY (directly and only) after another node referencing O3") {
 
 				NodeVec nodes = P->getNodes();
@@ -470,7 +470,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 					if (!result) break;
 				}
 				UNSCOPED_INFO("Rule:");
-				UNSCOPED_INFO(R5->getTextualRepresentation());
+				UNSCOPED_INFO(R5.getTextualRepresentation());
 				UNSCOPED_INFO("Checked nodes:");
 				UNSCOPED_INFO(count);
 				UNSCOPED_INFO("Generated Puzzle:");
@@ -483,7 +483,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated without Rules") {
 			rules.clear();
-			Puzzle* P = PG->generatePuzzle(objects, events, rules);
+			Puzzle* P = PG.generatePuzzle(objects, events, rules);
 			THEN("getGraphRepresentation() returns the recursive representation of the puzzle starting from the leaf (ending) nodes") {
 
 				NodeVec nodes = P->getNodes();
