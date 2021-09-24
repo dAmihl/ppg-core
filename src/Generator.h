@@ -1,9 +1,9 @@
 #pragma once
-#include <vector>
+
+#include "Core.h"
+#include "Randomizer.h"
 #include "Node.h"
 #include "Relation.h"
-#include "Randomizer.h"
-#include "PuzzGenCore.h"
 #include "Puzzle.h"
 #include "GeneratorHelper.h"
 #include "Logger.h"

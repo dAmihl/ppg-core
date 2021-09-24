@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "Core.h"
 
 namespace PPG
 {
@@ -8,7 +8,7 @@ namespace PPG
 	{
 	public:
 
-		virtual void onObjectEvent(std::string objName, std::string eventName) = 0;
+		virtual void onObjectEvent(Str objName, Str eventName) = 0;
 
 	};
 }

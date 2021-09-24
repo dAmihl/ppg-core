@@ -26,9 +26,9 @@ namespace PPG
 		}
 	}
 
-	std::string Relation::getSimpleTextualRepresentation() const
+	Str Relation::getSimpleTextualRepresentation() const
 	{
-		std::string out = "";
+		Str out = "";
 
 		for (auto& it: pairs) {
 			out += "[" + it.first->getRelatedObject()->getObjectName() + "::" + it.first->getGoalState().getName() + "]";
@@ -41,11 +41,11 @@ namespace PPG
 	}
 
 
-	std::string Relation::getRecursiveTextualRepresentationOfNode(Vec<const Node*>& alreadyOut, std::string* out, const Node* N, int level) const {
+	Str Relation::getRecursiveTextualRepresentationOfNode(Vec<const Node*>& alreadyOut, Str* out, const Node* N, int level) const {
 
 		NodeVec pre = getPrecedingNodes(N);
 		NodeVec fol = getFollowingNodes(N);
-		std::string tmp = "";
+		Str tmp = "";
 		if (std::find(alreadyOut.begin(), alreadyOut.end(), N) == alreadyOut.end()) {
 			for (int hyph = 0; hyph > level; hyph--) {
 				tmp += "-";
@@ -70,9 +70,9 @@ namespace PPG
 		return (*out);
 	}
 
-	std::string Relation::getExtendedTextualRepresentation(const NodeVec nodes) const
+	Str Relation::getExtendedTextualRepresentation(const NodeVec nodes) const
 	{
-		std::string out = "";
+		Str out = "";
 		Vec<const Node*> alreadyOutputNodes;
 
 		NodeVec leafs = getMaxima(nodes);

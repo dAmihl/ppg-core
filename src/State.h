@@ -1,7 +1,6 @@
 #pragma once
 
-#include "PuzzGenCore.h"
-#include <string>
+#include "Core.h"
 
 namespace PPG
 {
@@ -10,14 +9,14 @@ namespace PPG
 
 	public:
 		State() : m_name{ "DefaultState" } {};
-		State(std::string name) : m_name{ name } {};
+		State(Str name) : m_name{ name } {};
 	
-		std::string getName() const {
+		Str getName() const {
 			return m_name;
 		}
 
 	private:
-		std::string m_name;
+		Str m_name;
 	};
 
 	inline bool operator==(const State& lhs, const State& rhs)

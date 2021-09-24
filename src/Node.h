@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core.h"
 #include "Object.h"
 #include "State.h"
 #include "Event.h"
@@ -29,15 +30,15 @@ namespace PPG
 		void setPuzzleNodeState(ENodeState state);
 		void setPuzzleUpdateListener(UpdateListener* updList);
 
-		std::string getTextualRepresentation() const;
-		std::string getSimpleTextualRepresentation() const;
+		Str getTextualRepresentation() const;
+		Str getSimpleTextualRepresentation() const;
 
 	private:
 		Object* relatedObject;
 		State goalState;
 		ENodeState currentNodeState;
 		UpdateListener* PUL = nullptr;
-		std::string getCompletionStateString() const;
+		Str getCompletionStateString() const;
 
 	};
 

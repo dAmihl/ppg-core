@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdlib>
-#include "PuzzGenCore.h"
+#include "Core.h"
 #include "State.h"
 #include "Object.h"
 #include "Node.h"
@@ -18,7 +18,7 @@ namespace PPG {
 		static void init(unsigned int seed);
 
 		template<typename T>
-		static T getRandomFromList(std::vector<T> list)
+		static T getRandomFromList(Vec<T> list)
 		{
 			if (list.empty()) return nullptr;
 			int index = rand() % list.size();

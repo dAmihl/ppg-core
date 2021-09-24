@@ -27,11 +27,11 @@ namespace PPG
 		EventVec getEvents() const;
 		Relation getRelation() const;
 
-		std::string getSimpleTextualRepresentation() const;
-		std::string getExtendedTextualRepresentation() const;
-		std::string getTextualEnvironmentDescription() const;
+		Str getSimpleTextualRepresentation() const;
+		Str getExtendedTextualRepresentation() const;
+		Str getTextualEnvironmentDescription() const;
 
-		Vec<GraphNode*> getGraphRepresentation();
+		Vec<GraphNode*> getGraphRepresentation() const;
 
 	private:
 		NodeVec nodes;
@@ -39,18 +39,13 @@ namespace PPG
 		EventVec events;
 		Relation relation;
 
-		UpdateListener* updateListener = NULL;
+		UpdateListener* updateListener = nullptr;
 
-		/*
-		void doSetNodeActive(PuzzleNode* M);
-		void doCheckNodeComplete(PuzzleNode* M);
-		void doSetNodeIncomplete(PuzzleNode* M);
-		*/
-		bool canNodeHandleEvent(Node* N, Event E);
-		bool isNodeCompatible(Node* N, Event E);
+		bool canNodeHandleEvent(const Node* N, Event E) const;
+		bool isNodeCompatible(const Node* N, Event E) const;
 		void updateNodeProperties(Node* N);
-		void checkPuzzleCompletion();
-		void onPuzzleCompleted();
+		void checkPuzzleCompletion() const;
+		void onPuzzleCompleted() const;
 
 	};
 

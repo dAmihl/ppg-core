@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PuzzGenCore.h"
+#include "Core.h"
 #include "Object.h"
 #include "Event.h"
 #include "State.h"

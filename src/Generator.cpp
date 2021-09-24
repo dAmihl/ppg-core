@@ -22,7 +22,7 @@ namespace PPG {
 
 		/* Generate Nodes and add to puzzle P*/
 		if (numberNodes == 0) numberNodes = objects.size();
-		std::vector<Node*> nodes = generateNodes(objects, numberNodes);
+		Vec<Node*> nodes = generateNodes(objects, numberNodes);
 		for (auto& it: nodes) {
 			P->addNode(it, true);
 		}

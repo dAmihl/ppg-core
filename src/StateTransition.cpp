@@ -8,7 +8,7 @@ namespace PPG
 		return transitionMap;
 	}
 
-	void StateTransition::addTransition(std::string eventName, State origState, State newState)
+	void StateTransition::addTransition(Str eventName, State origState, State newState)
 	{
 
 		bool eventEntryFound = (transitionMap.find(eventName) != transitionMap.end());
@@ -20,16 +20,16 @@ namespace PPG
 			transitionMap.find(eventName)->second.push_back(newStatePair);
 		}
 		else {
-			std::vector<std::pair<State, State>> newVector;
+			Vec<Pair<State, State>> newVector;
 			newVector.push_back(newStatePair);
 			transitionMap.insert(std::make_pair(eventName, newVector));
 		}
 
 	}
 
-	std::string StateTransition::getTextualOutput() const
+	Str StateTransition::getTextualOutput() const
 	{
-		std::string out = "";
+		Str out = "";
 		for (auto& it: transitionMap) {
 			out += "> " + it.first + ": ";
 			for (auto& vecIt: it.second) {
@@ -52,7 +52,7 @@ namespace PPG
 		return reachables;
 	}
 
-	EventMapVal StateTransition::findTransitions(const std::string name) const
+	EventMapVal StateTransition::findTransitions(const Str name) const
 	{
 		auto& it = transitionMap.find(name);
 		if (it != transitionMap.end()) {

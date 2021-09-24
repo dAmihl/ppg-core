@@ -2,35 +2,35 @@
 
 namespace PPG
 {
-	void Logger::log(const std::string msg)
+	void Logger::log(const Str msg)
 	{
 		Logger::log(msg, 0);
 	}
 
-	void Logger::log(const std::string msg, unsigned int logLevel)
+	void Logger::log(const Str msg, unsigned int logLevel)
 	{
 		if (logLevel < MINIMUM_LOG_LEVEL) {
 			return;
 		}
 
-		std::time_t currTime = std::time(nullptr);
-
+		auto currTime = std::chrono::system_clock::now();
+		std::time_t t = std::chrono::system_clock::to_time_t(currTime);
 		std::ofstream file("ppg-core.log", std::ofstream::app);
-		file << std::asctime(std::localtime(&currTime)) << ": " << msg << "\n";
+		file << std::ctime(&t) << ": " << msg << "\n";
 		file.close();
 	}
 
-	void Logger::error(const std::string msg)
+	void Logger::error(const Str msg)
 	{
 		Logger::log(msg, 3);
 	}
 
-	void Logger::warning(const std::string msg)
+	void Logger::warning(const Str msg)
 	{
 		Logger::log(msg, 2);
 	}
 
-	void Logger::info(const std::string msg)
+	void Logger::info(const Str msg)
 	{
 		Logger::log(msg, 1);
 	}

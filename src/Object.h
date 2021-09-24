@@ -1,8 +1,6 @@
 #pragma once
 
-#include "PuzzGenCore.h"
-#include <string>
-#include <vector>
+#include "Core.h"
 #include "State.h"
 #include "StateTransition.h"
 #include "ObjectMetaData.h"
@@ -14,34 +12,34 @@ namespace PPG
 	
 	public:
 		Object();
-		Object(std::string name);
+		Object(Str name);
 	
 	public:
-		std::string getObjectName() const;
+		Str getObjectName() const;
 		State getCurrentState() const;
 		StateTransition getStateTransition() const;
-		std::string getTextualRepresentation() const;
-		std::vector<State> getReachableStates() const;
+		Str getTextualRepresentation() const;
+		Vec<State> getReachableStates() const;
 		ObjectMetaData getMetaData() const;
-		std::string getTemplateName() const;
+		Str getTemplateName() const;
 		bool isTemplateObject() const;
 
 		void setStateTransition(const StateTransition F);
 		void setCurrentState(State Sc);
 		void setMetaData(ObjectMetaData MD);
-		void setTemplateName(std::string tName);
+		void setTemplateName(Str tName);
 		void setIsTemplateObject(bool bTemplate);
 
 		bool sameTemplateAs(const Object& o2) const;
 
 	private:
-		std::string objectName;
+		Str objectName;
 		State currentState;
 		StateTransition stateTransition;
-		std::string getReachableStatesTextualRepresentation() const;
+		Str getReachableStatesTextualRepresentation() const;
 		ObjectMetaData metaData;
 		bool bIsTemplate = false;
-		std::string templateName;
+		Str templateName;
 	};
 
 }

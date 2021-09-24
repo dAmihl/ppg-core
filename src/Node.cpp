@@ -62,8 +62,8 @@ namespace PPG
 		return 1;
 	}
 
-	std::string Node::getCompletionStateString() const {
-		std::string out;
+	Str Node::getCompletionStateString() const {
+		Str out;
 		switch (currentNodeState) {
 		case ENodeState::ACTIVE: out = "ACTIVE"; break;
 		case ENodeState::INCOMPLETE: out = "INCOMPLETE"; break;
@@ -73,9 +73,9 @@ namespace PPG
 		return out;
 	}
 
-	std::string Node::getTextualRepresentation() const
+	Str Node::getTextualRepresentation() const
 	{
-		std::string out = "";
+		Str out = "";
 		out += "<> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getName() + ") <> \n";
 		out += relatedObject->getTextualRepresentation();
 		out += "Puzzlenode-State: ";
@@ -83,9 +83,9 @@ namespace PPG
 		out += "\n";
 		return out;
 	}
-	std::string Node::getSimpleTextualRepresentation() const
+	Str Node::getSimpleTextualRepresentation() const
 	{
-		std::string out = ">> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getName() + ") :: " + getCompletionStateString() + " <> \n";
+		Str out = ">> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getName() + ") :: " + getCompletionStateString() + " <> \n";
 		return out;
 	}
 

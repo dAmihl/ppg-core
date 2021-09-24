@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PuzzGenCore.h"
+#include "Core.h"
 #include "Object.h"
 #include "State.h"
 
@@ -33,7 +33,7 @@ namespace PPG
 		const Object* getRightHandSideObject() const { return m_rhsObj; };
 		const State getRightHandSideState() const { return m_rhsState; };
 
-		std::string getTextualRepresentation();
+		Str getTextualRepresentation();
 
 
 	private:
@@ -45,7 +45,7 @@ namespace PPG
 		const Object* m_rhsObj;
 		const State m_rhsState;
 
-		std::string getRuleTypeString();
+		Str getRuleTypeString();
 
 	};
 

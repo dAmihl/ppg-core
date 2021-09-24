@@ -122,8 +122,8 @@ namespace PPG
 		this->relation.checkDoForAllFollowing(N, checkActive, doSetNodeIncomplete);
 	}
 
-	void Puzzle::checkPuzzleCompletion()
-	{
+	void Puzzle::checkPuzzleCompletion() const
+{
 		for (auto& it: relevantNodes) {
 			if (!it->isCompleted()) {
 				return;
@@ -132,8 +132,8 @@ namespace PPG
 		onPuzzleCompleted();
 	}
 
-	void Puzzle::onPuzzleCompleted()
-	{
+	void Puzzle::onPuzzleCompleted() const
+{
 		if (this->updateListener != nullptr) {
 			this->updateListener->onPuzzleComplete();
 		}
@@ -165,9 +165,9 @@ namespace PPG
 		return relation;
 	}
 
-	std::string Puzzle::getSimpleTextualRepresentation() const
+	Str Puzzle::getSimpleTextualRepresentation() const
 	{
-		std::string out = "";
+		Str out = "";
 
 		out += "<<< Puzzle >>>\n";
 		for (auto& it: nodes) {
@@ -182,9 +182,9 @@ namespace PPG
 		return out;
 	}
 
-	std::string Puzzle::getExtendedTextualRepresentation() const
+	Str Puzzle::getExtendedTextualRepresentation() const
 	{
-		std::string out = "";
+		Str out = "";
 
 		out += "<<< Puzzle >>>\n";
 		for (auto& it: nodes) {
@@ -205,9 +205,9 @@ namespace PPG
 		return out;
 	}
 
-	std::string Puzzle::getTextualEnvironmentDescription() const
+	Str Puzzle::getTextualEnvironmentDescription() const
 	{
-		std::string out = "";
+		Str out = "";
 
 		out += "<<< Environment >>>\n";
 		for (auto& it: nodes) {
@@ -217,13 +217,13 @@ namespace PPG
 		return out;
 	}
 
-	Vec<GraphNode*> Puzzle::getGraphRepresentation()
-	{
+	PPG::Vec<GraphNode*> Puzzle::getGraphRepresentation() const
+{
 		Vec<GraphNode*> allRoots = relation.getGraphRepresentation(nodes);
 		return allRoots;
 	}
 
-	bool Puzzle::canNodeHandleEvent(Node* N, Event E)
+	bool Puzzle::canNodeHandleEvent(const Node* N, Event E) const
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject()->getObjectName() == E.getRelatedObject()->getObjectName();
@@ -232,7 +232,7 @@ namespace PPG
 		return bResult;
 	}
 
-	bool Puzzle::isNodeCompatible(Node* N, Event E)
+	bool Puzzle::isNodeCompatible(const Node* N, Event E) const
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject()->getObjectName() == E.getRelatedObject()->getObjectName();

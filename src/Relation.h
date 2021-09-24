@@ -1,7 +1,6 @@
 #pragma once
 
-#include <vector>
-#include "PuzzGenCore.h"
+#include "Core.h"
 #include "GraphNode.h"
 #include "Node.h"
 #include "Rule.h"
@@ -21,9 +20,9 @@ namespace PPG
 
 		void removePair(NodePair pair);
 
-		std::string getSimpleTextualRepresentation() const;
-		std::string getRecursiveTextualRepresentationOfNode(Vec<const Node*>& alreadyOut, std::string* out, const Node* N, int level) const;
-		std::string getExtendedTextualRepresentation(const NodeVec nodes) const;
+		Str getSimpleTextualRepresentation() const;
+		Str getRecursiveTextualRepresentationOfNode(Vec<const Node*>& alreadyOut, Str* out, const Node* N, int level) const;
+		Str getExtendedTextualRepresentation(const NodeVec nodes) const;
 
 		Vec<GraphNode*> getGraphRepresentation(const NodeVec nodes) const;
 		GraphNode* getRecursiveGraphRepresentation(const Node* N) const;

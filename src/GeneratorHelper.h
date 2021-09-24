@@ -1,11 +1,9 @@
 #pragma once
 
+#include "Core.h"
 #include "Relation.h"
 #include "Randomizer.h"
-#include "PuzzGenCore.h"
-#include "Puzzle.h"
 #include "Logger.h"
-#include "Rule.h"
 
 namespace PPG
 {

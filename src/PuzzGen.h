@@ -1,7 +1,7 @@
 // PuzzGenLibrary.h - Contains declaration of Function class  
 #pragma once  
 
-#include "PuzzGenCore.h"
+#include "Core.h"
 
 #include "Object.h"
 #include "Puzzle.h"

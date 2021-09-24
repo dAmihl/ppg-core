@@ -8,7 +8,7 @@ project "PPG"
 	language "C++"
 	targetdir "bin/%{cfg.buildcfg}"
 	
-	files {"src/**.h", "src/**.cpp"}
+	files {"src/**.h", "src/**.cpp", "src/core/**.h", "src/core/**.cpp"}
 	
 	includedirs {"vendor/includes"}
 	

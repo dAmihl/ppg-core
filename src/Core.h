@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <memory>
+#include <string>
+#include <unordered_map>
 
 #ifndef PPG_EXPORT
 	//#define PPG_EXPORT __declspec(dllexport)
@@ -14,10 +16,14 @@ namespace PPG
 	template<typename T, typename U> using Pair = std::pair<T, U>;
 	template<typename T> using UPtr = std::unique_ptr<T>;
 	template<typename T> using Ptr = std::shared_ptr<T>;
+	template<typename K, typename V> using Map = std::unordered_map<K, V>;
+	
+	using Str = std::string;
 
 	template<typename T>
 	struct PuzzleList {
-		typedef std::vector<T> Type;
+		typedef Vec<T> Type;
 	};
+
 
 }

@@ -5,10 +5,10 @@ namespace PPG
 	Object::Object() : objectName{ "DefaultObject" }, templateName{ objectName }
 	{}
 
-	Object::Object(std::string name) : objectName{ name }, templateName{ name }
+	Object::Object(Str name) : objectName{ name }, templateName{ name }
 	{}
 
-	std::string Object::getObjectName() const {
+	Str Object::getObjectName() const {
 		return objectName;
 	}
 
@@ -22,9 +22,9 @@ namespace PPG
 		return stateTransition;
 	}
 
-	std::vector<PPG::State> Object::getReachableStates() const
+	Vec<PPG::State> Object::getReachableStates() const
 {
-		std::vector<State> reachables;
+		Vec<State> reachables;
 		reachables = stateTransition.getReachableStates();
 		return reachables;
 	}
@@ -34,7 +34,7 @@ namespace PPG
 		return this->metaData;
 	}
 
-	std::string Object::getTemplateName() const
+	Str Object::getTemplateName() const
 	{
 		return this->templateName;
 	}
@@ -59,7 +59,7 @@ namespace PPG
 		this->metaData = MD;
 	}
 
-	void Object::setTemplateName(std::string tName)
+	void Object::setTemplateName(Str tName)
 	{
 		this->templateName = tName;
 	}
@@ -71,16 +71,16 @@ namespace PPG
 
 	bool Object::sameTemplateAs(const Object& o2) const
 	{
-		std::string id1 = isTemplateObject() ? getTemplateName() : getObjectName();
-		std::string id2 = o2.isTemplateObject() ? o2.getTemplateName() : o2.getObjectName();
+		Str id1 = isTemplateObject() ? getTemplateName() : getObjectName();
+		Str id2 = o2.isTemplateObject() ? o2.getTemplateName() : o2.getObjectName();
 
 		return id1 == id2;
 	}
 
 
-	std::string Object::getTextualRepresentation() const
+	Str Object::getTextualRepresentation() const
 	{
-		std::string out = "";
+		Str out = "";
 		out += "Gameobject: " + objectName + "\n";
 		out += " > StateTransition: \n";
 		out += stateTransition.getTextualOutput();
@@ -94,10 +94,10 @@ namespace PPG
 	}
 
 
-	std::string Object::getReachableStatesTextualRepresentation() const
+	Str Object::getReachableStatesTextualRepresentation() const
 	{
-		std::vector<State> reachables = getReachableStates();
-		std::string out = "";
+		Vec<State> reachables = getReachableStates();
+		Str out = "";
 		for (auto& vecIt: reachables) {
 			out += "  - " + vecIt.getName() + "\n";
 		}
