@@ -36,7 +36,7 @@ namespace PPG
 		template<class... _Ts>
 		Rule& addRule(_Ts&&... params)
 		{
-			return rules.emplace_back(std::forward<_Ts>(params));
+			return rules.emplace_back(std::forward<_Ts>(params)...);
 		}
 		
 		inline Vec<Ptr<Object>>& getObjects() { return objects; }
