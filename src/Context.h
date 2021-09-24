@@ -27,6 +27,17 @@ namespace PPG
 			auto t = std::make_shared<T>(params...);
 			return addInt(std::move(t));
 		}
+
+		template<class... _Ts>
+		Ptr<Rule> add(_Ts&&... params) = delete;
+		template<class... _Ts>
+		Ptr<State> add(_Ts&&... params) = delete;
+
+		template<class... _Ts>
+		Rule& addRule(_Ts&&... params)
+		{
+			return rules.emplace_back(std::forward<_Ts>(params));
+		}
 		
 		inline Vec<Ptr<Object>>& getObjects() { return objects; }
 		inline Vec<Ptr<Event>>& getEvents() { return events; }
@@ -39,17 +50,10 @@ namespace PPG
 			return objects.back();
 		}
 
-
 		Ptr<Event> addInt(Ptr<Event>&& u)
 		{
 			events.push_back(std::move(u));
 			return events.back();
-		}
-
-		template<class... _Ts>
-		Rule& addRule(_Ts&&... params)
-		{
-			return rules.emplace_back(std::forward<_Ts>(params));
 		}
 		
 	private:
