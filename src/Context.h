@@ -20,32 +20,32 @@ namespace PPG
 		
 		inline Vec<Ptr<Object>>& getObjects() { return objects; }
 		inline Vec<Ptr<Event>>& getEvents() { return events; }
-		inline Vec<Ptr<Rule>>& getRules() { return rules; }
+		inline Vec<Rule>& getRules() { return rules; }
 
 	private:
-		Ptr<Object>& addInt(Ptr<Object>&& u)
+		Ptr<Object> addInt(Ptr<Object>&& u)
 		{
 			objects.push_back(std::move(u));
 			return objects.back();
 		}
 
 
-		Ptr<Event>& addInt(Ptr<Event>&& u)
+		Ptr<Event> addInt(Ptr<Event>&& u)
 		{
 			events.push_back(std::move(u));
 			return events.back();
 		}
 
-		Ptr<Rule>& addInt(Ptr<Rule>&& u)
+		template<class... _Ts>
+		Rule& addRule(_Ts&&... params)
 		{
-			rules.push_back(std::move(u));
-			return rules.back();
+			return rules.emplace_back(std::forward<_Ts>(params));
 		}
 		
 	private:
 		Vec<Ptr<Object>> objects;
 		Vec<Ptr<Event>> events;
-		Vec<Ptr<Rule>> rules;
+		Vec<Rule> rules;
 
 	};
 }

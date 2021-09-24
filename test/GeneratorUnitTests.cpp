@@ -6,8 +6,8 @@ using namespace PPG;
 using NodeVec = Vec<Node*>;
 using NodePair = Pair<Node*, Node*>;
 using RuleVec = Vec<Rule>;
-using EventVec = Vec<Event*>;
-using ObjVec = Vec<Object*>;
+using EventVec = Vec<Ptr<Event>>;
+using ObjVec = Vec<Ptr<Object>>;
 
 
 TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
@@ -18,19 +18,19 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		Generator PG;
 		Context c;
 		
-		auto O1 = &*c.add<Object>("Object_O1");
+		auto O1 = c.add<Object>("Object_O1");
 		auto S1 = State("State_S1");
 		Node* N1 = new Node(O1, S1);
 
-		auto O2 = &*c.add<Object>("Object_O2");
+		auto O2 = c.add<Object>("Object_O2");
 		State S2("State_S2");
 		Node* N2 = new Node(O2, S2);
 
-		auto O3 = &*c.add<Object>("Object_O3");
+		auto O3 = c.add<Object>("Object_O3");
 		State S3("State_S3");
 		Node* N3 = new Node(O3, S3);
 
-		auto O4 = &*c.add<Object>("Object_O4");
+		auto O4 = c.add<Object>("Object_O4");
 		State S4("State_S4");
 		Node* N4 = new Node(O4, S4);
 
@@ -139,7 +139,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A meta-equal node N4 = N2 is to be added to R via N4->N1->N2") {
 
-			Object* metaEqualO2 = O2;
+			Ptr<Object> metaEqualO2 = O2;
 			State metaEqualS2 = S2;
 			Node* N4 = new Node(metaEqualO2, metaEqualS2);
 
@@ -155,7 +155,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A non-meta-equal node N4 ?= N2 is to be added to R via N4->N1->N2, where N4 and N2 have different states") {
 
-			Object* metaEqualO2 = O2;
+			Ptr<Object> metaEqualO2 = O2;
 			State metaEqualS2("State_Sx");
 			Node* N4 = new Node(metaEqualO2, metaEqualS2);
 
@@ -202,7 +202,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			nodes.push_back(N4);
 			Node* N5 = new Node(O1, S2);
 			nodes.push_back(N5);
-			Object* O5 = new Object("O5");
+			Ptr<Object> O5 = c.add<Object>("O5"); 
 
 			THEN("findNodesByPattern for Object O1 and S1 should only return N1") {
 				NodeVec foundNodes = R.findNodesByPattern(nodes, O1, S1, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
@@ -235,43 +235,44 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		unsigned int numberNodes = 20;
 
 		Generator* PG = new Generator(numberNodes);
+		Context c;
 
 		RuleVec rules;
 		EventVec events;
 		ObjVec objects;
 
-		Object* O1 = new Object("Object_O1");
+		Ptr<Object> O1 = c.add<Object>("Object_O1");
 		objects.push_back(O1);
 		State S1_1("State_S1_1");
 		State S1_2("State_S1_2");
 		StateTransition* T1 = new StateTransition();
-		Event* E1 = new Event("Event_E1", O1);
+		Ptr<Event> E1 = c.add<Event>("Event_E1", O1);
 		T1->addTransition(E1->getEventName(), S1_1, S1_2);
 		T1->addTransition(E1->getEventName(), S1_2, S1_1);
 		O1->setStateTransition(*T1);
 		events.push_back(E1);
 		Node* N1 = new Node(O1, S1_1);
 
-		Object* O2 = new Object("Object_O2");
+		Ptr<Object> O2 = c.add<Object>("Object_O2");
 		objects.push_back(O2);
 		State S2_1("State_S2_1");
 		State S2_2("State_S2_2");
 		StateTransition* T2 = new StateTransition();
-		Event* E2 = new Event("Event_E2", O2);
+		Ptr<Event> E2 = c.add<Event>("Event_E2", O2);
 		T2->addTransition(E2->getEventName(), S2_1, S2_2);
 		T2->addTransition(E2->getEventName(), S2_2, S2_1);
 		O2->setStateTransition(*T2);
 		events.push_back(E2);
 		Node* N2 = new Node(O2, S2_1);
 
-		Object* O3 = new Object("Object_O3");
+		Ptr<Object> O3 = c.add<Object>("Object_O3");
 		objects.push_back(O3);
 		State S3_1("State_S3_1");
 		State S3_2("State_S3_2");
 		State S3_3("State_S3_3");
 		StateTransition* T3 = new StateTransition();
-		Event* E3_1 = new Event("Event_E3_1", O3);
-		Event* E3_2 = new Event("Event_E3_2", O3);
+		Ptr<Event> E3_1 = c.add<Event>("Event_E3_1", O3);
+		Ptr<Event> E3_2 = c.add<Event>("Event_E3_2", O3);
 		T3->addTransition(E3_1->getEventName(),S3_1, S3_2);
 		T3->addTransition(E3_2->getEventName(),S3_2, S3_3);
 		events.push_back(E3_1);

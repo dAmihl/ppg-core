@@ -136,7 +136,7 @@ namespace PPG {
 	*
 	*
 	*/
-	NodeVec GeneratorHelper::filterCompatibleNodes(Node* N, Relation& R, NodeVec nodes, RuleVec rules)
+	NodeVec GeneratorHelper::filterCompatibleNodes(Node* N, Relation& R, NodeVec nodes, RuleVec& rules)
 	{
 		NodeVec compatibles;
 
@@ -179,7 +179,7 @@ namespace PPG {
 	/*
 	*	Checks compatibility of two nodes S and N by User-made Custom Rules (Rule)s
 	*/
-	bool GeneratorHelper::checkCompatibilityCustomRules(NodeVec nodes, Node* S, Node* N, Relation& R, RuleVec rules)
+	bool GeneratorHelper::checkCompatibilityCustomRules(NodeVec nodes, Node* S, Node* N, Relation& R, RuleVec& rules)
 	{
 		for (auto& r: rules) {
 
@@ -187,7 +187,7 @@ namespace PPG {
 			Logger::log("S: " + S->getSimpleTextualRepresentation());
 			Logger::log("N: " + N->getSimpleTextualRepresentation());
 
-			bool (*FN) (NodeVec, Node*, Node*, Relation&, Rule, bool) = NULL;
+			bool (*FN) (NodeVec, Node*, Node*, Relation&, const Rule&, bool) = NULL;
 			bool strict = false;
 
 			switch (r.getRuleType()) {
@@ -237,13 +237,13 @@ namespace PPG {
 	*
 	*	IF S is not LHS of the rule and N is not the RHS, then the inverse rule must apply, i.e. (N < S) or (N <! S)
 	*/
-	bool GeneratorHelper::checkCompatibilityRuleTypeAfter(NodeVec nodes, Node* S, Node* N, Relation& R, Rule rule, bool isStrict)
+	bool GeneratorHelper::checkCompatibilityRuleTypeAfter(NodeVec nodes, Node* S, Node* N, Relation& R, const Rule& rule, bool isStrict)
 	{
 		/* */
-		const Object* lhsO = rule.getLeftHandSideObject();
+		const Ptr<Object> lhsO = rule.getLeftHandSideObject();
 		const State lhsS = rule.getLeftHandSideState();
 
-		const Object* rhsO = rule.getRightHandSideObject();
+		const Ptr<Object> rhsO = rule.getRightHandSideObject();
 		const State rhsS = rule.getRightHandSideState();
 
 		// Find all existing Right-Hand-side nodes of rule
@@ -291,8 +291,8 @@ namespace PPG {
 		else {
 			//return true;
 			Rule::EPuzzleRuleType tmpType = isStrict ? Rule::EPuzzleRuleType::STRICT_BEFORE : Rule::EPuzzleRuleType::BEFORE;
-			Rule* tmpRule = new Rule(rule.getRightHandSideObject(), rule.getRightHandSideState(), rule.getLeftHandSideObject(), rule.getLeftHandSideState(), tmpType);
-			return checkCompatibilityRuleTypeBefore(nodes, N, S, R, *tmpRule, isStrict);
+			Rule tmpRule(rule.getRightHandSideObject(), rule.getRightHandSideState(), rule.getLeftHandSideObject(), rule.getLeftHandSideState(), tmpType);
+			return checkCompatibilityRuleTypeBefore(nodes, N, S, R, tmpRule, isStrict);
 		}
 
 		return false;
@@ -307,13 +307,13 @@ namespace PPG {
 	*	True = Compatible!
 	*	False = INCOMPATIBLE!
 	*/
-	bool GeneratorHelper::checkCompatibilityRuleTypeBefore(NodeVec nodes, Node* S, Node* N, Relation& R, Rule rule, bool isStrict)
+	bool GeneratorHelper::checkCompatibilityRuleTypeBefore(NodeVec nodes, Node* S, Node* N, Relation& R, const Rule& rule, bool isStrict)
 	{
 		/* */
-		const Object* lhsO = rule.getLeftHandSideObject();
+		const Ptr<Object> lhsO = rule.getLeftHandSideObject();
 		const State lhsS = rule.getLeftHandSideState();
 
-		const Object* rhsO = rule.getRightHandSideObject();
+		const Ptr<Object> rhsO = rule.getRightHandSideObject();
 		const State rhsS = rule.getRightHandSideState();
 
 		// LHS = N and RHS = S
@@ -397,15 +397,15 @@ namespace PPG {
 	}
 
 
-	bool GeneratorHelper::isRuleNodeEqual(Node* N, Object* ruleObject, State ruleState)
+	bool GeneratorHelper::isRuleNodeEqual(Node* N, Ptr<Object> ruleObject, State ruleState)
 	{
-		Object* nodeObject = N->getRelatedObject();
+		Ptr<Object> nodeObject = N->getRelatedObject();
 		const State nodeState = N->getGoalState();
 
 		return isRuleObjectEqual(nodeObject, ruleObject) && isRuleStateEqual(nodeState, ruleState);
 	}
 
-	bool GeneratorHelper::isRuleObjectEqual(const Object* o1, const Object* o2) {
+	bool GeneratorHelper::isRuleObjectEqual(const Ptr<Object> o1, const Ptr<Object> o2) {
 		if (o1 == nullptr || o2 == nullptr) return true;
 		return (o1->sameTemplateAs(*o2));
 	}

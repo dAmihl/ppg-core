@@ -3,10 +3,10 @@
 namespace PPG
 {
 
-	Node::Node(Object* G, State Sg) : relatedObject{ G }, goalState{ Sg }, currentNodeState{ENodeState::INCOMPLETE}
+	Node::Node(Ptr<Object> G, State Sg) : relatedObject{ G }, goalState{ Sg }, currentNodeState{ENodeState::INCOMPLETE}
 	{}
 
-	PPG::Object* Node::getRelatedObject() const
+	PPG::Ptr<Object> Node::getRelatedObject() const
 {
 		return relatedObject;
 	}

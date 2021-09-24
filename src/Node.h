@@ -17,8 +17,8 @@ namespace PPG
 	class PPG_EXPORT Node
 	{
 	public:
-		Node(Object* G, State Sg);
-		Object* getRelatedObject() const;
+		Node(Ptr<Object> G, State Sg);
+		Ptr<Object> getRelatedObject() const;
 		const State getGoalState() const;
 		ENodeState getCurrentNodeState() const;
 		bool isActive() const;
@@ -34,7 +34,7 @@ namespace PPG
 		Str getSimpleTextualRepresentation() const;
 
 	private:
-		Object* relatedObject;
+		Ptr<Object> relatedObject;
 		State goalState;
 		ENodeState currentNodeState;
 		UpdateListener* PUL = nullptr;

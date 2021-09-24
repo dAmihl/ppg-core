@@ -2,7 +2,7 @@
 
 namespace PPG {
 
-	Puzzle* Generator::generatePuzzle(ObjVec objects, EventVec events, RuleVec rules)
+	Puzzle* Generator::generatePuzzle(ObjVec& objects, EventVec& events, RuleVec& rules)
 	{
 		Logger::log("Start generating a new Puzzle.");
 		Logger::log("Using rules:");
@@ -42,6 +42,15 @@ namespace PPG {
 		initializeActivePropertyOnNodes(P);
 
 		return P;
+	}
+
+	PPG::Puzzle* Generator::generatePuzzle(Context& context)
+	{
+		Vec<Ptr<Object>>& objects = context.getObjects();
+		Vec<Ptr<Event>>& events = context.getEvents();
+		Vec<Rule>& rules = context.getRules();
+
+		return generatePuzzle(objects, events, rules);
 	}
 
 	void Generator::removeNodeFromList(Node* N, NodeVec& nodes) {
@@ -156,7 +165,7 @@ namespace PPG {
 		return rel;
 	}
 
-	PPG::Relation Generator::generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec rules)
+	PPG::Relation Generator::generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec& rules)
 	{
 		Relation rel;
 
@@ -197,7 +206,7 @@ namespace PPG {
 		NodeVec nodes;
 
 		for (size_t i = 0; i < numNodes; i++) {
-			Object* obj = Randomizer::getRandomFromList(objects);
+			Ptr<Object> obj = Randomizer::getRandomFromList(objects);
 			if (obj == nullptr) continue;
 			try {
 				State state = Randomizer::getRandomFromList(obj->getReachableStates());

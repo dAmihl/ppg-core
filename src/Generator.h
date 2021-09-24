@@ -7,13 +7,14 @@
 #include "Puzzle.h"
 #include "GeneratorHelper.h"
 #include "Logger.h"
+#include "Context.h"
 
 namespace PPG 
 {
 
 	using NodeVec = Vec<Node*>;
-	using ObjVec = Vec<Object*>;
-	using EventVec = Vec<Event*>;
+	using ObjVec = Vec<Ptr<Object>>;
+	using EventVec = Vec<Ptr<Event>>;
 	using RuleVec = Vec<Rule>;
 
 	class PPG_EXPORT Generator
@@ -23,19 +24,21 @@ namespace PPG
 		Generator() : numberNodes{ 0 }{ }
 		Generator(uint32_t numNodes) : numberNodes{ numNodes }{}
 
-		Puzzle* generatePuzzle(ObjVec objects, EventVec events, RuleVec rules);
+		Puzzle* generatePuzzle(ObjVec& objects, EventVec& events, RuleVec& rules);
+
+		Puzzle* generatePuzzle(Context& context);
 
 		Relation simpleGenerateRelation(NodeVec nodes);
 
 		Relation generateRelation(NodeVec nodes, RuleVec rules);
-		Relation generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec rules);
-
-		NodeVec generateNodes(ObjVec objects, size_t numNodes);
+		Relation generateRelationExperimental(Puzzle* P, NodeVec nodes, RuleVec& rules);
 
 		void setSeed(unsigned int seed);
 		unsigned int getSeed() const;
 
 	private:
+
+		NodeVec generateNodes(ObjVec objects, size_t numNodes);
 
 		void initializeActivePropertyOnNodes(Puzzle* P);
 

@@ -10,17 +10,17 @@ namespace PPG
 	class PPG_EXPORT GraphNode
 	{
 	public:
-		Object* getObject() const;
+		Ptr<Object> getObject() const;
 		State getState() const;
 		Vec<GraphNode*> getChildren() const;
 
-		void setObject(Object* object);
+		void setObject(Ptr<Object> object);
 		void setState(State state);
 		void setChildren(Vec<GraphNode*> children);
 		void addChild(GraphNode* child);
 
 	private:
-		Object* object;
+		Ptr<Object> object;
 		State state;
 		Vec<GraphNode*> children;
 

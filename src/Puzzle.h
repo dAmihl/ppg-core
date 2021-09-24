@@ -8,13 +8,13 @@
 namespace PPG
 {
 	using NodeVec = Vec<Node*>;
-	using EventVec = Vec<Event*>;
+	using EventVec = Vec<Ptr<Event>>;
 
 	class PPG_EXPORT Puzzle
 	{
 	public:
 		void addNode(Node* n, bool isRelevant);
-		void addEvent(Event* e);
+		void addEvent(Ptr<Event> e);
 		void setRelation(Relation O);
 		void setNodes(NodeVec ns);
 
@@ -24,7 +24,7 @@ namespace PPG
 
 		NodeVec getNodes() const;
 		NodeVec getRelevantNodes() const;
-		EventVec getEvents() const;
+		EventVec& getEvents();
 		Relation getRelation() const;
 
 		Str getSimpleTextualRepresentation() const;

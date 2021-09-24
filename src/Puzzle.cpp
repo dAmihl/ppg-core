@@ -140,7 +140,7 @@ namespace PPG
 
 	}
 
-	void Puzzle::addEvent(Event* e)
+	void Puzzle::addEvent(Ptr<Event> e)
 	{
 		this->events.push_back(e);
 	}
@@ -155,9 +155,9 @@ namespace PPG
 		return this->relevantNodes;
 	}
 
-	EventVec Puzzle::getEvents() const
+	EventVec& Puzzle::getEvents()
 	{
-		return this->events;
+		return events;
 	}
 
 	Relation Puzzle::getRelation() const

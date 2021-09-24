@@ -394,7 +394,7 @@ namespace PPG
 		return false;
 	}
 
-	NodeVec Relation::findNodesByPattern(const NodeVec nodes, const Object* O, const State S, bool(*EqualObject)(const Object*, const Object*), bool(*EqualState)(const State, const State)) const
+	NodeVec Relation::findNodesByPattern(const NodeVec nodes, const Ptr<Object> O, const State S, bool(*EqualObject)(const Ptr<Object>, const Ptr<Object>), bool(*EqualState)(const State, const State)) const
 	{
 		NodeVec foundNodes;
 
