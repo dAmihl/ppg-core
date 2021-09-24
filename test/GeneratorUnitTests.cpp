@@ -65,7 +65,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 			NodePair circularDependencyPair = Relation::makePuzzlePair(N3, N4);
 
-			THEN("Return true in _checkCreatesCircularDependency()") {
+			THEN("Return true in _checkCreatesCircularDependency()") { 
 				bool hasCircularDependency = GeneratorHelper::checkCreatesCircularDependency(circularDependencyPair, R);
 				REQUIRE_FALSE(hasCircularDependency);
 			}
@@ -317,7 +317,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 					// The node (O2, S2_2)
 					if ((*it)->getRelatedObject() == O2 && (*it)->getGoalState().getName() == S2_2.getName()) {
-						auto checkNotO3 = [](Node N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
+						auto checkNotO3 = [](const Node& N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
 						// All smaller nodes than (O2, S2_2) have to be != O3
 						result = result && R.checkAllSmaller((*it), checkNotO3);
 						count++;
@@ -353,7 +353,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 					// The node (O1, S1_2)
 					if ((*it)->getRelatedObject() == O1 && (*it)->getGoalState().getName() == S1_2.getName()) {
-						auto checkNotO2AndS2_1 = [](Node N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O2" && N.getGoalState().getName() == "State_2_1"); };
+						auto checkNotO2AndS2_1 = [](const Node& N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O2" && N.getGoalState().getName() == "State_2_1"); };
 						// All smaller nodes than (O1, S1_2) have to be != O2 AND != S2_1
 						result = result && R.checkAllSmaller((*it), checkNotO2AndS2_1);
 						count++;
@@ -389,7 +389,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 					// The node (O1, *)
 					if ((*it)->getRelatedObject() == O1) {
-						auto checkIsO3= [](Node N) -> auto {return (N.getRelatedObject()->getObjectName() == "Object_O3"); };
+						auto checkIsO3= [](const Node& N) -> auto {return (N.getRelatedObject()->getObjectName() == "Object_O3"); };
 						// All directly following nodes of (O1, *) have to  be = O3 
 						result = result && R.checkAllFollowing((*it), checkIsO3);
 						count++;
@@ -425,7 +425,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 					// The node (O1, *)
 					if ((*it)->getRelatedObject() == O1) {
-						auto checkNotO3 = [](Node N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
+						auto checkNotO3 = [](const Node& N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
 						// There must not be a node referencing O3 LARGER than O1
 						result = result && R.checkAllLarger((*it), checkNotO3);
 						count++;
@@ -461,7 +461,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 					// The node (O2, S2_2)
 					if ((*it)->getRelatedObject() == O2 && (*it)->getGoalState().getName() == S2_2.getName()) {
-						auto checkIsO3 = [](Node N) -> auto {return (N.getRelatedObject()->getObjectName() == "Object_O3"); };
+						auto checkIsO3 = [](const Node& N) -> auto {return (N.getRelatedObject()->getObjectName() == "Object_O3"); };
 						// At least one preceding node has to be referencing O3
 						result = result && R.checkAtLeastOnePreceding((*it), checkIsO3);
 						count++;

@@ -22,56 +22,56 @@ namespace PPG
 		void removePair(NodePair pair);
 
 		std::string getSimpleTextualRepresentation() const;
-		std::string getRecursiveTextualRepresentationOfNode(NodeVec& alreadyOut, std::string* out, Node* N, int level) const;
-		std::string getExtendedTextualRepresentation(NodeVec nodes) const;
+		std::string getRecursiveTextualRepresentationOfNode(Vec<const Node*>& alreadyOut, std::string* out, const Node* N, int level) const;
+		std::string getExtendedTextualRepresentation(const NodeVec nodes) const;
 
-		Vec<GraphNode*> getGraphRepresentation(NodeVec nodes);
-		GraphNode* getRecursiveGraphRepresentation(Node* N);
+		Vec<GraphNode*> getGraphRepresentation(const NodeVec nodes) const;
+		GraphNode* getRecursiveGraphRepresentation(const Node* N) const;
 
-		void checkDoForAllPreceding(Node* N, bool(*Check)(Node), void(*Do)(Node*));
-		void checkDoForAllFollowing(Node* N, bool(*Check)(Node), void(*Do)(Node*));
+		void checkDoForAllPreceding(const Node* N, bool(*Check)(const Node&), void(*Do)(Node&));
+		void checkDoForAllFollowing(const Node* N, bool(*Check)(const Node&), void(*Do)(Node&));
 
-		bool checkAllLarger(Node* N, bool(*Check)(Node));
-		bool checkAllSmaller(Node* N, bool(*Check)(Node));
+		bool checkAllLarger(const Node* N, bool(*Check)(const Node&)) const;
+		bool checkAllSmaller(const Node* N, bool(*Check)(const Node&)) const;
 
-		bool checkAllFollowing(Node* N, bool(*Check)(Node));
-		bool checkAllPreceding(Node* N, bool(*Check)(Node));
-		bool checkAtLeastOneFollowing(Node* N, bool(*Check)(Node));
-		bool checkAtLeastOnePreceding(Node* N, bool(*Check)(Node));
+		bool checkAllFollowing(const Node* N, bool(*Check)(const Node&)) const;
+		bool checkAllPreceding(const Node* N, bool(*Check)(const Node&)) const;
+		bool checkAtLeastOneFollowing(const Node* N, bool(*Check)(const Node&)) const;
+		bool checkAtLeastOnePreceding(const Node* N, bool(*Check)(const Node&)) const;
 
 
 
-		NodePairVec getNextPairs(NodePair P) const;
-		NodePairVec getParallelPairs(NodePair P) const;
+		NodePairVec getNextPairs(const NodePair P) const;
+		NodePairVec getParallelPairs(const NodePair P) const;
 
-		bool hasPrecedingNode(Node* N) const;
-		bool hasFollowingNode(Node* N) const;
+		bool hasPrecedingNode(const Node* N) const;
+		bool hasFollowingNode(const Node* N) const;
 
-		NodeVec getMinima(NodeVec nodes) const;
-		NodeVec getMaxima(NodeVec nodes) const;
+		NodeVec getMinima(const NodeVec nodes) const;
+		NodeVec getMaxima(const NodeVec nodes) const;
 
-		NodeVec getSmallestNodesFromList(NodeVec nodes);
-		NodeVec getLargestNodesFromList(NodeVec nodes);
+		NodeVec getSmallestNodesFromList(const NodeVec nodes) const;
+		NodeVec getLargestNodesFromList(const NodeVec nodes) const;
 
-		bool findPrecedingNode(Node* start, Node* nodeToFind);
-		bool findFollowingNode(Node* start, Node* nodeToFind);
-		bool findPrecedingNode(Node* start, Node* nodeToFind, bool includeStart);
-		bool findFollowingNode(Node* start, Node* nodeToFind, bool includeStart);
+		bool findPrecedingNode(const Node* start, const Node* nodeToFind) const;
+		bool findFollowingNode(const Node* start, const Node* nodeToFind) const;
+		bool findPrecedingNode(const Node* start, const Node* nodeToFind, bool includeStart) const;
+		bool findFollowingNode(const Node* start, const Node* nodeToFind, bool includeStart) const;
 
-		bool findDirectlyPrecedingNode(Node* start, Node* nodeToFind);
-		bool findDirectlyFollowingNode(Node* start, Node* nodeToFind);
+		bool findDirectlyPrecedingNode(const Node* start, const Node* nodeToFind) const;
+		bool findDirectlyFollowingNode(const Node* start, const Node* nodeToFind) const;
 
-		NodeVec findNodesByPattern(NodeVec nodes, const Object* O, const State S, bool(*EqualObject)(const Object*, const Object*), bool(*EqualState)(const State, const State)) const;
+		NodeVec findNodesByPattern(const NodeVec nodes, const Object* O, const State S, bool(*EqualObject)(const Object*, const Object*), bool(*EqualState)(const State, const State)) const;
 
-		NodeVec findNearestPrecedingEqualNodesByObject(Node* N);
-		NodeVec findNearestPrecedingEqualNodesByObject(Node* N, Node* start);
-		NodeVec findNearestFollowingEqualNodesByObject(Node* N);
-		NodeVec findNearestFollowingEqualNodesByObject(Node* N, Node* start);
+		NodeVec findNearestPrecedingEqualNodesByObject(const Node* N) const;
+		NodeVec findNearestPrecedingEqualNodesByObject(const Node* N, const Node* start) const;
+		NodeVec findNearestFollowingEqualNodesByObject(const Node* N) const;
+		NodeVec findNearestFollowingEqualNodesByObject(const Node* N, const Node* start) const;
 
-		NodeVec filterCompatibleNodesByRules(NodeVec nodes, Vec<Rule> rules);
+		NodeVec filterCompatibleNodesByRules(const NodeVec nodes, const Vec<Rule> rules) const;
 
-		NodeVec getPrecedingNodes(Node* N) const;
-		NodeVec getFollowingNodes(Node* N) const;
+		NodeVec getPrecedingNodes(const Node* N) const;
+		NodeVec getFollowingNodes(const Node* N) const;
 
 		static NodePair makePuzzlePair(Node* N1, Node* N2);
 

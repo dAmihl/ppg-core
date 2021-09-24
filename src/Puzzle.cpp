@@ -20,11 +20,11 @@ namespace PPG
 		relevantNodes = ns;
 	}
 
-	bool checkCompleted(Node M) {
+	bool checkCompleted(const Node& M) {
 		return M.isCompleted();
 	}
 
-	bool checkActive(Node M) {
+	bool checkActive(const Node& M) {
 		return M.isActive();
 	}
 
@@ -103,16 +103,16 @@ namespace PPG
 		}
 	}
 
-	void doSetNodeActive(Node* M) {
-		if (M->isIncomplete()) M->setPuzzleNodeState(ENodeState::ACTIVE);
+	void doSetNodeActive(Node& M) {
+		if (M.isIncomplete()) M.setPuzzleNodeState(ENodeState::ACTIVE);
 	}
 
-	void doSetNodeIncomplete(Node* M) {
-		if (M->isActive()) M->setPuzzleNodeState(ENodeState::INCOMPLETE);
+	void doSetNodeIncomplete(Node& M) {
+		if (M.isActive()) M.setPuzzleNodeState(ENodeState::INCOMPLETE);
 	}
 
-	void doCheckNodeComplete(Node* M) {
-		if (!M->isCompleted()) M->updateCompletionState();
+	void doCheckNodeComplete(Node& M) {
+		if (!M.isCompleted()) M.updateCompletionState();
 	}
 
 	void Puzzle::updateNodeProperties(Node* N)
