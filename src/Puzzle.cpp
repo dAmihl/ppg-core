@@ -5,8 +5,6 @@ namespace PPG
 	void Puzzle::addNode(Ptr<Node> n, bool isRelevant)
 	{
 		nodes.push_back(n);
-		if (isRelevant) relevantNodes.push_back(n);
-
 	}
 
 	void Puzzle::setRelation(Relation O)
@@ -17,7 +15,6 @@ namespace PPG
 	void Puzzle::setNodes(NodeVec ns)
 	{
 		nodes = ns;
-		relevantNodes = ns;
 	}
 
 	bool checkCompleted(const Node& M) {
@@ -115,7 +112,7 @@ namespace PPG
 		if (!M.isCompleted()) M.updateCompletionState();
 	}
 
-	void Puzzle::updateNodeProperties(Ptr<Node> N)
+	void Puzzle::updateNodeProperties(Ptr<Node>& N)
 	{
 		this->relation.checkDoForAllFollowing(N, checkCompleted, doSetNodeActive);
 		//this->relation.checkDoForAllFollowing(N, checkCompleted, doCheckNodeComplete); // check node already complete by definition
@@ -124,7 +121,7 @@ namespace PPG
 
 	void Puzzle::checkPuzzleCompletion() const
 	{
-		for (auto& it: relevantNodes) {
+		for (auto& it: nodes) {
 			if (!it->isCompleted()) {
 				return;
 			}
@@ -139,13 +136,13 @@ namespace PPG
 		}
 	}
 
-	NodeVec Puzzle::getNodes() const
-	{
+	NodeVec& Puzzle::getNodes()
+{
 		return this->nodes;
 	}
 
-	Relation Puzzle::getRelation() const
-	{
+	PPG::Relation& Puzzle::getRelation()
+{
 		return relation;
 	}
 
@@ -207,7 +204,7 @@ namespace PPG
 		return allRoots;
 	}
 
-	bool Puzzle::canNodeHandleEvent(const Ptr<Node> N, Event E) const
+	bool Puzzle::canNodeHandleEvent(const Ptr<Node>& N, Event E) const
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject().getObjectName() == E.getRelatedObject().getObjectName();
@@ -216,7 +213,7 @@ namespace PPG
 		return bResult;
 	}
 
-	bool Puzzle::isNodeCompatible(const Ptr<Node> N, Event E) const
+	bool Puzzle::isNodeCompatible(const Ptr<Node>& N, Event E) const
 	{
 		bool bResult = true;
 		bResult = bResult && N->getRelatedObject().getObjectName() == E.getRelatedObject().getObjectName();

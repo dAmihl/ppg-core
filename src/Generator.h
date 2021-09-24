@@ -36,7 +36,7 @@ namespace PPG
 
 	private:
 
-		NodeVec generateNodes(ObjVec objects, size_t numNodes);
+		NodeVec generateNodes(const ObjVec& objects, size_t numNodes);
 
 		void initializeActivePropertyOnNodes(Puzzle* P);
 

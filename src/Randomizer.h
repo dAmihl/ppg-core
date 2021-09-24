@@ -18,7 +18,7 @@ namespace PPG {
 		static void init(unsigned int seed);
 
 		template<typename T>
-		static T getRandomFromList(Vec<T> list)
+		static T getRandomFromList(const Vec<T>& list)
 		{
 			if (list.empty()) return nullptr;
 			int index = rand() % list.size();

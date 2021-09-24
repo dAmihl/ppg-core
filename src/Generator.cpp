@@ -116,18 +116,16 @@ namespace PPG {
 		*/
 
 		for (auto& it: nodes) {
-			Ptr<Node> N1 = it;
-
 			/*
 			* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
 			*/
-			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, nodes, rules);
+			NodeVec compList = GeneratorHelper::filterCompatibleNodes(it, rel, nodes, rules);
 
 			// returns nullptr if list is empty
 			Ptr<Node> N2 = Randomizer::getRandomFromList(compList);
 
 			if (N2 != nullptr) {
-				rel.addPair(N1, N2);
+				rel.addPair(it, N2);
 			}
 		}
 
@@ -144,24 +142,23 @@ namespace PPG {
 		nodesInGraph.push_back(NStart);
 
 		for (auto& it: nodes) {
-			Ptr<Node> N1 = it;
 
 			// Copies nodesInGraph
 			// Add N1 temporary for filterCompatibleNodes
 			NodeVec tmpNodes = nodesInGraph;
-			tmpNodes.push_back(N1);
+			tmpNodes.push_back(it);
 
 			/*
 			* checks for basic rules (exclusive dependency, equality, circular dependency etc) and for custom rules
 			*/
-			NodeVec compList = GeneratorHelper::filterCompatibleNodes(N1, rel, tmpNodes, rules);
+			NodeVec compList = GeneratorHelper::filterCompatibleNodes(it, rel, tmpNodes, rules);
 
 			// returns nullptr if list is empty
 			Ptr<Node> N2 = Randomizer::getRandomFromList(compList);
 
 			if (N2 != nullptr) {
-				rel.addPair(N1, N2);
-				nodesInGraph.push_back(N1);
+				rel.addPair(it, N2);
+				nodesInGraph.push_back(it);
 			}
 		}
 
@@ -170,7 +167,7 @@ namespace PPG {
 		return rel;
 	}
 
-	NodeVec Generator::generateNodes(ObjVec objects, size_t numNodes)
+	NodeVec Generator::generateNodes(const ObjVec& objects, size_t numNodes)
 	{
 		NodeVec nodes;
 

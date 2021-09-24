@@ -21,8 +21,8 @@ namespace PPG
 
 		void setUpdateListener(UpdateListener* PUL);
 
-		NodeVec getNodes() const;
-		Relation getRelation() const;
+		NodeVec& getNodes();
+		Relation& getRelation();
 
 		Str getSimpleTextualRepresentation() const;
 		Str getExtendedTextualRepresentation() const;
@@ -32,14 +32,13 @@ namespace PPG
 
 	private:
 		NodeVec nodes;
-		NodeVec relevantNodes;
 		Relation relation;
 
 		UpdateListener* updateListener = nullptr;
 
-		bool canNodeHandleEvent(const Ptr<Node> N, Event E) const;
-		bool isNodeCompatible(const Ptr<Node> N, Event E) const;
-		void updateNodeProperties(Ptr<Node> N);
+		bool canNodeHandleEvent(const Ptr<Node>& N, Event E) const;
+		bool isNodeCompatible(const Ptr<Node>& N, Event E) const;
+		void updateNodeProperties(Ptr<Node>& N);
 		void checkPuzzleCompletion() const;
 		void onPuzzleCompleted() const;
 
