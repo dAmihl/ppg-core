@@ -240,10 +240,10 @@ namespace PPG {
 	bool GeneratorHelper::checkCompatibilityRuleTypeAfter(NodeVec nodes, Node* S, Node* N, Relation& R, const Rule& rule, bool isStrict)
 	{
 		/* */
-		const Ptr<Object> lhsO = rule.getLeftHandSideObject();
+		const Object& lhsO = rule.getLeftHandSideObject();
 		const State lhsS = rule.getLeftHandSideState();
 
-		const Ptr<Object> rhsO = rule.getRightHandSideObject();
+		const Object& rhsO = rule.getRightHandSideObject();
 		const State rhsS = rule.getRightHandSideState();
 
 		// Find all existing Right-Hand-side nodes of rule
@@ -291,7 +291,7 @@ namespace PPG {
 		else {
 			//return true;
 			Rule::EPuzzleRuleType tmpType = isStrict ? Rule::EPuzzleRuleType::STRICT_BEFORE : Rule::EPuzzleRuleType::BEFORE;
-			Rule tmpRule(rule.getRightHandSideObject(), rule.getRightHandSideState(), rule.getLeftHandSideObject(), rule.getLeftHandSideState(), tmpType);
+			Rule tmpRule(rule, tmpType);
 			return checkCompatibilityRuleTypeBefore(nodes, N, S, R, tmpRule, isStrict);
 		}
 
@@ -310,10 +310,10 @@ namespace PPG {
 	bool GeneratorHelper::checkCompatibilityRuleTypeBefore(NodeVec nodes, Node* S, Node* N, Relation& R, const Rule& rule, bool isStrict)
 	{
 		/* */
-		const Ptr<Object> lhsO = rule.getLeftHandSideObject();
+		const Object& lhsO = rule.getLeftHandSideObject();
 		const State lhsS = rule.getLeftHandSideState();
 
-		const Ptr<Object> rhsO = rule.getRightHandSideObject();
+		const Object& rhsO = rule.getRightHandSideObject();
 		const State rhsS = rule.getRightHandSideState();
 
 		// LHS = N and RHS = S
@@ -397,17 +397,17 @@ namespace PPG {
 	}
 
 
-	bool GeneratorHelper::isRuleNodeEqual(Node* N, Ptr<Object> ruleObject, State ruleState)
+	bool GeneratorHelper::isRuleNodeEqual(Node* N, const Object& ruleObject, State ruleState)
 	{
-		Ptr<Object> nodeObject = N->getRelatedObject();
+		const Object& nodeObject = N->getRelatedObject();
 		const State nodeState = N->getGoalState();
 
 		return isRuleObjectEqual(nodeObject, ruleObject) && isRuleStateEqual(nodeState, ruleState);
 	}
 
-	bool GeneratorHelper::isRuleObjectEqual(const Ptr<Object> o1, const Ptr<Object> o2) {
-		if (o1 == nullptr || o2 == nullptr) return true;
-		return (o1->sameTemplateAs(*o2));
+	bool GeneratorHelper::isRuleObjectEqual(const Object& o1, const Object& o2) {
+	
+		return (o1.sameTemplateAs(o2));
 	}
 
 	bool GeneratorHelper::isRuleStateEqual(const State s1, const State s2) {

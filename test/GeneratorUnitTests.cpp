@@ -170,7 +170,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A custom rule is used to restrict the generation: (O4, *) < (O2, *)") {
 
-			Rule rule1(N4->getRelatedObject(), STATE_ANY, N2->getRelatedObject(), STATE_ANY, Rule::EPuzzleRuleType::BEFORE);
+			Rule rule1(N4->getObjPtr(), STATE_ANY, N2->getObjPtr(), STATE_ANY, Rule::EPuzzleRuleType::BEFORE);
 
 			THEN("isRuleObjectEqual and isRuleStateEqual should return true with (O4,*) =R= (O4, S4)") {
 				bool isRuleObjectEqual = GeneratorHelper::isRuleObjectEqual(rule1.getLeftHandSideObject(), N4->getRelatedObject());
@@ -205,14 +205,14 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			Ptr<Object> O5 = c.add<Object>("O5"); 
 
 			THEN("findNodesByPattern for Object O1 and S1 should only return N1") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, O1, S1, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = R.findNodesByPattern(nodes, *O1, S1, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 1);
 				REQUIRE(foundNodes.at(0) == N1);
 			}
 
 			THEN("findNodesByPattern for Object O1 and * should return N1 and N5") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, O1, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = R.findNodesByPattern(nodes, *O1, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 2);
 				bool result = (foundNodes.at(0) == N1) || (foundNodes.at(0) == N5);
@@ -220,7 +220,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			}
 
 			THEN("findNodesByPattern for Object O5 and * should return nothing") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, O5, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = R.findNodesByPattern(nodes, *O5, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 0);
 			}
@@ -317,8 +317,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				for (NodeVec::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 
 					// The node (O2, S2_2)
-					if ((*it)->getRelatedObject() == O2 && (*it)->getGoalState().getName() == S2_2.getName()) {
-						auto checkNotO3 = [](const Node& N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
+					if ((*it)->getRelatedObject() == *O2 && (*it)->getGoalState().getName() == S2_2.getName()) {
+						auto checkNotO3 = [](const Node& N) -> auto {return !(N.getRelatedObject().getObjectName() == "Object_O3"); };
 						// All smaller nodes than (O2, S2_2) have to be != O3
 						result = result && R.checkAllSmaller((*it), checkNotO3);
 						count++;
@@ -353,8 +353,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				for (NodeVec::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 
 					// The node (O1, S1_2)
-					if ((*it)->getRelatedObject() == O1 && (*it)->getGoalState().getName() == S1_2.getName()) {
-						auto checkNotO2AndS2_1 = [](const Node& N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O2" && N.getGoalState().getName() == "State_2_1"); };
+					if ((*it)->getRelatedObject() == *O1 && (*it)->getGoalState().getName() == S1_2.getName()) {
+						auto checkNotO2AndS2_1 = [](const Node& N) -> auto {return !(N.getRelatedObject().getObjectName() == "Object_O2" && N.getGoalState().getName() == "State_2_1"); };
 						// All smaller nodes than (O1, S1_2) have to be != O2 AND != S2_1
 						result = result && R.checkAllSmaller((*it), checkNotO2AndS2_1);
 						count++;
@@ -389,8 +389,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				for (NodeVec::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 
 					// The node (O1, *)
-					if ((*it)->getRelatedObject() == O1) {
-						auto checkIsO3= [](const Node& N) -> auto {return (N.getRelatedObject()->getObjectName() == "Object_O3"); };
+					if ((*it)->getRelatedObject() == *O1) {
+						auto checkIsO3= [](const Node& N) -> auto {return (N.getRelatedObject().getObjectName() == "Object_O3"); };
 						// All directly following nodes of (O1, *) have to  be = O3 
 						result = result && R.checkAllFollowing((*it), checkIsO3);
 						count++;
@@ -425,8 +425,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				for (NodeVec::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 
 					// The node (O1, *)
-					if ((*it)->getRelatedObject() == O1) {
-						auto checkNotO3 = [](const Node& N) -> auto {return !(N.getRelatedObject()->getObjectName() == "Object_O3"); };
+					if ((*it)->getRelatedObject() == *O1) {
+						auto checkNotO3 = [](const Node& N) -> auto {return !(N.getRelatedObject().getObjectName() == "Object_O3"); };
 						// There must not be a node referencing O3 LARGER than O1
 						result = result && R.checkAllLarger((*it), checkNotO3);
 						count++;
@@ -461,8 +461,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 				for (NodeVec::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 
 					// The node (O2, S2_2)
-					if ((*it)->getRelatedObject() == O2 && (*it)->getGoalState().getName() == S2_2.getName()) {
-						auto checkIsO3 = [](const Node& N) -> auto {return (N.getRelatedObject()->getObjectName() == "Object_O3"); };
+					if ((*it)->getRelatedObject() == *O2 && (*it)->getGoalState().getName() == S2_2.getName()) {
+						auto checkIsO3 = [](const Node& N) -> auto {return (N.getRelatedObject().getObjectName() == "Object_O3"); };
 						// At least one preceding node has to be referencing O3
 						result = result && R.checkAtLeastOnePreceding((*it), checkIsO3);
 						count++;

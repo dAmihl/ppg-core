@@ -211,7 +211,7 @@ namespace PPG
 
 		out += "<<< Environment >>>\n";
 		for (auto& it: nodes) {
-			out += it->getRelatedObject()->getObjectName() + " - " + it->getRelatedObject()->getCurrentState().getName() + "\n";
+			out += it->getRelatedObject().getObjectName() + " - " + it->getRelatedObject().getCurrentState().getName() + "\n";
 		}
 		out += "<<<<>>>>\n";
 		return out;
@@ -226,7 +226,7 @@ namespace PPG
 	bool Puzzle::canNodeHandleEvent(const Node* N, Event E) const
 	{
 		bool bResult = true;
-		bResult = bResult && N->getRelatedObject()->getObjectName() == E.getRelatedObject()->getObjectName();
+		bResult = bResult && N->getRelatedObject().getObjectName() == E.getRelatedObject().getObjectName();
 		bResult = bResult && (N->isActive() || (N->isCompleted() && relation.checkAllFollowing(N, checkActive)));
 		// Check object relation
 		return bResult;
@@ -235,7 +235,7 @@ namespace PPG
 	bool Puzzle::isNodeCompatible(const Node* N, Event E) const
 	{
 		bool bResult = true;
-		bResult = bResult && N->getRelatedObject()->getObjectName() == E.getRelatedObject()->getObjectName();
+		bResult = bResult && N->getRelatedObject().getObjectName() == E.getRelatedObject().getObjectName();
 		// Check object relation
 		return bResult;
 	}

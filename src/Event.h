@@ -13,7 +13,7 @@ namespace PPG
 			: eventName{ name_v }, relatedObject{ G }
 		{}
 	
-		Ptr<Object> getRelatedObject() const { return relatedObject; };
+		Object& getRelatedObject() const { return *relatedObject; };
 		const Str& getEventName() const { return eventName; };
 		bool getIsReversible() const { return isReversible; };
 		void setIsReversible(bool newIsReversible) { isReversible = newIsReversible; };

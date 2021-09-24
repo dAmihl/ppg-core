@@ -21,16 +21,20 @@ namespace PPG
 			: m_lhsObj{ leftO }, m_lhsState{ leftS }, m_rhsObj{ rightO }, m_rhsState{ rightS }, m_type{ t }
 		{};
 
+		Rule(const Rule& other, EPuzzleRuleType t)
+			: m_lhsObj{ other.m_lhsObj }, m_lhsState{ other.m_lhsState }, m_rhsObj{ other.m_rhsObj }, m_rhsState{ other.m_rhsState }, m_type{ t }
+		{}
+
 	public:
 
 		void setRuleType(EPuzzleRuleType t) { m_type = t; };
 
 		EPuzzleRuleType getRuleType() { return m_type; };
 
-		const Ptr<Object> getLeftHandSideObject() const { return m_lhsObj; };
+		const Object& getLeftHandSideObject() const { return *m_lhsObj; };
 		const State getLeftHandSideState() const { return m_lhsState; };
 
-		const Ptr<Object> getRightHandSideObject() const { return m_rhsObj; };
+		const Object& getRightHandSideObject() const { return *m_rhsObj; };
 		const State getRightHandSideState() const { return m_rhsState; };
 
 		Str getTextualRepresentation();

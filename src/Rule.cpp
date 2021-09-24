@@ -14,7 +14,7 @@ namespace PPG
 		if (getRightHandSideState() == STATE_ANY) rhS = "{}";
 		else rhS = getRightHandSideState().getName();
 
-		Str out = ">> Rule (" + getLeftHandSideObject()->getObjectName() + " | " + lhS + ") " + getRuleTypeString() + " (" + getRightHandSideObject()->getObjectName() + " | " + rhS + ") \n";
+		Str out = ">> Rule (" + getLeftHandSideObject().getObjectName() + " | " + lhS + ") " + getRuleTypeString() + " (" + getRightHandSideObject().getObjectName() + " | " + rhS + ") \n";
 		return out;
 	}
 

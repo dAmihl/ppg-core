@@ -42,6 +42,10 @@ namespace PPG
 		Str templateName;
 	};
 
+	inline bool operator==(const Object& lhs, const Object& rhs) {
+		return &lhs == &rhs;
+	}
+
 }
 
 

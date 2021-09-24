@@ -18,7 +18,7 @@ namespace PPG
 	{
 	public:
 		Node(Ptr<Object> G, State Sg);
-		Ptr<Object> getRelatedObject() const;
+		Object& getRelatedObject() const;
 		const State getGoalState() const;
 		ENodeState getCurrentNodeState() const;
 		bool isActive() const;
@@ -32,6 +32,8 @@ namespace PPG
 
 		Str getTextualRepresentation() const;
 		Str getSimpleTextualRepresentation() const;
+
+		const Ptr<Object> getObjPtr() const;
 
 	private:
 		Ptr<Object> relatedObject;

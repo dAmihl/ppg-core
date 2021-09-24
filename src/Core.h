@@ -17,6 +17,7 @@ namespace PPG
 	template<typename T, typename U> using Pair = std::pair<T, U>;
 	template<typename T> using UPtr = std::unique_ptr<T>;
 	template<typename T> using Ptr = std::shared_ptr<T>;
+	template<typename T> using WPtr = std::weak_ptr<T>;
 	template<typename K, typename V> using Map = std::unordered_map<K, V>;
 	template<typename T> using Set = std::set<T>;
 

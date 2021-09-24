@@ -2,7 +2,7 @@
 
 namespace PPG
 {
-	Ptr<Object> GraphNode::getObject() const
+	Object& GraphNode::getObject() const
 	{
 		return object;
 	}
@@ -15,16 +15,6 @@ namespace PPG
 	Vec<GraphNode*> GraphNode::getChildren() const
 	{
 		return children;
-	}
-
-	void GraphNode::setObject(Ptr<Object> obj)
-	{
-		object = obj;
-	}
-
-	void GraphNode::setState(State s)
-	{
-		state = s;
 	}
 
 	void GraphNode::setChildren(Vec<GraphNode*> v)

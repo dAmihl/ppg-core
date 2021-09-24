@@ -31,9 +31,9 @@ namespace PPG
 		Str out = "";
 
 		for (auto& it: pairs) {
-			out += "[" + it.first->getRelatedObject()->getObjectName() + "::" + it.first->getGoalState().getName() + "]";
+			out += "[" + it.first->getRelatedObject().getObjectName() + "::" + it.first->getGoalState().getName() + "]";
 			out += " <<< ";
-			out += "[" + it.second->getRelatedObject()->getObjectName() + "::" + it.second->getGoalState().getName() + "]";
+			out += "[" + it.second->getRelatedObject().getObjectName() + "::" + it.second->getGoalState().getName() + "]";
 			out += "\n";
 		}
 
@@ -50,7 +50,7 @@ namespace PPG
 			for (int hyph = 0; hyph > level; hyph--) {
 				tmp += "-";
 			}
-			tmp += "[(L" + std::to_string(level) + ")" + N->getRelatedObject()->getObjectName() + "::" + N->getGoalState().getName() + "]\n";
+			tmp += "[(L" + std::to_string(level) + ")" + N->getRelatedObject().getObjectName() + "::" + N->getGoalState().getName() + "]\n";
 			alreadyOut.push_back(N);
 		}
 		(*out) += tmp;
@@ -102,9 +102,7 @@ namespace PPG
 
 	PPG::GraphNode* Relation::getRecursiveGraphRepresentation(const Node* N) const
 	{
-		GraphNode* root = new GraphNode();
-		root->setObject(N->getRelatedObject());
-		root->setState(N->getRelatedObject()->getCurrentState());
+		GraphNode* root = new GraphNode(N->getRelatedObject(), N->getRelatedObject().getCurrentState());
 
 		NodeVec pre = getPrecedingNodes(N);
 		Vec<GraphNode*> children;
@@ -394,7 +392,7 @@ namespace PPG
 		return false;
 	}
 
-	NodeVec Relation::findNodesByPattern(const NodeVec nodes, const Ptr<Object> O, const State S, bool(*EqualObject)(const Ptr<Object>, const Ptr<Object>), bool(*EqualState)(const State, const State)) const
+	NodeVec Relation::findNodesByPattern(const NodeVec nodes, const Object& O, const State S, bool(*EqualObject)(const Object&, const Object&), bool(*EqualState)(const State, const State)) const
 	{
 		NodeVec foundNodes;
 

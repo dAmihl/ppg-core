@@ -6,9 +6,9 @@ namespace PPG
 	Node::Node(Ptr<Object> G, State Sg) : relatedObject{ G }, goalState{ Sg }, currentNodeState{ENodeState::INCOMPLETE}
 	{}
 
-	PPG::Ptr<Object> Node::getRelatedObject() const
+	PPG::Object& Node::getRelatedObject() const
 {
-		return relatedObject;
+		return *relatedObject;
 	}
 
 	const PPG::State Node::getGoalState() const
@@ -87,6 +87,11 @@ namespace PPG
 	{
 		Str out = ">> Puzzlenode (" + relatedObject->getObjectName() + " | " + goalState.getName() + ") :: " + getCompletionStateString() + " <> \n";
 		return out;
+	}
+
+	const Ptr<Object> Node::getObjPtr() const
+	{
+		return relatedObject;
 	}
 
 	// Only callable privately after handling event!
