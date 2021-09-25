@@ -23,50 +23,48 @@ namespace PPG
 	}
 
 	Vec<PPG::State> Object::getReachableStates() const
-{
-		Vec<State> reachables;
-		reachables = stateTransition.getReachableStates();
-		return reachables;
+	{
+		return stateTransition.getReachableStates();	
 	}
 
 	ObjectMetaData Object::getMetaData() const
 	{
-		return this->metaData;
+		return metaData;
 	}
 
 	Str Object::getTemplateName() const
 	{
-		return this->templateName;
+		return templateName;
 	}
 
 	bool Object::isTemplateObject() const
 	{
-		return this->bIsTemplate;
+		return bIsTemplate;
 	}
 
 	void Object::setStateTransition(StateTransition F)
 	{
-		this->stateTransition = F;
+		stateTransition = F;
 	}
 
 	void Object::setCurrentState(State Sc)
 	{
-		this->currentState = Sc;
+		currentState = Sc;
 	}
 
 	void Object::setMetaData(ObjectMetaData MD)
 	{
-		this->metaData = MD;
+		metaData = MD;
 	}
 
 	void Object::setTemplateName(Str tName)
 	{
-		this->templateName = tName;
+		templateName = tName;
 	}
 
 	void Object::setIsTemplateObject(bool bTemplate)
 	{
-		this->bIsTemplate = bTemplate;
+		bIsTemplate = bTemplate;
 	}
 
 	bool Object::sameTemplateAs(const Object& o2) const

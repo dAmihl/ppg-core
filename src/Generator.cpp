@@ -11,8 +11,8 @@ namespace PPG {
 		}
 
 		// initialize randomizer
-		if (this->seedSet) {
-			Randomizer::init(this->seed);
+		if (seedSet) {
+			Randomizer::init(seed);
 		}
 		else {
 			Randomizer::init();

@@ -81,7 +81,7 @@ namespace PPG
 		}
 
 		// Find nodes
-		/*for (std::vector<PuzzleNode*>::iterator it = this->nodes.begin(); it != this->nodes.end(); ++it) {
+		/*for (std::vector<PuzzleNode*>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 			if (canNodeHandleEvent((*it), e)) {
 				(*it)->handleEvent(e);
 				(*it)->updateCompletionState();
@@ -93,7 +93,7 @@ namespace PPG
 
 	void Puzzle::setUpdateListener(UpdateListener* PUL)
 	{
-		this->updateListener = PUL;
+		updateListener = PUL;
 
 		for (auto& n: nodes) {
 			n->setPuzzleUpdateListener(updateListener);
@@ -114,9 +114,9 @@ namespace PPG
 
 	void Puzzle::updateNodeProperties(Ptr<Node>& N)
 	{
-		this->relation.checkDoForAllFollowing(N, checkCompleted, doSetNodeActive);
-		//this->relation.checkDoForAllFollowing(N, checkCompleted, doCheckNodeComplete); // check node already complete by definition
-		this->relation.checkDoForAllFollowing(N, checkActive, doSetNodeIncomplete);
+		relation.checkDoForAllFollowing(N, checkCompleted, doSetNodeActive);
+		//relation.checkDoForAllFollowing(N, checkCompleted, doCheckNodeComplete); // check node already complete by definition
+		relation.checkDoForAllFollowing(N, checkActive, doSetNodeIncomplete);
 	}
 
 	void Puzzle::checkPuzzleCompletion() const
@@ -131,14 +131,14 @@ namespace PPG
 
 	void Puzzle::onPuzzleCompleted() const
 	{
-		if (this->updateListener != nullptr) {
-			this->updateListener->onPuzzleComplete();
+		if (updateListener != nullptr) {
+			updateListener->onPuzzleComplete();
 		}
 	}
 
 	NodeVec& Puzzle::getNodes()
 {
-		return this->nodes;
+		return nodes;
 	}
 
 	PPG::Relation& Puzzle::getRelation()

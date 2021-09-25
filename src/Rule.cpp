@@ -21,7 +21,7 @@ namespace PPG
 	Str Rule::getRuleTypeString()
 	{
 		Str out;
-		switch (this->getRuleType()) {
+		switch (getRuleType()) {
 		case EPuzzleRuleType::AFTER: out = "AFTER"; break;
 		case EPuzzleRuleType::BEFORE: out = "BEFORE"; break;
 		case EPuzzleRuleType::STRICT_AFTER: out = "STRICTAFTER"; break;

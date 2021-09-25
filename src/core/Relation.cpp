@@ -21,8 +21,8 @@ namespace PPG
 	void Relation::removePair(NodePair& pair)
 	{
 		auto found = std::find(pairs.begin(), pairs.end(), pair);
-		if (found != this->pairs.end()) {
-			this->pairs.erase(found);
+		if (found != pairs.end()) {
+			pairs.erase(found);
 		}
 	}
 
