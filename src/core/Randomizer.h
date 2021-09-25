@@ -22,9 +22,16 @@ namespace PPG {
 		{
 			if (list.empty()) return nullptr;
 			int index = rand() % list.size();
-
 			return list.at(index);
 		};
+
+
+		static State getRandomFromList(const Vec<State>& list)
+		{
+			if (list.empty()) return STATE_ANY;
+			int index = rand() % list.size();
+			return list.at(index);
+		}
 
 		static unsigned int getRandomUintFromRange(unsigned int min, unsigned int max);
 

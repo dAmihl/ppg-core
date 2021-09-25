@@ -47,7 +47,7 @@ namespace PPG {
 	}
 
 	void Generator::removeNodeFromList(const Ptr<Node>& N, NodeVec& nodes) {
-		NodeVec::iterator found = std::find(nodes.begin(), nodes.end(), N);
+		auto found = std::find(nodes.begin(), nodes.end(), N);
 		if (found != nodes.end()) {
 			nodes.erase(found);
 		}

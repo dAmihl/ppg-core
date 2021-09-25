@@ -54,7 +54,7 @@ namespace PPG
 
 	EventMapVal StateTransition::findTransitions(const Str name) const
 	{
-		auto& it = transitionMap.find(name);
+		auto it = transitionMap.find(name);
 		if (it != transitionMap.end()) {
 			return it->second;
 		}

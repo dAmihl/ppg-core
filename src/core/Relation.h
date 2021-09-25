@@ -4,6 +4,7 @@
 #include "GraphNode.h"
 #include "Node.h"
 #include "../Rule.h"
+#include <algorithm>
 
 namespace PPG
 {

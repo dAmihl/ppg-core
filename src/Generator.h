@@ -8,6 +8,7 @@
 #include "core/GeneratorHelper.h"
 #include "core/Logger.h"
 #include "Context.h"
+#include <algorithm>
 
 namespace PPG 
 {
