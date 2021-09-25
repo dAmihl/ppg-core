@@ -4,6 +4,7 @@
 #include "Event.h"
 #include "core/Relation.h"
 #include "UpdateListener.h"
+#include "Context.h"
 
 namespace PPG
 {
@@ -16,6 +17,7 @@ namespace PPG
 		void addNode(Ptr<Node> n);
 		void setRelation(Relation O);
 		void setNodes(NodeVec ns);
+		void setContext(Context c);
 
 		void handleEvent(Event e);
 
@@ -23,6 +25,7 @@ namespace PPG
 
 		NodeVec& getNodes();
 		Relation& getRelation();
+		Context& getContext();
 
 		Str getSimpleTextualRepresentation() const;
 		Str getExtendedTextualRepresentation() const;
@@ -33,6 +36,7 @@ namespace PPG
 	private:
 		NodeVec nodes;
 		Relation relation;
+		Context context;
 
 		UpdateListener* updateListener = nullptr;
 

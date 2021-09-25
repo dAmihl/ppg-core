@@ -25,9 +25,7 @@ namespace PPG
 		Generator() : numberNodes{ 0 }{ }
 		Generator(uint32_t numNodes) : numberNodes{ numNodes }{}
 
-		UPtr<Puzzle> generatePuzzle(ObjVec& objects, EventVec& events, RuleVec& rules);
-
-		UPtr<Puzzle> generatePuzzle(Context& context);
+		UPtr<Puzzle> generatePuzzle(Context context);
 
 		Relation generateRelation(NodeVec& nodes, RuleVec rules);
 		Relation generateRelationExperimental(UPtr<Puzzle>& P, NodeVec& nodes, RuleVec& rules);

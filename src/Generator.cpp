@@ -2,8 +2,12 @@
 
 namespace PPG {
 
-	UPtr<Puzzle> Generator::generatePuzzle(ObjVec& objects, EventVec& events, RuleVec& rules)
+	UPtr<Puzzle> Generator::generatePuzzle(Context context)
 	{
+		Vec<Ptr<Object>>& objects = context.getObjects();
+		Vec<Ptr<Event>>& events = context.getEvents();
+		Vec<Rule>& rules = context.getRules();
+
 		Logger::log("Start generating a new Puzzle.");
 		Logger::log("Using rules:");
 		for (auto& it : rules) {
@@ -33,17 +37,9 @@ namespace PPG {
 		cleanupNodes(P);
 
 		initializeActivePropertyOnNodes(P);
+		P->setContext(context);
 
 		return P;
-	}
-
-	UPtr<Puzzle> Generator::generatePuzzle(Context& context)
-	{
-		Vec<Ptr<Object>>& objects = context.getObjects();
-		Vec<Ptr<Event>>& events = context.getEvents();
-		Vec<Rule>& rules = context.getRules();
-
-		return generatePuzzle(objects, events, rules);
 	}
 
 	void Generator::removeNodeFromList(const Ptr<Node>& N, NodeVec& nodes) {

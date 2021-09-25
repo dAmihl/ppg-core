@@ -8,10 +8,13 @@ namespace PPG
 	{
 
 	public:
-		State() : m_name{ "DefaultState" } {};
-		State(Str name) : m_name{ name } {};
-	
-		Str getName() const {
+		explicit State() : m_name{ "DefaultState" } {};
+		explicit State(const Str name) : m_name{ name } {};
+
+		State(const State& other) : m_name{ other.m_name }
+		{}
+
+		const Str getName() const {
 			return m_name;
 		}
 

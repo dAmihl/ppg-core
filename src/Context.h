@@ -13,6 +13,7 @@ namespace PPG
 
 	public:
 
+		/*
 		Context() = default;
 		Context(const Context& other) = default;
 		Context(Context&& other) noexcept = default;
@@ -20,7 +21,7 @@ namespace PPG
 		Context& operator=(Context&& other) = default;
 
 		~Context() = default;
-
+		*/
 	public:
 		template<class T, class... _Ts>
 		Ptr<T> add(_Ts&&... params) {

@@ -237,12 +237,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		Generator PG(numberNodes);
 		Context c;
 
-		RuleVec rules;
-		EventVec events;
-		ObjVec objects;
-
 		Ptr<Object> O1 = c.add<Object>("Object_O1");
-		objects.push_back(O1);
 		State S1_1("State_S1_1");
 		State S1_2("State_S1_2");
 		StateTransition T1;
@@ -250,11 +245,9 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		T1.addTransition(E1->getEventName(), S1_1, S1_2);
 		T1.addTransition(E1->getEventName(), S1_2, S1_1);
 		O1->setStateTransition(T1);
-		events.push_back(E1);
 		Ptr<Node> N1 = make<Node>(O1, S1_1);
 
 		Ptr<Object> O2 = c.add<Object>("Object_O2");
-		objects.push_back(O2);
 		State S2_1("State_S2_1");
 		State S2_2("State_S2_2");
 		StateTransition T2;
@@ -262,11 +255,9 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		T2.addTransition(E2->getEventName(), S2_1, S2_2);
 		T2.addTransition(E2->getEventName(), S2_2, S2_1);
 		O2->setStateTransition(T2);
-		events.push_back(E2);
 		Ptr<Node> N2 = make<Node>(O2, S2_1);
 
 		Ptr<Object> O3 = c.add<Object>("Object_O3");
-		objects.push_back(O3);
 		State S3_1("State_S3_1");
 		State S3_2("State_S3_2");
 		State S3_3("State_S3_3");
@@ -275,8 +266,6 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		Ptr<Event> E3_2 = c.add<Event>("Event_E3_2", O3);
 		T3.addTransition(E3_1->getEventName(),S3_1, S3_2);
 		T3.addTransition(E3_2->getEventName(),S3_2, S3_3);
-		events.push_back(E3_1);
-		events.push_back(E3_2);
 		O3->setStateTransition(T3);
 		Ptr<Node> N3 = make<Node>(O3, S3_1);
 
@@ -291,8 +280,12 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		//PG.setSeed(seed);		
 
+		auto objects = c.getObjects();
+		auto events = c.getEvents();
+		auto rules = c.getRules();
+
 		WHEN("A puzzle is generated") {
-			auto P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(c);
 			UNSCOPED_INFO("Generated Puzzle:");
 			UNSCOPED_INFO(P->getRelation().getExtendedTextualRepresentation(P->getNodes()));
 			THEN("It is definitely generated..") {
@@ -303,8 +296,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O2,S2_2) < (O3, *)") {
 			rules.clear();
-			rules.push_back(R2);
-			auto P = PG.generatePuzzle(objects, events, rules);
+			c.addRule(R2);
+			auto P = PG.generatePuzzle(c);
 			THEN("Every node (O2, S2_2) has to occur before every other node referencing O3") {
 
 				NodeVec nodes = P->getNodes();
@@ -338,8 +331,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O1,S1_2) < (O2, S2_1)") {
 			rules.clear();
-			rules.push_back(R1);
-			auto P = PG.generatePuzzle(objects, events, rules);
+			c.addRule(R1);
+			auto P = PG.generatePuzzle(c);
 
 			THEN("Every node (O1, S1_2) has to occur before every other node referencing O2 and Stage S2_1") {
 
@@ -374,8 +367,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O1,*) <! (O3,*)") {
 			rules.clear();
-			rules.push_back(R3);
-			auto P = PG.generatePuzzle(objects, events, rules);
+			c.addRule(R3);
+			auto P = PG.generatePuzzle(c);
 
 			THEN("Every node (O1,*) has to occur STRICTLY (directly and only) before a node referencing O3") {
 
@@ -410,8 +403,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O1,*) > (O3,*)") {
 			rules.clear();
-			rules.push_back(R4);
-			auto P = PG.generatePuzzle(objects, events, rules);
+			c.addRule(R4);
+			auto P = PG.generatePuzzle(c);
 
 			THEN("Every node (O1,*) has to be after every other node referencing O3") {
 
@@ -447,8 +440,8 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated with the Rule (O2,S2_2) >! (O3, *)") {
 			rules.clear();
-			rules.push_back(R5);
-			auto P = PG.generatePuzzle(objects, events, rules);
+			c.addRule(R5);
+			auto P = PG.generatePuzzle(c);
 			THEN("Every node (O2, S2_2) has to occur STRICTLY (directly and only) after another node referencing O3") {
 
 				NodeVec nodes = P->getNodes();
@@ -483,7 +476,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 
 		WHEN("A puzzle is generated without Rules") {
 			rules.clear();
-			auto P = PG.generatePuzzle(objects, events, rules);
+			auto P = PG.generatePuzzle(c);
 			THEN("getGraphRepresentation() returns the recursive representation of the puzzle starting from the leaf (ending) nodes") {
 
 				NodeVec nodes = P->getNodes();

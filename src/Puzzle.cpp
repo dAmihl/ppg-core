@@ -17,6 +17,11 @@ namespace PPG
 		nodes = ns;
 	}
 
+	void Puzzle::setContext(Context c)
+	{
+		context = c;
+	}
+
 	bool checkCompleted(const Node& M) {
 		return M.isCompleted();
 	}
@@ -144,6 +149,11 @@ namespace PPG
 	PPG::Relation& Puzzle::getRelation()
 {
 		return relation;
+	}
+
+	PPG::Context& Puzzle::getContext()
+	{
+		return context;
 	}
 
 	Str Puzzle::getSimpleTextualRepresentation() const

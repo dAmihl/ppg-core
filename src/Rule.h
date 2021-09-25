@@ -43,11 +43,11 @@ namespace PPG
 	private:
 		EPuzzleRuleType m_type;
 
-		const Ptr<Object> m_lhsObj;
-		const State m_lhsState;
+		Ptr<Object> m_lhsObj;
+		State m_lhsState;
 
-		const Ptr<Object> m_rhsObj;
-		const State m_rhsState;
+		Ptr<Object> m_rhsObj;
+		State m_rhsState;
 
 		Str getRuleTypeString();
 
