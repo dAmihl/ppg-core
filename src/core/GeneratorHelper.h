@@ -11,6 +11,7 @@ namespace PPG
 	using NodePair = Pair<Ptr<Node>, Ptr<Node>>;
 	using NodePairVec = Vec<NodePair>;
 	using NodeVec = Vec<Ptr<Node>>;
+	using NodeRefVec = Vec<Node&>;
 	using RuleVec = Vec<Rule>;
 
 	class PPG_EXPORT GeneratorHelper
@@ -23,7 +24,6 @@ namespace PPG
 		static bool checkEquality(Ptr<Node> N1, Ptr<Node> N2);
 		static bool checkMetaEqualOccurance(NodePair P, Relation& R);
 
-
 		static bool checkCompatibilityBasicRules(Ptr<Node> S, Ptr<Node> N, Relation& R);
 		static bool checkCompatibilityCustomRules(NodeVec nodes, Ptr<Node> S, Ptr<Node> N, Relation& R, RuleVec& rules);
 
@@ -31,6 +31,8 @@ namespace PPG
 		static bool checkCompatibilityRuleTypeBefore(NodeVec nodes, Ptr<Node> S, Ptr<Node> N, Relation& R, const Rule& rule, bool isStrict);
 
 		static NodeVec filterCompatibleNodes(Ptr<Node> N, Relation& R, NodeVec nodes, RuleVec& rules);
+
+		static NodeVec findNodesByPattern(const NodeVec nodes, const Object& O, const State S, bool(*EqualObject)(const Object&, const Object&), bool(*EqualState)(const State, const State));
 
 		static bool checkMetaEqualOccuranceByNode(Ptr<Node> N, Relation& R);
 

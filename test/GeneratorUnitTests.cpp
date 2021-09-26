@@ -205,14 +205,14 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			Ptr<Object> O5 = c.add<Object>("O5"); 
 
 			THEN("findNodesByPattern for Object O1 and S1 should only return N1") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, *O1, S1, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = GeneratorHelper::findNodesByPattern(nodes, *O1, S1, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 1);
 				REQUIRE(foundNodes.at(0) == N1);
 			}
 
 			THEN("findNodesByPattern for Object O1 and * should return N1 and N5") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, *O1, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = GeneratorHelper::findNodesByPattern(nodes, *O1, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 2);
 				bool result = (foundNodes.at(0) == N1) || (foundNodes.at(0) == N5);
@@ -220,7 +220,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			}
 
 			THEN("findNodesByPattern for Object O5 and * should return nothing") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, *O5, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = GeneratorHelper::findNodesByPattern(nodes, *O5, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 0);
 			}

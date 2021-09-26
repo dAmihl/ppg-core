@@ -43,8 +43,10 @@ namespace PPG
 	};
 
 	inline bool operator==(const Object& lhs, const Object& rhs) {
-		return &lhs == &rhs;
+		return (&lhs == &rhs) || (lhs.getObjectName() == rhs.getObjectName() && lhs.getTemplateName() == rhs.getTemplateName() && lhs.getCurrentState() == rhs.getCurrentState());
 	}
+
+	
 
 }
 

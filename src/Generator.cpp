@@ -26,20 +26,36 @@ namespace PPG {
 
 		/* Generate Nodes and add to puzzle P*/
 		if (numberNodes == 0) numberNodes = objects.size();
-		Vec<Ptr<Node>> nodes = generateNodes(objects, numberNodes);
-		P->setNodes(nodes);
+		P->setNodes(generateNodes(objects, numberNodes));
 
 		/* Generate Relation and add to Puzzle P */
-		Relation R = generateRelationExperimental(P, P->getNodes(), rules);
-
-		P->setRelation(R);
-
+		Relation R;
+		switch (genType)
+		{
+		case EGenType::STANDARD:
+		case EGenType::EXPERIMENTAL:
+		{
+			P->setRelation(generateRelationExperimental(P, P->getNodes(), rules));
+			break;
+		}
+		case EGenType::WFC:
+		{
+			P->setRelation(generateRelationWFC(P, P->getNodes(), rules));
+			break;
+		}
+		}
+		
 		cleanupNodes(P);
-
 		initializeActivePropertyOnNodes(P);
 		P->setContext(context);
 
 		return P;
+	}
+
+	PPG::UPtr<PPG::Puzzle> Generator::generatePuzzle(Context context, EGenType type)
+	{
+		genType = type;
+		return generatePuzzle(context);
 	}
 
 	void Generator::removeNodeFromList(const Ptr<Node>& N, NodeVec& nodes) {
@@ -51,7 +67,7 @@ namespace PPG {
 
 
 	/**
-	*	In order to dont have two meta-equal nodes O1 and O2, where O1 has dependencies and O2 does NOT,
+	*	In order to don't have two meta-equal nodes O1 and O2, where O1 has dependencies and O2 does NOT,
 	*	this method will perform a cleanup of the nodes after the relation is generated.
 	*
 	*/
@@ -157,6 +173,99 @@ namespace PPG {
 
 		P->setNodes(nodesInGraph);
 
+		return rel;
+	}
+
+	Vec<size_t> findIndicesByPattern(const NodeVec& nodes, std::function<bool(const Ptr<Node> n)> pred)
+	{
+		Vec<size_t> res;
+		for (size_t i = 0; i < nodes.size(); ++i)
+		{
+			if (pred(nodes.at(i)))
+			{
+				res.push_back(i);
+			}
+		}
+		return res;
+	}
+
+
+	PPG::Relation Generator::generateRelationWFC(UPtr<Puzzle>& P, const NodeVec& nodes, RuleVec& rules)
+	{
+
+		Relation rel;
+
+		// Initialize Array. index 1 is node from, index 2 is node to
+		Vec<bool> arr(nodes.size()*nodes.size(), true);
+
+		// set identities to false, rest default to true
+		for (size_t i = 0; i < nodes.size(); ++i)
+		{
+			for (size_t j = 0; j < nodes.size(); ++j)
+			{
+				if (i == j)
+				{
+					arr[i*nodes.size() + j] = false;
+				}
+			}
+		}
+
+		// for each rule, set flags to false
+		for (auto& rule : rules)
+		{
+			auto& lhsO = rule.getLeftHandSideObject();
+			auto& rhsO = rule.getRightHandSideObject();
+			auto lhsS = rule.getLeftHandSideState();
+			auto rhsS = rule.getRightHandSideState();
+
+			NodeVec lhsNs;
+			NodeVec rhsNs;
+
+			// find the nodes which are relevant for the rules
+			auto predLhs = [obj = lhsO, st = lhsS](const Ptr<Node> n) {
+				return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
+			};
+
+			auto predRhs = [obj = rhsO, st = rhsS](const Ptr<Node> n) {
+				return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
+			};
+
+			Vec<size_t> lhsIndices = findIndicesByPattern(nodes, predLhs);
+			Vec<size_t> rhsIndices = findIndicesByPattern(nodes, predRhs);
+
+			// for rule type before. we can set every direct combination where RHS < LHS to false
+			// for rule type after, we can set every direct combination where LHS < RHS to false
+			switch (rule.getRuleType())
+			{
+			case Rule::EPuzzleRuleType::AFTER:
+			case Rule::EPuzzleRuleType::STRICT_AFTER:
+			{
+				for (size_t i : lhsIndices)
+				{
+					for (size_t j : rhsIndices)
+					{
+						arr[i * nodes.size() + j] = false;
+					}
+				}
+				break;
+			}
+
+			case Rule::EPuzzleRuleType::BEFORE:
+			case Rule::EPuzzleRuleType::STRICT_BEFORE:
+			{
+				for (size_t i : rhsIndices)
+				{
+					for (size_t j : lhsIndices)
+					{
+						arr[i * nodes.size() + j] = false;
+					}
+				}
+				break;
+			}
+			
+			}
+
+		}
 		return rel;
 	}
 
