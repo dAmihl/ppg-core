@@ -37,12 +37,12 @@ namespace PPG
 		
 		EWfcCellState at(size_t x, size_t y) const
 		{
-			return m_data[x + m_size * y];
+			return m_data[x * m_size + y];
 		}
 
 		void set(size_t x, size_t y, EWfcCellState val)
 		{
-			m_data[x + m_size * y] = val;
+			m_data[x * m_size + y] = val;
 		}
 
 

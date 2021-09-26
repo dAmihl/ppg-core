@@ -53,6 +53,24 @@ namespace PPG
 		return nodes;
 	}
 
+	NodeVec WfcGenerator::generateNodes(const ObjVec& objects, size_t numNodes)
+	{
+		NodeVec nodes;
+
+		for (size_t i = 0; i < numNodes; i++) {
+			Ptr<Object> obj = Randomizer::getRandomFromList(objects);
+			if (obj == nullptr) continue;
+
+			Vec<State> reachableStates = obj->getReachableStates();
+			if (reachableStates.empty()) continue;
+
+			State state = Randomizer::getRandomFromList(reachableStates);
+			Ptr<Node> newNode = make<Node>(obj, state);
+			nodes.push_back(newNode);
+		}
+		return nodes;
+	}
+
 
 	Vec<size_t> findIndicesByPattern(const NodeVec& nodes, std::function<bool(const Ptr<Node> n)> pred)
 	{
@@ -216,9 +234,9 @@ namespace PPG
 		// take NOTs from row Y and copy to row X where cell is available
 		for (size_t k = 0; k < nodes.size(); ++k)
 		{
-			if (mat.at(y, k) == EWfcCellState::NOT && mat.at(x,k) == EWfcCellState::AVAILABLE)
+			if (mat.at(k, y) == EWfcCellState::NOT && mat.at(k,x) == EWfcCellState::AVAILABLE)
 			{
-				mat.set(x, k, EWfcCellState::NOT);
+				mat.set(k, x, EWfcCellState::NOT);
 			}
 		}
 

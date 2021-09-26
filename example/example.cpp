@@ -33,7 +33,7 @@ PPG::Context createExtendedContext()
 	a->setCurrentState(closed);
 	a->setStateTransition(to1);
 	auto b = con.add<PPG::Object>("B");
-	a->setCurrentState(closed);
+	b->setCurrentState(closed);
 	b->setStateTransition(to1);
 	auto c = con.add<PPG::Object>("C");
 	c->setCurrentState(closed);
@@ -77,6 +77,7 @@ int main()
 		PPG::WfcGenerator generator;
 		auto P = generator.generatePuzzle(c);
 		std::cout << P->getExtendedTextualRepresentation() << "\n";
+		auto g = P->getGraphRepresentation();
 	}
 
 	return 0;

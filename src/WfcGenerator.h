@@ -96,6 +96,9 @@ namespace PPG
 		NodeVec generateUniqueNodes(const ObjVec& objects, size_t numNodes);
 
 	private:
+
+		NodeVec generateNodes(const ObjVec& objects, size_t numNodes);
+
 		void initializeActivePropertyOnNodes(UPtr<Puzzle>& P);
 		void cleanupNodes(UPtr<Puzzle>& P);
 		void removeNodeFromList(const Ptr<Node>& N, NodeVec& nodes);
