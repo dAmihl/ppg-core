@@ -15,7 +15,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 	GIVEN("a simple Puzzle Relation with 4 nodes and a simple Relation N1->N2->N3") {
 
 		Relation R;
-		Generator PG;
+		DefaultGenerator PG;
 		Context c;
 		
 		auto O1 = c.add<Object>("Object_O1");
@@ -234,7 +234,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		// Number of nodes to generate
 		unsigned int numberNodes = 20;
 
-		Generator PG(numberNodes);
+		DefaultGenerator PG(numberNodes);
 		Context c;
 
 		Ptr<Object> O1 = c.add<Object>("Object_O1");

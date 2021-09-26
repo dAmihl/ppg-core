@@ -60,7 +60,7 @@ int main()
 	// Manual example
 	{
 		PPG::Context c = createSimpleContext();
-		PPG::Generator generator;
+		PPG::DefaultGenerator generator;
 		auto P = generator.generatePuzzle(c);
 		std::cout << P->getExtendedTextualRepresentation() << "\n";
 	}
@@ -70,8 +70,8 @@ int main()
 	{
 		
 		PPG::Context c = createExtendedContext();
-		PPG::Generator generator;
-		auto P = generator.generatePuzzle(c, PPG::EGenType::WFC);
+		PPG::WfcGenerator generator;
+		auto P = generator.generatePuzzle(c);
 		std::cout << P->getExtendedTextualRepresentation() << "\n";
 	}
 
