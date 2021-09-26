@@ -30,16 +30,22 @@ PPG::Context createExtendedContext()
 	
 
 	auto a = con.add<PPG::Object>("A");
+	a->setCurrentState(closed);
 	a->setStateTransition(to1);
 	auto b = con.add<PPG::Object>("B");
+	a->setCurrentState(closed);
 	b->setStateTransition(to1);
 	auto c = con.add<PPG::Object>("C");
+	c->setCurrentState(closed);
 	c->setStateTransition(to1);
 	auto d = con.add<PPG::Object>("D");
+	d->setCurrentState(closed);
 	d->setStateTransition(to1);
 	auto e = con.add<PPG::Object>("E");
+	e->setCurrentState(closed);
 	e->setStateTransition(to1);
 	auto f = con.add<PPG::Object>("F");
+	f->setCurrentState(closed);
 	f->setStateTransition(to1);
 
 	// a < b

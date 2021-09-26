@@ -91,12 +91,9 @@ namespace PPG
 	}
 
 
-	PPG::Relation WfcGenerator::generateRelation(UPtr<Puzzle>& P, NodeVec& nodes, RuleVec& rules)
-	{
-		Relation rel;
 
-		// Initialize Array. index 1 is node from, index 2 is node to
-		Vec<bool> arr(nodes.size() * nodes.size(), true);
+	void initMatrixState(NodeVec& nodes, Vec<bool>& arr, RuleVec& rules)
+	{
 
 		// set identities to false, rest default to true
 		for (size_t i = 0; i < nodes.size(); ++i)
@@ -110,7 +107,7 @@ namespace PPG
 			}
 		}
 
-		// for each rule, set flags to false
+		// for each rule, set related flags to false
 		for (auto& rule : rules)
 		{
 			auto& lhsO = rule.getLeftHandSideObject();
@@ -194,7 +191,111 @@ namespace PPG
 			}
 
 		}
+	}
 
+
+	void collapseNode(size_t x, size_t y, Vec<bool>& arr, NodeVec& nodes, Relation& rel, RuleVec& rules)
+	{
+		arr[x * nodes.size() + y] = false;
+		// also disallow the inverse
+		arr[y * nodes.size() + x] = false;
+
+		auto& nx = nodes[x];
+		auto& ny = nodes[y];
+		// add node X -> Y
+		rel.addPair(makePair(nx, ny));
+
+		// now check every rule for X and Y
+		// e.g. Y < W for a node W
+		// disallow node W -> X
+		// also for a rule X > W disallow Y -> W node
+
+		for (auto& rule : rules)
+		{
+			auto& lhsO = rule.getLeftHandSideObject();
+			auto& rhsO = rule.getRightHandSideObject();
+			auto lhsS = rule.getLeftHandSideState();
+			auto rhsS = rule.getRightHandSideState();
+
+			NodeVec lhsNs;
+			NodeVec rhsNs;
+
+			// find the nodes which are relevant for the rules
+			auto predLhs = [obj = lhsO, st = lhsS](const Ptr<Node> n) {
+				return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
+			};
+
+			auto predRhs = [obj = rhsO, st = rhsS](const Ptr<Node> n) {
+				return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
+			};
+
+			// Check Rule type
+			switch (rule.getRuleType())
+			{
+			case Rule::EPuzzleRuleType::BEFORE:
+			case Rule::EPuzzleRuleType::STRICT_BEFORE:
+			{
+				// a rule Y < W
+				if (predLhs(ny))
+				{
+					auto predX = [obj = nx->getRelatedObject(), st = nx->getGoalState()](const Ptr<Node> n) {
+						return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
+					};
+
+					// disallow every node W -> X
+					Vec<size_t> wIndices = findIndicesByPattern(nodes, predRhs);
+					Vec<size_t> xIndices = findIndicesByPattern(nodes, predX);
+
+					for (size_t i : wIndices)
+					{
+						for (size_t j : xIndices)
+						{
+							arr[i * nodes.size() + j] = false;
+						}
+					}
+				}
+				break;
+			}
+
+			case Rule::EPuzzleRuleType::AFTER:
+			case Rule::EPuzzleRuleType::STRICT_AFTER:
+			{
+				// a rule X > W
+				if (predLhs(nx))
+				{
+					auto predY = [obj = ny->getRelatedObject(), st = ny->getGoalState()](const Ptr<Node> n) {
+						return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
+					};
+
+					// disallow Y -> W node
+					Vec<size_t> wIndices = findIndicesByPattern(nodes, predRhs);
+					Vec<size_t> yIndices = findIndicesByPattern(nodes, predY);
+
+					for (size_t i : yIndices)
+					{
+						for (size_t j : wIndices)
+						{
+							arr[i * nodes.size() + j] = false;
+						}
+					}
+				}
+				break;
+			}
+			}
+
+		}
+	}
+
+
+	
+	PPG::Relation WfcGenerator::generateRelation(UPtr<Puzzle>& P, NodeVec& nodes, RuleVec& rules)
+	{
+		Relation rel;
+
+		// Initialize Array. index 1 is node from, index 2 is node to
+		Vec<bool> arr(nodes.size() * nodes.size(), true);
+
+		initMatrixState(nodes, arr, rules);
 
 		// use resulting array until every node is unavailable
 		size_t x;
@@ -202,95 +303,7 @@ namespace PPG
 		while (getRandomAvailableIndex(x, y, arr, nodes.size()))
 		{
 			// collapse (x,y)
-			arr[x * nodes.size() + y] = false;
-			// also disallow the inverse
-			arr[y * nodes.size() + x] = false;
-
-			auto& nx = nodes[x];
-			auto& ny = nodes[y];
-			// add node X -> Y
-			rel.addPair(makePair(nx, ny));
-
-			// now check every rule for X and Y
-			// e.g. Y < W for a node W
-			// disallow node W -> X
-			// also for a rule X > W disallow Y -> W node
-
-			for (auto& rule : rules)
-			{
-				auto& lhsO = rule.getLeftHandSideObject();
-				auto& rhsO = rule.getRightHandSideObject();
-				auto lhsS = rule.getLeftHandSideState();
-				auto rhsS = rule.getRightHandSideState();
-
-				NodeVec lhsNs;
-				NodeVec rhsNs;
-
-				// find the nodes which are relevant for the rules
-				auto predLhs = [obj = lhsO, st = lhsS](const Ptr<Node> n) {
-					return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
-				};
-
-				auto predRhs = [obj = rhsO, st = rhsS](const Ptr<Node> n) {
-					return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
-				};
-
-				// Check Rule type
-				switch (rule.getRuleType())
-				{
-				case Rule::EPuzzleRuleType::BEFORE:
-				case Rule::EPuzzleRuleType::STRICT_BEFORE:
-				{
-					// a rule Y < W
-					if (predLhs(ny))
-					{
-						auto predX = [obj = nx->getRelatedObject(), st = nx->getGoalState()](const Ptr<Node> n) {
-							return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
-						};
-
-						// disallow every node W -> X
-						Vec<size_t> wIndices = findIndicesByPattern(nodes, predRhs);
-						Vec<size_t> xIndices = findIndicesByPattern(nodes, predX);
-
-						for (size_t i : wIndices)
-						{
-							for (size_t j : xIndices)
-							{
-								arr[i * nodes.size() + j] = false;
-							}
-						}
-					}
-					break;
-				}
-
-				case Rule::EPuzzleRuleType::AFTER:
-				case Rule::EPuzzleRuleType::STRICT_AFTER:
-				{
-					// a rule X > W
-					if (predLhs(nx))
-					{
-						auto predY = [obj = ny->getRelatedObject(), st = ny->getGoalState()](const Ptr<Node> n) {
-							return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
-						};
-
-						// disallow Y -> W node
-						Vec<size_t> wIndices = findIndicesByPattern(nodes, predRhs);
-						Vec<size_t> yIndices = findIndicesByPattern(nodes, predY);
-
-						for (size_t i : yIndices)
-						{
-							for (size_t j : wIndices)
-							{
-								arr[i * nodes.size() + j] = false;
-							}
-						}
-					}
-					break;
-				}
-				}
-
-			}
-
+			collapseNode(x, y, arr, nodes, rel, rules);
 		}
 
 
