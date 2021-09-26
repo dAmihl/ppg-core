@@ -26,7 +26,7 @@ PPG::Context createExtendedContext()
 	PPG::State open{ "Open" };
 	PPG::State closed{ "Closed" };
 	to1.addTransition("Use", closed, open);
-	to1.addTransition("Use", open, closed);
+	//to1.addTransition("Use", open, closed);
 	
 
 	auto a = con.add<PPG::Object>("A");
@@ -41,6 +41,7 @@ PPG::Context createExtendedContext()
 	auto d = con.add<PPG::Object>("D");
 	d->setCurrentState(closed);
 	d->setStateTransition(to1);
+	
 	auto e = con.add<PPG::Object>("E");
 	e->setCurrentState(closed);
 	e->setStateTransition(to1);
@@ -50,11 +51,9 @@ PPG::Context createExtendedContext()
 
 	// a < b
 	auto ab = PPG::Rule(a, PPG::STATE_ANY, b, PPG::STATE_ANY, PPG::Rule::EPuzzleRuleType::BEFORE);
+	con.addRule(ab);
 	// e < f
 	auto ef = PPG::Rule(e, PPG::STATE_ANY, f, PPG::STATE_ANY, PPG::Rule::EPuzzleRuleType::BEFORE);
-
-
-	con.addRule(ab);
 	con.addRule(ef);
 
 	return con;
@@ -74,7 +73,6 @@ int main()
 
 	// WFC
 	{
-		
 		PPG::Context c = createExtendedContext();
 		PPG::WfcGenerator generator;
 		auto P = generator.generatePuzzle(c);

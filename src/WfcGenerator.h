@@ -77,7 +77,7 @@
 #include "Context.h"
 #include <algorithm>
 #include <functional>
-
+#include "core/WfcMat.h"
 
 
 namespace PPG

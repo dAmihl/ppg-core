@@ -67,14 +67,14 @@ namespace PPG
 		return res;
 	}
 
-	bool getRandomAvailableIndex(size_t& indxI, size_t& indxJ, const Vec<bool>& arr, const size_t numNodes)
+	bool getRandomAvailableIndex(size_t& indxI, size_t& indxJ, const WfcMat& mat, const size_t numNodes)
 	{
 		Vec<Pair<size_t, size_t>> indices;
 		for (size_t i = 0; i < numNodes; ++i)
 		{
 			for (size_t j = 0; j < numNodes; ++j)
 			{
-				if (arr[i * numNodes + j])
+				if (mat.at(i,j) == EWfcCellState::AVAILABLE)
 				{
 					indices.emplace_back(i, j);
 				}
@@ -92,7 +92,7 @@ namespace PPG
 
 
 
-	void initMatrixState(NodeVec& nodes, Vec<bool>& arr, RuleVec& rules)
+	void initMatrixState(NodeVec& nodes, WfcMat& mat, RuleVec& rules)
 	{
 
 		// set identities to false, rest default to true
@@ -102,7 +102,7 @@ namespace PPG
 			{
 				if (i == j)
 				{
-					arr[i * nodes.size() + j] = false;
+					mat.set(i, j, EWfcCellState::NOT);
 				}
 			}
 		}
@@ -142,7 +142,7 @@ namespace PPG
 				{
 					for (size_t j : rhsIndices)
 					{
-						arr[i * nodes.size() + j] = false;
+						mat.set(i, j, EWfcCellState::NOT);
 					}
 				}
 				break;
@@ -154,7 +154,7 @@ namespace PPG
 				{
 					for (size_t j : lhsIndices)
 					{
-						arr[i * nodes.size() + j] = false;
+						mat.set(i, j, EWfcCellState::NOT);
 					}
 				}
 				break;
@@ -168,7 +168,11 @@ namespace PPG
 					// set all other nodes to false except the ones on LHS
 					for (size_t j = 0; j < nodes.size(); ++j)
 					{
-						arr[i * nodes.size() + j] = std::find(lhsIndices.begin(), lhsIndices.end(), j) != std::end(lhsIndices);
+						bool exists = std::find(lhsIndices.begin(), lhsIndices.end(), j) != std::end(lhsIndices);
+						if (!exists)
+						{
+							mat.set(i, j, EWfcCellState::NOT);
+						}
 					}
 				}
 				break;
@@ -182,7 +186,11 @@ namespace PPG
 					// set all other nodes to false except the ones on RHS
 					for (size_t j = 0; j < nodes.size(); ++j)
 					{
-						arr[i * nodes.size() + j] = std::find(rhsIndices.begin(), rhsIndices.end(), j) != std::end(rhsIndices);
+						bool exists = std::find(rhsIndices.begin(), rhsIndices.end(), j) != std::end(rhsIndices);
+						if (!exists)
+						{
+							mat.set(i, j, EWfcCellState::NOT);
+						}
 					}
 				}
 				break;
@@ -194,23 +202,33 @@ namespace PPG
 	}
 
 
-	void collapseNode(size_t x, size_t y, Vec<bool>& arr, NodeVec& nodes, Relation& rel, RuleVec& rules)
+	void collapseNode(size_t x, size_t y, WfcMat& mat, NodeVec& nodes, Relation& rel, RuleVec& rules)
 	{
-		arr[x * nodes.size() + y] = false;
+		mat.set(x, y, EWfcCellState::USED);
 		// also disallow the inverse
-		arr[y * nodes.size() + x] = false;
+		mat.set(y, x, EWfcCellState::NOT);
 
 		auto& nx = nodes[x];
 		auto& ny = nodes[y];
 		// add node X -> Y
 		rel.addPair(makePair(nx, ny));
 
+		// take NOTs from row Y and copy to row X where cell is available
+		for (size_t k = 0; k < nodes.size(); ++k)
+		{
+			if (mat.at(y, k) == EWfcCellState::NOT && mat.at(x,k) == EWfcCellState::AVAILABLE)
+			{
+				mat.set(x, k, EWfcCellState::NOT);
+			}
+		}
+
+
 		// now check every rule for X and Y
 		// e.g. Y < W for a node W
 		// disallow node W -> X
 		// also for a rule X > W disallow Y -> W node
 
-		for (auto& rule : rules)
+		/*for (auto& rule : rules)
 		{
 			auto& lhsO = rule.getLeftHandSideObject();
 			auto& rhsO = rule.getRightHandSideObject();
@@ -250,7 +268,7 @@ namespace PPG
 					{
 						for (size_t j : xIndices)
 						{
-							arr[i * nodes.size() + j] = false;
+							mat[i * nodes.size() + j] = false;
 						}
 					}
 				}
@@ -275,7 +293,7 @@ namespace PPG
 					{
 						for (size_t j : wIndices)
 						{
-							arr[i * nodes.size() + j] = false;
+							mat[i * nodes.size() + j] = false;
 						}
 					}
 				}
@@ -283,7 +301,7 @@ namespace PPG
 			}
 			}
 
-		}
+		}*/
 	}
 
 
@@ -292,18 +310,18 @@ namespace PPG
 	{
 		Relation rel;
 
-		// Initialize Array. index 1 is node from, index 2 is node to
-		Vec<bool> arr(nodes.size() * nodes.size(), true);
+		// Initialize Array. index 1 is node from, index 2 is node 
+		WfcMat mat{ nodes.size() };
 
-		initMatrixState(nodes, arr, rules);
+		initMatrixState(nodes, mat, rules);
 
 		// use resulting array until every node is unavailable
 		size_t x;
 		size_t y;
-		while (getRandomAvailableIndex(x, y, arr, nodes.size()))
+		while (getRandomAvailableIndex(x, y, mat, nodes.size()))
 		{
 			// collapse (x,y)
-			collapseNode(x, y, arr, nodes, rel, rules);
+			collapseNode(x, y, mat, nodes, rel, rules);
 		}
 
 
