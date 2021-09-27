@@ -240,6 +240,16 @@ namespace PPG
 			}
 		}
 
+		// take NOTs from col X and copy to col Y where cell is available
+		// "every node which is not allowed to connect with X should not be allowed to connect to Y"
+		for (size_t k = 0; k < nodes.size(); ++k)
+		{
+			if (mat.at(x, k) == EWfcCellState::NOT && mat.at(y, k) == EWfcCellState::AVAILABLE)
+			{
+				mat.set(y, k, EWfcCellState::NOT);
+			}
+		}
+
 
 		// now check every rule for X and Y
 		// e.g. Y < W for a node W
