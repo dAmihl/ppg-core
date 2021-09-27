@@ -7,7 +7,7 @@ namespace PPG
 	{}
 
 	PPG::Object& Node::getRelatedObject() const
-{
+	{
 		return *relatedObject;
 	}
 

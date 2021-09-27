@@ -16,4 +16,5 @@
 
 #include "Puzzle.h"
 #include "Context.h"
-#include "Generator.h"
+#include "DefaultGenerator.h"
+#include "WfcGenerator.h"

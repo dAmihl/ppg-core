@@ -1,8 +1,8 @@
-#include "Generator.h"
+#include "DefaultGenerator.h"
 
 namespace PPG {
 
-	UPtr<Puzzle> Generator::generatePuzzle(Context context)
+	UPtr<Puzzle> DefaultGenerator::generatePuzzle(Context context)
 	{
 		Vec<Ptr<Object>>& objects = context.getObjects();
 		Vec<Ptr<Event>>& events = context.getEvents();
@@ -26,23 +26,22 @@ namespace PPG {
 
 		/* Generate Nodes and add to puzzle P*/
 		if (numberNodes == 0) numberNodes = objects.size();
-		Vec<Ptr<Node>> nodes = generateNodes(objects, numberNodes);
-		P->setNodes(nodes);
+		
 
 		/* Generate Relation and add to Puzzle P */
-		Relation R = generateRelationExperimental(P, P->getNodes(), rules);
-
-		P->setRelation(R);
-
+		Relation R;
+		P->setNodes(generateNodes(objects, numberNodes));
+		P->setRelation(generateRelation(P, P->getNodes(), rules));
+		
 		cleanupNodes(P);
-
 		initializeActivePropertyOnNodes(P);
 		P->setContext(context);
 
 		return P;
 	}
 
-	void Generator::removeNodeFromList(const Ptr<Node>& N, NodeVec& nodes) {
+
+	void DefaultGenerator::removeNodeFromList(const Ptr<Node>& N, NodeVec& nodes) {
 		auto found = std::find(nodes.begin(), nodes.end(), N);
 		if (found != nodes.end()) {
 			nodes.erase(found);
@@ -51,12 +50,11 @@ namespace PPG {
 
 
 	/**
-	*	In order to dont have two meta-equal nodes O1 and O2, where O1 has dependencies and O2 does NOT,
+	*	In order to don't have two meta-equal nodes O1 and O2, where O1 has dependencies and O2 does NOT,
 	*	this method will perform a cleanup of the nodes after the relation is generated.
 	*
 	*/
-
-	void Generator::cleanupNodes(UPtr<Puzzle>& P) {
+	void DefaultGenerator::cleanupNodes(UPtr<Puzzle>& P) {
 		NodeVec& nodes = P->getNodes();
 		NodeVec nodesToDelete;
 		const Relation& R = P->getRelation();
@@ -82,7 +80,7 @@ namespace PPG {
 	*	Generating a relation of given nodes;
 	*	by keeping invariants and thus solvability within this system
 	*/
-	PPG::Relation Generator::generateRelation(NodeVec& nodes, RuleVec rules)
+	PPG::Relation DefaultGenerator::generateRelationSimple(NodeVec& nodes, RuleVec rules)
 	{
 		Relation rel;
 
@@ -125,7 +123,7 @@ namespace PPG {
 		return rel;
 	}
 
-	PPG::Relation Generator::generateRelationExperimental(UPtr<Puzzle>& P, NodeVec& nodes, RuleVec& rules)
+	PPG::Relation DefaultGenerator::generateRelation(UPtr<Puzzle>& P, NodeVec& nodes, RuleVec& rules)
 	{
 		Relation rel;
 
@@ -160,43 +158,32 @@ namespace PPG {
 		return rel;
 	}
 
-	NodeVec Generator::generateNodes(const ObjVec& objects, size_t numNodes)
+	
+
+	NodeVec DefaultGenerator::generateNodes(const ObjVec& objects, size_t numNodes)
 	{
 		NodeVec nodes;
 
 		for (size_t i = 0; i < numNodes; i++) {
 			Ptr<Object> obj = Randomizer::getRandomFromList(objects);
 			if (obj == nullptr) continue;
-			try {
-				State state = Randomizer::getRandomFromList(obj->getReachableStates());
-				Ptr<Node> newNode = make<Node>(obj, state);
-				nodes.push_back(newNode);
-			}
-			catch (int error) {
-				// TODO error handling
-				(void)error;
-			}
+			
+			Vec<State> reachableStates = obj->getReachableStates();
+			if (reachableStates.empty()) continue;
+
+			State state = Randomizer::getRandomFromList(reachableStates);
+			Ptr<Node> newNode = make<Node>(obj, state);
+			nodes.push_back(newNode);
 		}
 		return nodes;
 	}
 
 
-	void Generator::setSeed(unsigned int seed)
-	{
-		seed = seed;
-		seedSet = true;
-	}
-
-	unsigned int Generator::getSeed() const
-	{
-		return seed;
-	}
-
 	/*
 	*	Initialize all ACTIVE nodes with state ACTIVE
 	*	Remember: Only active nodes are initially able to handle events
 	*/
-	void Generator::initializeActivePropertyOnNodes(UPtr<Puzzle>& P)
+	void DefaultGenerator::initializeActivePropertyOnNodes(UPtr<Puzzle>& P)
 	{
 		NodeVec nodes = P->getNodes();
 

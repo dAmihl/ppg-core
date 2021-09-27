@@ -15,7 +15,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 	GIVEN("a simple Puzzle Relation with 4 nodes and a simple Relation N1->N2->N3") {
 
 		Relation R;
-		Generator PG;
+		DefaultGenerator PG;
 		Context c;
 		
 		auto O1 = c.add<Object>("Object_O1");
@@ -205,14 +205,14 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			Ptr<Object> O5 = c.add<Object>("O5"); 
 
 			THEN("findNodesByPattern for Object O1 and S1 should only return N1") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, *O1, S1, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = GeneratorHelper::findNodesByPattern(nodes, *O1, S1, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 1);
 				REQUIRE(foundNodes.at(0) == N1);
 			}
 
 			THEN("findNodesByPattern for Object O1 and * should return N1 and N5") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, *O1, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = GeneratorHelper::findNodesByPattern(nodes, *O1, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 2);
 				bool result = (foundNodes.at(0) == N1) || (foundNodes.at(0) == N5);
@@ -220,7 +220,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 			}
 
 			THEN("findNodesByPattern for Object O5 and * should return nothing") {
-				NodeVec foundNodes = R.findNodesByPattern(nodes, *O5, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+				NodeVec foundNodes = GeneratorHelper::findNodesByPattern(nodes, *O5, STATE_ANY, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 				int size = foundNodes.size();
 				REQUIRE(size == 0);
 			}
@@ -234,7 +234,7 @@ TEST_CASE("PuzzleGeneratorHelperUnitTests", "[PPG_UNIT_TEST]") {
 		// Number of nodes to generate
 		unsigned int numberNodes = 20;
 
-		Generator PG(numberNodes);
+		DefaultGenerator PG(numberNodes);
 		Context c;
 
 		Ptr<Object> O1 = c.add<Object>("Object_O1");

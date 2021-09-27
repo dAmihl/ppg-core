@@ -392,21 +392,6 @@ namespace PPG
 		return false;
 	}
 
-	NodeVec Relation::findNodesByPattern(const NodeVec nodes, const Object& O, const State S, bool(*EqualObject)(const Object&, const Object&), bool(*EqualState)(const State, const State)) const
-	{
-		NodeVec foundNodes;
-
-		// BIG TODO
-		for (auto& it : nodes) {
-			if (EqualObject(O, it->getRelatedObject()) && EqualState(S, it->getGoalState())) {
-				foundNodes.push_back(it);
-			}
-		}
-
-		return foundNodes;
-	}
-
-
 
 	NodeVec Relation::findNearestPrecedingEqualNodesByObject(const Ptr<Node>& N) const
 	{

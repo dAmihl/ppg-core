@@ -148,6 +148,20 @@ namespace PPG {
 	}
 
 
+	NodeVec GeneratorHelper::findNodesByPattern(const NodeVec nodes, const Object& O, const State S, bool(*EqualObject)(const Object&, const Object&), bool(*EqualState)(const State, const State))
+	{
+		NodeVec foundNodes;
+
+		// BIG TODO
+		for (const auto& it : nodes) {
+			if (EqualObject(O, it->getRelatedObject()) && EqualState(S, it->getGoalState())) {
+				foundNodes.push_back(it);
+			}
+		}
+
+		return foundNodes;
+	}
+
 	/*
 	*	Checks compatibility of two nodes S and N by Basic Rules (Rule)s
 	*/
@@ -242,8 +256,8 @@ namespace PPG {
 		const State rhsS = rule.getRightHandSideState();
 
 		// Find all existing Right-Hand-side nodes of rule
-		NodeVec existingRHS = R.findNodesByPattern(nodes, rhsO, rhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
-		NodeVec existingLHS = R.findNodesByPattern(nodes, lhsO, lhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+		NodeVec existingRHS = findNodesByPattern(nodes, rhsO, rhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+		NodeVec existingLHS = findNodesByPattern(nodes, lhsO, lhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 
 		if (isRuleObjectEqual(lhsO, S->getRelatedObject()) && isRuleStateEqual(lhsS, S->getGoalState())) {
 
@@ -320,8 +334,8 @@ namespace PPG {
 		}
 
 		// Find all existing Right-Hand-side nodes of rule
-		NodeVec existingRHS = R.findNodesByPattern(nodes, rhsO, rhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
-		NodeVec existingLHS = R.findNodesByPattern(nodes, lhsO, lhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+		NodeVec existingRHS = findNodesByPattern(nodes, rhsO, rhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
+		NodeVec existingLHS = findNodesByPattern(nodes, lhsO, lhsS, GeneratorHelper::isRuleObjectEqual, GeneratorHelper::isRuleStateEqual);
 
 		// LHS = S and RHS = N
 		// S < N for all N
