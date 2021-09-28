@@ -30,7 +30,7 @@ namespace PPG
 
 		/* Generate Relation and add to Puzzle P */
 		Relation R;
-		P->setNodes(generateUniqueNodes(objects, numberNodes));
+		P->setNodes(generateNodes(objects, numberNodes));
 		P->setRelation(generateRelation(P, P->getNodes(), rules));
 
 		cleanupNodes(P);
