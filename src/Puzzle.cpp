@@ -130,7 +130,7 @@ namespace PPG
 			bool canBeActive = relation.checkAllPreceding(p, checkCompleted);
 			if (canBeActive)
 			{
-				relation.checkDoForAllFollowing(N, checkCompleted, doSetNodeActive);
+				doSetNodeActive(*p);
 			}
 		}
 		
