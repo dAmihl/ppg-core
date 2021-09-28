@@ -26,6 +26,11 @@ namespace PPG
 		return M.isCompleted();
 	}
 
+	bool checkNotCompleted(const Node& M)
+	{
+		return !M.isCompleted();
+	}
+
 	bool checkActive(const Node& M) {
 		return M.isActive();
 	}
@@ -119,7 +124,16 @@ namespace PPG
 
 	void Puzzle::updateNodeProperties(Ptr<Node>& N)
 	{
-		relation.checkDoForAllFollowing(N, checkCompleted, doSetNodeActive);
+		
+		for (auto& p : relation.getFollowingNodes(N))
+		{
+			bool canBeActive = !relation.checkAtLeastOnePreceding(p, checkNotCompleted);
+			if (canBeActive)
+			{
+				relation.checkDoForAllFollowing(N, checkCompleted, doSetNodeActive);
+			}
+		}
+		
 		//relation.checkDoForAllFollowing(N, checkCompleted, doCheckNodeComplete); // check node already complete by definition
 		relation.checkDoForAllFollowing(N, checkActive, doSetNodeIncomplete);
 	}
