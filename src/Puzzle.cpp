@@ -127,7 +127,7 @@ namespace PPG
 		
 		for (auto& p : relation.getFollowingNodes(N))
 		{
-			bool canBeActive = !relation.checkAtLeastOnePreceding(p, checkNotCompleted);
+			bool canBeActive = relation.checkAllPreceding(p, checkCompleted);
 			if (canBeActive)
 			{
 				relation.checkDoForAllFollowing(N, checkCompleted, doSetNodeActive);
