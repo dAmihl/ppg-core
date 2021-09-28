@@ -9,6 +9,7 @@ namespace PPG
 	{
 		FREE,
 		USED,
+		TUSED,
 		NOT,
 		NTNOT
 	};

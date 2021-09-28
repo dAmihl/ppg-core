@@ -342,7 +342,23 @@ namespace PPG
 			if (mat.at(x, k) == EWfcCellState::NOT)
 			{
 				if (mat.at(y, k) == EWfcCellState::FREE || mat.at(y, k) == EWfcCellState::NTNOT)
-				mat.set(y, k, EWfcCellState::NOT);
+				{
+					mat.set(y, k, EWfcCellState::NOT);
+				}
+				
+			}
+		}
+
+		// take USED from col Y and copy to col X 
+		// (when Y -> W, and X -> Y, we don't need to connect X -> W)
+		// so inherit transitive connections
+		for (size_t k = 0; k < nodes.size(); ++k)
+		{
+			if (mat.at(y, k) == EWfcCellState::USED)
+			{
+				if (mat.at(x, k) == EWfcCellState::FREE) {
+					mat.set(x, k, EWfcCellState::TUSED);
+				}
 			}
 		}
 	}
