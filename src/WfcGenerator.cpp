@@ -30,7 +30,7 @@ namespace PPG
 
 		/* Generate Relation and add to Puzzle P */
 		Relation R;
-		P->setNodes(generateNodes(objects, numberNodes));
+		P->setNodes(generateUniqueNodes(objects, numberNodes));
 		P->setRelation(generateRelation(P, P->getNodes(), rules));
 
 		cleanupNodes(P);
@@ -43,6 +43,7 @@ namespace PPG
 	NodeVec WfcGenerator::generateUniqueNodes(const ObjVec& objects, size_t numNodes)
 	{
 		NodeVec nodes;
+		NodeVec resNodes;
 		for (auto& o : objects)
 		{
 			for (auto& s : o->getReachableStates())
@@ -50,7 +51,20 @@ namespace PPG
 				nodes.emplace_back(make<Node>(o, s));
 			}
 		}
-		return nodes;
+
+		if (nodes.size() <= numNodes) return nodes;
+
+		// else choose a subset of numNodes
+		while (resNodes.size() < numNodes)
+		{
+			Ptr<Node> n = Randomizer::getRandomFromList(nodes);
+			if (std::find(resNodes.begin(), resNodes.end(), n) == resNodes.end())
+			{
+				resNodes.push_back(n);
+			}
+		}
+
+		return resNodes;
 	}
 
 	NodeVec WfcGenerator::generateNodes(const ObjVec& objects, size_t numNodes)
