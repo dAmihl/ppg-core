@@ -92,7 +92,7 @@ namespace PPG
 		{
 			for (size_t j = 0; j < numNodes; ++j)
 			{
-				if (mat.at(i,j) == EWfcCellState::AVAILABLE)
+				if (mat.at(i,j) == EWfcCellState::FREE)
 				{
 					indices.emplace_back(i, j);
 				}
@@ -105,6 +105,62 @@ namespace PPG
 
 		indxI = randPair.first;
 		indxJ = randPair.second;
+		return true;
+	}
+
+	bool getNextAvailableIndex(size_t& indxI, size_t& indxJ, const WfcMat& mat, const size_t numNodes)
+	{
+		// count number of possible connections (entropy)
+		// for each index
+		size_t numAvailableI = 0;
+		size_t numAvailableJ = 0;
+
+		Vec<Pair<size_t, size_t>> indicesI;
+		Vec<Pair<size_t, size_t>> indicesJ;
+		Vec<Pair<size_t, size_t>> indices;
+
+		for (size_t i = 0; i < numNodes; ++i)
+		{
+			for (size_t j = 0; j < numNodes; ++j)
+			{
+				if (mat.at(i, j) == EWfcCellState::FREE)
+				{
+					if (i == indxI || j == indxI)
+					{
+						numAvailableI++;
+						indicesI.emplace_back(i, j);
+					}
+
+					if (i == indxJ || j == indxJ) {
+						numAvailableJ++;
+						indicesJ.emplace_back(i, j);
+					}
+
+					indices.emplace_back(i, j);
+				}
+			}
+		}
+
+		if (indices.empty()) return false;
+
+		Pair<size_t, size_t> randpair;
+
+		if (numAvailableI > 0 && numAvailableI < numAvailableJ)
+		{
+			randpair = indicesI[Randomizer::getRandomUintFromRange(0, indicesI.size())];
+		}
+		else if (numAvailableJ > 0 && numAvailableJ < numAvailableI)
+		{
+			randpair = indicesJ[Randomizer::getRandomUintFromRange(0, indicesJ.size())];
+		}
+		else
+		{
+			randpair = indices[Randomizer::getRandomUintFromRange(0, indices.size())];
+		}
+		
+
+		indxI = randpair.first;
+		indxJ = randpair.second;
 		return true;
 	}
 
@@ -180,34 +236,55 @@ namespace PPG
 
 			case Rule::EPuzzleRuleType::STRICT_AFTER:
 			{
-				// for every RHS node
-				for (size_t i : rhsIndices)
+				// X >! Y means that X -> Y NOT
+				// and for every W != Y, W -> X is NT-NOT (non transitive)
+				
+				// for every X node
+				for (size_t i : lhsIndices)
 				{
-					// set all other nodes to false except the ones on LHS
+					// and column
 					for (size_t j = 0; j < nodes.size(); ++j)
 					{
-						bool exists = std::find(lhsIndices.begin(), lhsIndices.end(), j) != std::end(lhsIndices);
-						if (!exists)
+						// if node is Y node
+						bool exists = std::find(rhsIndices.begin(), rhsIndices.end(), j) != std::end(rhsIndices);
+						if (exists)
 						{
+							// set X -> Y to NOT
 							mat.set(i, j, EWfcCellState::NOT);
+						}
+						else
+						{
+							// set W -> X NT-NOT
+							mat.set(j, i, EWfcCellState::NTNOT);
 						}
 					}
 				}
+
 				break;
 			}
 
 			case Rule::EPuzzleRuleType::STRICT_BEFORE:
 			{
-				// for every LHS node
+				// X <! Y means that Y -> X is NOT
+				// and for every W != X, X -> W is NT NOT
+
+				// for every X node
 				for (size_t i : lhsIndices)
 				{
-					// set all other nodes to false except the ones on RHS
+					// and column
 					for (size_t j = 0; j < nodes.size(); ++j)
 					{
+						// if node is Y node
 						bool exists = std::find(rhsIndices.begin(), rhsIndices.end(), j) != std::end(rhsIndices);
-						if (!exists)
+						if (exists)
 						{
-							mat.set(i, j, EWfcCellState::NOT);
+							// set Y -> X to NOT
+							mat.set(j, i, EWfcCellState::NOT);
+						}
+						else
+						{
+							// set X -> W NT-NOT
+							mat.set(i, j, EWfcCellState::NTNOT);
 						}
 					}
 				}
@@ -234,102 +311,26 @@ namespace PPG
 		// take NOTs from row Y and copy to row X where cell is available
 		for (size_t k = 0; k < nodes.size(); ++k)
 		{
-			if (mat.at(k, y) == EWfcCellState::NOT && mat.at(k,x) == EWfcCellState::AVAILABLE)
+			if (mat.at(k, y) == EWfcCellState::NOT)
 			{
-				mat.set(k, x, EWfcCellState::NOT);
+				if (mat.at(k, x) == EWfcCellState::FREE || mat.at(k, x) == EWfcCellState::NTNOT)
+				{
+					mat.set(k, x, EWfcCellState::NOT);
+				}
+				
 			}
 		}
 
-		// take NOTs from col X and copy to col Y where cell is available
-		// "every node which is not allowed to connect with X should not be allowed to connect to Y"
+		// take NOTs from col X (X -> *) and copy to col Y where cell is available
+		// "every node where X is not allowed to connect, Y is now also not allowed to connect"
 		for (size_t k = 0; k < nodes.size(); ++k)
 		{
-			if (mat.at(x, k) == EWfcCellState::NOT && mat.at(y, k) == EWfcCellState::AVAILABLE)
+			if (mat.at(x, k) == EWfcCellState::NOT)
 			{
+				if (mat.at(y, k) == EWfcCellState::FREE || mat.at(y, k) == EWfcCellState::NTNOT)
 				mat.set(y, k, EWfcCellState::NOT);
 			}
 		}
-
-
-		// now check every rule for X and Y
-		// e.g. Y < W for a node W
-		// disallow node W -> X
-		// also for a rule X > W disallow Y -> W node
-
-		/*for (auto& rule : rules)
-		{
-			auto& lhsO = rule.getLeftHandSideObject();
-			auto& rhsO = rule.getRightHandSideObject();
-			auto lhsS = rule.getLeftHandSideState();
-			auto rhsS = rule.getRightHandSideState();
-
-			NodeVec lhsNs;
-			NodeVec rhsNs;
-
-			// find the nodes which are relevant for the rules
-			auto predLhs = [obj = lhsO, st = lhsS](const Ptr<Node> n) {
-				return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
-			};
-
-			auto predRhs = [obj = rhsO, st = rhsS](const Ptr<Node> n) {
-				return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
-			};
-
-			// Check Rule type
-			switch (rule.getRuleType())
-			{
-			case Rule::EPuzzleRuleType::BEFORE:
-			case Rule::EPuzzleRuleType::STRICT_BEFORE:
-			{
-				// a rule Y < W
-				if (predLhs(ny))
-				{
-					auto predX = [obj = nx->getRelatedObject(), st = nx->getGoalState()](const Ptr<Node> n) {
-						return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
-					};
-
-					// disallow every node W -> X
-					Vec<size_t> wIndices = findIndicesByPattern(nodes, predRhs);
-					Vec<size_t> xIndices = findIndicesByPattern(nodes, predX);
-
-					for (size_t i : wIndices)
-					{
-						for (size_t j : xIndices)
-						{
-							mat[i * nodes.size() + j] = false;
-						}
-					}
-				}
-				break;
-			}
-
-			case Rule::EPuzzleRuleType::AFTER:
-			case Rule::EPuzzleRuleType::STRICT_AFTER:
-			{
-				// a rule X > W
-				if (predLhs(nx))
-				{
-					auto predY = [obj = ny->getRelatedObject(), st = ny->getGoalState()](const Ptr<Node> n) {
-						return n->getRelatedObject() == obj && (st == STATE_ANY || n->getGoalState() == st);
-					};
-
-					// disallow Y -> W node
-					Vec<size_t> wIndices = findIndicesByPattern(nodes, predRhs);
-					Vec<size_t> yIndices = findIndicesByPattern(nodes, predY);
-
-					for (size_t i : yIndices)
-					{
-						for (size_t j : wIndices)
-						{
-							mat[i * nodes.size() + j] = false;
-						}
-					}
-				}
-				break;
-			}
-			}
-
-		}*/
 	}
 
 
@@ -346,7 +347,13 @@ namespace PPG
 		// use resulting array until every node is unavailable
 		size_t x;
 		size_t y;
-		while (getRandomAvailableIndex(x, y, mat, nodes.size()))
+
+		// choose wave origin randomly
+		getRandomAvailableIndex(x, y, mat, nodes.size());
+		collapseNode(x, y, mat, nodes, rel, rules);
+
+		// then 
+		while (getNextAvailableIndex(x, y, mat, nodes.size()))
 		{
 			// collapse (x,y)
 			collapseNode(x, y, mat, nodes, rel, rules);

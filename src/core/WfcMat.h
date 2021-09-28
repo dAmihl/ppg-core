@@ -7,9 +7,10 @@ namespace PPG
 
 	enum class EWfcCellState
 	{
-		AVAILABLE,
+		FREE,
 		USED,
-		NOT
+		NOT,
+		NTNOT
 	};
 
 	class WfcMat
@@ -18,7 +19,7 @@ namespace PPG
 	public:
 		WfcMat(size_t size) 
 			: m_size(size), 
-			m_data{ m_size * m_size, EWfcCellState::AVAILABLE }
+			m_data{ m_size * m_size, EWfcCellState::FREE }
 		{}
 
 		// default dtor
