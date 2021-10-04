@@ -17,7 +17,7 @@ file(GLOB PPG_EXAMPLE_SRC
 	"example/*.cpp"
 )
 
-add_library(ppg-core ${PPG_CORE_SRC})
+add_library(ppg-core STATIC ${PPG_CORE_SRC})
 
 
 add_executable(ppg-core-example ${PPG_EXAMPLE_SRC})
